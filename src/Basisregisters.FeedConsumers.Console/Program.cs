@@ -22,7 +22,13 @@ AppDomain.CurrentDomain.FirstChanceException += (_, eventArgs) =>
         AppDomain.CurrentDomain.FriendlyName);
 
 AppDomain.CurrentDomain.UnhandledException += (_, eventArgs) =>
-    Log.Fatal((Exception)eventArgs.ExceptionObject, "Encountered a fatal exception, exiting program.");
+{
+    if (eventArgs.ExceptionObject is Exception exception)
+        Log.Fatal(exception, "Encountered a fatal exception, exiting program.");
+    else
+        Log.Fatal("Encountered a fatal exception, exiting program. ExceptionObject: {ExceptionObject}",
+            eventArgs.ExceptionObject);
+};
 
 var host = new HostBuilder()
     .ConfigureAppConfiguration((_, builder) =>
@@ -53,7 +59,8 @@ var host = new HostBuilder()
     .ConfigureServices((hostContext, services) =>
     {
         var connectionString = hostContext.Configuration.GetConnectionString("FeedConsumers")
-                               ?? throw new ArgumentNullException("hostContext.Configuration.GetConnectionString(\"FeedConsumers\")");
+                               ?? throw new InvalidOperationException(
+                                   "Connection string 'FeedConsumers' is required in configuration.");
 
         var baseUrl = hostContext.Configuration["BaseUrl"]
                       ?? throw new ArgumentNullException("BaseUrl", "BaseUrl is required in configuration.");
@@ -63,9 +70,12 @@ var host = new HostBuilder()
         var municipalityFeedOptions = new FeedProjectorOptions
         {
             Name = hostContext.Configuration["MunicipalityFeed:Name"] ?? "MunicipalityFeed",
-            FeedUrl = hostContext.Configuration["MunicipalityFeed:FeedUrl"] ?? throw new ArgumentNullException("MunicipalityFeed:FeedUrl"),
-            PollingIntervalInMinutes = int.Parse(hostContext.Configuration["MunicipalityFeed:PollingIntervalInMinutes"] ?? "1440"),
-            IgnoreNoEventHandlers = bool.Parse(hostContext.Configuration["MunicipalityFeed:IgnoreNoEventHandlers"] ?? "false")
+            FeedUrl = hostContext.Configuration["MunicipalityFeed:FeedUrl"] ??
+                      throw new ArgumentNullException("MunicipalityFeed:FeedUrl"),
+            PollingIntervalInMinutes =
+                hostContext.Configuration.GetValue<int>("MunicipalityFeed:PollingIntervalInMinutes", 1440),
+            IgnoreNoEventHandlers =
+                hostContext.Configuration.GetValue<bool>("MunicipalityFeed:IgnoreNoEventHandlers", false)
         };
 
         services.AddDbContextFactory<FeedContext>((provider, options) =>
@@ -107,7 +117,7 @@ try
     await DistributedLock<Program>.RunAsync(
             async () =>
             {
-                var context = await host.Services.GetRequiredService<IDbContextFactory<FeedContext>>()
+                await using var context = await host.Services.GetRequiredService<IDbContextFactory<FeedContext>>()
                     .CreateDbContextAsync();
 
                 await context.Database.MigrateAsync(CancellationToken.None);
@@ -128,13 +138,14 @@ catch (AggregateException aggregateException)
 catch (Exception e)
 {
     logger.LogCritical(e, "Encountered a fatal exception, exiting program.");
-    await Log.CloseAndFlushAsync();
 
-    // Allow some time for flushing before shutdown.
-    await Task.Delay(500, CancellationToken.None);
     throw;
 }
 finally
 {
     logger.LogInformation("Stopping...");
+    await Log.CloseAndFlushAsync();
+
+    // Allow some time for flushing before shutdown.
+    await Task.Delay(500, CancellationToken.None);
 }

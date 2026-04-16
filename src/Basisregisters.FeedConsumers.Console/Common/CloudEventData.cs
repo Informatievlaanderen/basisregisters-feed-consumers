@@ -48,7 +48,7 @@ public sealed class CloudEventData
     /// </summary>
     [JsonPropertyName("attributen")]
     [Required]
-    public ICollection<Attribute> Attributen { get; }
+    public ICollection<CloudEventAttributeChange> Attributen { get; }
 
     [JsonConstructor]
     public CloudEventData(
@@ -57,7 +57,7 @@ public sealed class CloudEventData
         string @objectId,
         DateTimeOffset @versieId,
         ICollection<string> @nisCodes,
-        ICollection<Attribute> @attributen)
+        ICollection<CloudEventAttributeChange> @attributen)
     {
         Id = @id;
         Naamruimte = @naamruimte;

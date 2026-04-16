@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 public sealed class Municipality
 {
-    public string PersistentUri { get; set; }
-    public string NisCode { get; set; }
+    public string PersistentUri { get; set; } = null!;
+    public string NisCode { get; set; } = null!;
     public DateTimeOffset VersionId { get; set; }
     public MunicipalityStatus Status { get; set; }
 

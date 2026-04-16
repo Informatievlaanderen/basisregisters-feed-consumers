@@ -7,7 +7,7 @@
 
     <RuntimeIdentifier>$(MyRuntimeIdentifier)</RuntimeIdentifier>
     <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
-    <RuntimeFrameworkVersion>9.0.3</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>9.0.4</RuntimeFrameworkVersion>
     <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
 
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>

@@ -26,7 +26,7 @@ public class MunicipalityProjector : FeedProjectorBase
 
         When(CreateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
-            Logger.LogInformation($"Processing create event: {cloudEvent.Id}");
+            Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
             var municipality = new Municipality(
                 data.Id.ToString(),
                 data.ObjectId,
@@ -41,7 +41,7 @@ public class MunicipalityProjector : FeedProjectorBase
 
         When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
-            Logger.LogInformation($"Processing update event: {cloudEvent.Id}");
+            Logger.LogInformation("Processing update event: {EventId}", cloudEvent.Id);
             var municipality = await context.Municipalities.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
             if (municipality == null)
                 throw new InvalidOperationException($"Municipality {data.Id} not found");
@@ -51,7 +51,7 @@ public class MunicipalityProjector : FeedProjectorBase
 
         When(DeleteEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
-            Logger.LogInformation($"Processing delete event: {cloudEvent.Id}");
+            Logger.LogInformation("Processing delete event: {EventId}", cloudEvent.Id);
             var municipality = await context.Municipalities.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
             if (municipality == null)
                 throw new InvalidOperationException($"Municipality {data.Id} not found");
@@ -61,15 +61,8 @@ public class MunicipalityProjector : FeedProjectorBase
 
         When(TransformEvent, (_, _, _, _) =>
         {
-            try
-            {
-                Logger.LogInformation($"Ignoring transform event");
-                return Task.CompletedTask;
-            }
-            catch (Exception exception)
-            {
-                return Task.FromException(exception);
-            }
+            Logger.LogInformation("Ignoring transform event");
+            return Task.CompletedTask;
         });
     }
 

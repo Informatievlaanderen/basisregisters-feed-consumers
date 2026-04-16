@@ -37,7 +37,7 @@ The new version 1.2 of the European Union Public Licence (EUPL) is published in 
 * [Datadog.Trace.Bundle](https://github.com/DataDog/dd-trace-dotnet) - _.NET Client Library for Datadog APM_ - [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
 * [NJsonSchema](https://github.com/RicoSuter/NJsonSchema/blob/master/LICENSE.md) - _A JSON Schema parser and validator for .NET._ - [MIT License](https://choosealicense.com/licenses/mit/)
 * [Npgsql.EntityFrameworkCore.PostgreSQL](https://github.com/npgsql/efcore.pg) - _Entity Framework Core provider for PostgreSQL_ - [PostgreSQL License](https://choosealicense.com/licenses/postgresql/)
-* [Npgsql.EntityFrameworkCore.PostgreSQL.NetToplogySuite](https://github.com/npgsql/efcore.pg) - _Entity Framework Core provider for PostgreSQL With NTS integration_ - [PostgreSQL License](https://choosealicense.com/licenses/postgresql/)
+* [Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite](https://github.com/npgsql/efcore.pg) - _Entity Framework Core provider for PostgreSQL With NTS integration_ - [PostgreSQL License](https://choosealicense.com/licenses/postgresql/)
 * [Be.Vlaanderen.Basisregisters.Aws.DistributedMutex](https://github.com/Informatievlaanderen/aws-distributed-mutex/blob/main/LICENSE) - _A distributed mutex implementation for AWS using DynamoDB._ - [MIT](https://choosealicense.com/licenses/mit/)
 
 ### Tooling

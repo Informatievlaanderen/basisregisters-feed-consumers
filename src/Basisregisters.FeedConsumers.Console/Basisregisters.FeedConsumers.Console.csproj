@@ -9,7 +9,7 @@
 
     <RuntimeIdentifier>$(MyRuntimeIdentifier)</RuntimeIdentifier>
     <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
-    <RuntimeFrameworkVersion>9.0.3</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>9.0.4</RuntimeFrameworkVersion>
     <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
 
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
@@ -49,7 +49,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Microsoft.Extensions.Http" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
 
     <PackageReference Include="CloudNative.CloudEvents.SystemTextJson" />
     <PackageReference Include="NJsonSchema" />
@@ -66,6 +65,7 @@
     <PackageReference Include="Serilog.Enrichers.Environment" />
     <PackageReference Include="Serilog.Formatting.Compact" />
 
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
     <PackageReference Include="SourceLink.Embed.AllSourceFiles" PrivateAssets="all" />
     <PackageReference Include="SourceLink.Copy.PdbFiles" PrivateAssets="all" />
   </ItemGroup>

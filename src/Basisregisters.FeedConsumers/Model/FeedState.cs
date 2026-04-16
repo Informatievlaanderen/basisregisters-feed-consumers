@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 public sealed class FeedState
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
     public long EventPosition { get; set; }
     public int Page { get; set; }
 

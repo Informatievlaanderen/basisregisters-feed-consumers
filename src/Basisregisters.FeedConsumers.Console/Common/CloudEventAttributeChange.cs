@@ -3,7 +3,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-public sealed class Attribute : object
+public sealed class CloudEventAttributeChange : object
 {
     /// <summary>
     /// Name of the changed attribute
@@ -21,7 +21,7 @@ public sealed class Attribute : object
     public object NieuweWaarde { get; }
 
     [JsonConstructor]
-    public Attribute(string @naam, object @nieuweWaarde, object @oudeWaarde)
+    public CloudEventAttributeChange(string @naam, object @nieuweWaarde, object @oudeWaarde)
     {
         Naam = @naam;
         OudeWaarde = @oudeWaarde;

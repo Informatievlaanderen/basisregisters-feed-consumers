@@ -26,6 +26,8 @@ public class FeedProjectorOptions
 
 public abstract class FeedProjectorBase : BackgroundService
 {
+    public const string PageCompleteHeader = "X-Page-Complete";
+
     private readonly FeedProjectorOptions _options;
     private readonly IDbContextFactory<FeedContext> _feedContextFactory;
     private readonly List<Handler> _handlers = [];
@@ -55,7 +57,7 @@ public abstract class FeedProjectorBase : BackgroundService
         {
             var processedEvents = false;
 
-            using (var context = await _feedContextFactory.CreateDbContextAsync(stoppingToken))
+            await using (var context = await _feedContextFactory.CreateDbContextAsync(stoppingToken))
             {
                 var feedState = await context.FeedStates.FindAsync([_options.Name], cancellationToken: stoppingToken);
                 if (feedState is null)
@@ -77,9 +79,9 @@ public abstract class FeedProjectorBase : BackgroundService
                         throw new InvalidOperationException(
                             $"No handlers found for event type {cloudEvent.Type} in {_options.Name} projector.");
 
-                    if (_handlers.Count(x => x.Type.ToString() == cloudEvent.Type) > 1)
+                    if (_handlers.Count(x => x.Type.Value.ToString() == cloudEvent.Type) > 1)
                         Logger.LogWarning(
-                            $"Multiple handlers found for event type {cloudEvent.Type}. All handlers will be executed.");
+                            "Multiple handlers found for event type {EventType}. All handlers will be executed.", cloudEvent.Type);
 
                     processedEvents = true;
                     foreach (var handler in _handlers)
@@ -89,27 +91,29 @@ public abstract class FeedProjectorBase : BackgroundService
                             if (handler.Type.Value != cloudEvent.Type)
                                 continue;
 
+                            if (cloudEvent.Data is not JsonElement jsonElement)
+                                throw new InvalidOperationException($"CloudEvent {cloudEvent.Id} data is not a JsonElement. Actual type: {cloudEvent.Data?.GetType().Name ?? "null"}.");
+
                             await ValidateJsonSchema(cloudEvent, stoppingToken);
 
                             //deserialize the cloudevent data
-                            var eventData = cloudEvent.Data is JsonElement jsonElement
-                                ? jsonElement.Deserialize<CloudEventData>(CloudEventReader.JsonOptions)
-                                  ?? throw new InvalidOperationException($"Failed to deserialize CloudEvent data for event {cloudEvent.Id}.")
-                                : throw new InvalidOperationException($"CloudEvent {cloudEvent.Id} data is not a JsonElement. Actual type: {cloudEvent.Data?.GetType().Name ?? "null"}.");
-
+                            var eventData = jsonElement.Deserialize<CloudEventData>(CloudEventReader.JsonOptions)
+                                            ?? throw new InvalidOperationException($"Failed to deserialize CloudEvent data for event {cloudEvent.Id}.");
                             await handler.Handle(cloudEvent, eventData, context, stoppingToken);
                         }
                         catch (Exception ex)
                         {
-                            Logger.LogError(ex, $"Error processing event {cloudEvent.Id}");
+                            Logger.LogError(ex, "Error processing event {EventId}", cloudEvent.Id);
                             throw;
                         }
                     }
                 }
 
-                position = feedPage.Events.LastOrDefault() is null
-                    ? position
-                    : Convert.ToInt64(feedPage.Events.Last().Id!);
+                if (feedPage.Events.Any())
+                {
+                    var highestEventIdOnPage = feedPage.Events.Max(x => Convert.ToInt64(x.Id!));
+                    position = Math.Max(position, highestEventIdOnPage);
+                }
 
                 if (feedPage.IsPageComplete)
                     page++;
@@ -126,35 +130,50 @@ public abstract class FeedProjectorBase : BackgroundService
         }
     }
 
-    private async Task ValidateJsonSchema(CloudEvent cloudEvent, CancellationToken cancellationToken)
+    private Task ValidateJsonSchema(CloudEvent cloudEvent, CancellationToken cancellationToken)
     {
-        if(cloudEvent.DataSchema is null || cloudEvent.Data is null)
-            throw new InvalidOperationException($"CloudEvent {cloudEvent.Id} is missing DataSchema or Data, cannot validate JSON schema.");
-
-        _schemas.GetOrAdd(cloudEvent.DataSchema.ToString(), uri =>
+        try
         {
-            try
+            if(cloudEvent.DataSchema is null || cloudEvent.Data is null)
+                throw new InvalidOperationException($"CloudEvent {cloudEvent.Id} is missing DataSchema or Data, cannot validate JSON schema.");
+
+            if (cloudEvent.Data is not JsonElement jsonElement)
+                throw new InvalidOperationException($"CloudEvent {cloudEvent.Id} data is not a JsonElement. Actual type: {cloudEvent.Data?.GetType().Name ?? "null"}.");
+
+            var validationErrors = _schemas.GetOrAdd(cloudEvent.DataSchema.ToString(), uri =>
             {
-                var schema = JsonSchema.FromUrlAsync(uri, cancellationToken).GetAwaiter().GetResult();
-                return schema;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, $"Failed to load JSON schema from {uri} for event type {cloudEvent.Type}");
-                throw new InvalidOperationException($"Failed to load JSON schema from {uri} for event type {cloudEvent.Type}", ex);
-            }
-        }).Validate(cloudEvent.Data.ToString()!);
+                try
+                {
+                    var schema = JsonSchema.FromUrlAsync(uri, cancellationToken).GetAwaiter().GetResult();
+                    return schema;
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, "Failed to load JSON schema from {SchemaUri} for event type {EventType}", uri, cloudEvent.Type);
+                    throw new InvalidOperationException($"Failed to load JSON schema from {uri} for event type {cloudEvent.Type}", ex);
+                }
+            }).Validate(jsonElement.GetRawText());
+
+            if (validationErrors.Any())
+                throw new InvalidOperationException($"Failed to validate JSON schema for event type {cloudEvent.Type}");
+            return Task.CompletedTask;
+        }
+        catch (Exception exception)
+        {
+            return Task.FromException(exception);
+        }
     }
 
     private async Task<CloudEventsResult> FetchFeedPageAsync(int page, CancellationToken stoppingToken)
     {
-        // create http client with url
-        var result = await _options.FeedClient!.GetAsync(_options.FeedUrl + $"?pagina={page}", stoppingToken);
-        result.EnsureSuccessStatusCode();
+        using var response = await _options.FeedClient!.GetAsync(_options.FeedUrl + $"?pagina={page}", stoppingToken);
+        response.EnsureSuccessStatusCode();
 
-        var events = await CloudEventReader.ReadBatchAsync(await result.Content.ReadAsStreamAsync(stoppingToken), stoppingToken);
-        var xPageComplete = "X-Page-Complete";
-        return new CloudEventsResult(events, result.Headers.TryGetValues(xPageComplete, out var values) && values.FirstOrDefault()?.Equals("true", StringComparison.InvariantCultureIgnoreCase) == true);
+        await using var contentStream = await response.Content.ReadAsStreamAsync(stoppingToken);
+        var events = await CloudEventReader.ReadBatchAsync(contentStream, stoppingToken);
+
+        return new CloudEventsResult(events, response.Headers.TryGetValues(PageCompleteHeader, out var values)
+                                             && values.FirstOrDefault()?.Equals("true", StringComparison.InvariantCultureIgnoreCase) == true);
     }
 
     protected void When(BaseRegistriesCloudEventType eventType, Func<CloudEvent, CloudEventData, FeedContext, CancellationToken, Task> handler)

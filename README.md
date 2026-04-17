@@ -27,14 +27,18 @@ The new version 1.2 of the European Union Public Licence (EUPL) is published in 
 ### Libraries
 
 * [xUnit](https://github.com/xunit/xunit/blob/master/license.txt) - _xUnit.net is a free, open source, community-focused unit testing tool for the .NET Framework._ - [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
-* [Autofac](https://github.com/autofac/Autofac/blob/develop/LICENSE) - _An addictive .NET IoC container._ - [MIT](https://choosealicense.com/licenses/mit/)
 * [AutoFixture](https://github.com/AutoFixture/AutoFixture/blob/master/LICENCE.txt) - _AutoFixture is an open source library for .NET designed to minimize the 'Arrange' phase of your unit tests in order to maximize maintainability._ - [MIT](https://choosealicense.com/licenses/mit/)
 * [FluentAssertions](https://github.com/fluentassertions/fluentassertions/blob/master/LICENSE) - _Fluent API for asserting the results of unit tests._ - [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
+* [Moq](https://github.com/devlooped/moq/blob/main/License.txt) - _Moq is a friendly mocking library for .NET._ - [BSD](https://choosealicense.com/licenses/bsd-3-clause/)
 * [.NET Topology Suite](https://github.com/NetTopologySuite/NetTopologySuite/blob/develop/License.md) - _A .NET GIS solution that is fast and reliable for the .NET platform._ - [BSD](https://choosealicense.com/licenses/bsd-3-clause/)
 * [Serilog](https://github.com/serilog/serilog/blob/dev/LICENSE) - _Simple .NET logging with fully-structured events._ - [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
 * [NodaTime](https://github.com/nodatime/nodatime) - _A better date and time API for .NET._ - [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
+* [CloudNative.CloudEvents.SystemTextJson](https://github.com/cloudevents/sdk-csharp/blob/main/LICENSE) - _CloudEvents SDK for .NET._ - [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
 * [Datadog.Trace.Bundle](https://github.com/DataDog/dd-trace-dotnet) - _.NET Client Library for Datadog APM_ - [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
+* [NJsonSchema](https://github.com/RicoSuter/NJsonSchema/blob/master/LICENSE.md) - _A JSON Schema parser and validator for .NET._ - [MIT License](https://choosealicense.com/licenses/mit/)
 * [Npgsql.EntityFrameworkCore.PostgreSQL](https://github.com/npgsql/efcore.pg) - _Entity Framework Core provider for PostgreSQL_ - [PostgreSQL License](https://choosealicense.com/licenses/postgresql/)
+* [Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite](https://github.com/npgsql/efcore.pg) - _Entity Framework Core provider for PostgreSQL With NTS integration_ - [PostgreSQL License](https://choosealicense.com/licenses/postgresql/)
+* [Be.Vlaanderen.Basisregisters.Aws.DistributedMutex](https://github.com/Informatievlaanderen/aws-distributed-mutex/blob/main/LICENSE) - _A distributed mutex implementation for AWS using DynamoDB._ - [MIT](https://choosealicense.com/licenses/mit/)
 
 ### Tooling
 

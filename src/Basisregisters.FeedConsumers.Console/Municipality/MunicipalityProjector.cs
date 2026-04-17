@@ -19,8 +19,10 @@ public class MunicipalityProjector : FeedProjectorBase
     public MunicipalityProjector(
         FeedProjectorOptions options,
         IDbContextFactory<FeedContext> feedContextFactory,
+        IFeedPageFetcher feedPageFetcher,
+        IJsonSchemaValidator jsonSchemaValidator,
         ILoggerFactory loggerFactory)
-        : base(options, feedContextFactory, loggerFactory.CreateLogger<MunicipalityProjector>())
+        : base(options, feedContextFactory, feedPageFetcher, jsonSchemaValidator, loggerFactory.CreateLogger<MunicipalityProjector>())
     {
         Logger.LogInformation("Starting MunicipalityProjector");
 

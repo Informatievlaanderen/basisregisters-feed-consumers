@@ -97,11 +97,16 @@ var host = new HostBuilder()
         services.AddHostedService(provider =>
         {
             var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-            municipalityFeedOptions.FeedClient = httpClientFactory.CreateClient(municipalityFeedOptions.Name);
+            var httpClient = httpClientFactory.CreateClient(municipalityFeedOptions.Name);
+            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, municipalityFeedOptions.FeedUrl);
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
             return new MunicipalityProjector(
                 municipalityFeedOptions,
                 provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
-                provider.GetRequiredService<ILoggerFactory>());
+                feedPageFetcher,
+                jsonSchemaValidator,
+                loggerFactory);
         });
     })
     .UseConsoleLifetime()

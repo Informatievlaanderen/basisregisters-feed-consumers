@@ -99,7 +99,7 @@ public class PostalInformationProjector : FeedProjectorBase
                     break;
 
                 default:
-                    throw new InvalidOperationException($"Unknown attribute: {attribute.Naam}");
+                    throw new InvalidOperationException($"Unknown postal information attribute: {attribute.Naam}");
             }
         }
     }

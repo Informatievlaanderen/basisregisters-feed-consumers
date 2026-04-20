@@ -1,0 +1,478 @@
+[
+    {
+        "specversion": "1.0",
+        "id": "1356",
+        "time": "2020-02-10T12:42:50.6472584+01:00",
+        "type": "basisregisters.postalinformation.create.v1",
+        "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+        "datacontenttype": "application/json",
+        "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+        "basisregisterseventtype": "PostalInformationWasRegistered",
+        "basisregisterscausationid": "ccd8bca1-17f2-54a5-bca0-96b896f07e02",
+        "data": {
+            "@id": "https://data.vlaanderen.be/id/postinfo/5020",
+            "objectId": "5020",
+            "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+            "versieId": "2020-02-10T12:42:50+01:00",
+            "nisCodes": [],
+            "attributen": []
+        }
+    },
+    {
+        "specversion": "1.0",
+        "id": "1357",
+        "time": "2020-02-10T12:42:50.6472584+01:00",
+        "type": "basisregisters.postalinformation.update.v1",
+        "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+        "datacontenttype": "application/json",
+        "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+        "basisregisterseventtype": "PostalInformationWasRealized",
+        "basisregisterscausationid": "ccd8bca1-17f2-54a5-bca0-96b896f07e02",
+        "data": {
+            "@id": "https://data.vlaanderen.be/id/postinfo/5020",
+            "objectId": "5020",
+            "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+            "versieId": "2020-02-10T12:42:50+01:00",
+            "nisCodes": [],
+            "attributen": [
+                {
+                    "naam": "postInfoStatus",
+                    "oudeWaarde": null,
+                    "nieuweWaarde": "gerealiseerd"
+                }
+            ]
+        }
+    },
+    {
+        "specversion": "1.0",
+        "id": "1358",
+        "time": "2020-02-10T12:42:50.6472584+01:00",
+        "type": "basisregisters.postalinformation.update.v1",
+        "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+        "datacontenttype": "application/json",
+        "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+        "basisregisterseventtype": "PostalInformationPostalNameWasAdded",
+        "basisregisterscausationid": "ccd8bca1-17f2-54a5-bca0-96b896f07e02",
+        "data": {
+            "@id": "https://data.vlaanderen.be/id/postinfo/5020",
+            "objectId": "5020",
+            "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+            "versieId": "2020-02-10T12:42:50+01:00",
+            "nisCodes": [],
+            "attributen": [
+                {
+                    "naam": "postnamen",
+                    "oudeWaarde": [],
+                    "nieuweWaarde": [
+                        {
+                            "spelling": "Champion",
+                            "taal": "fr"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "specversion": "1.0",
+        "id": "1359",
+        "time": "2020-02-10T12:42:50.6472584+01:00",
+        "type": "basisregisters.postalinformation.update.v1",
+        "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+        "datacontenttype": "application/json",
+        "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+        "basisregisterseventtype": "PostalInformationPostalNameWasAdded",
+        "basisregisterscausationid": "ccd8bca1-17f2-54a5-bca0-96b896f07e02",
+        "data": {
+            "@id": "https://data.vlaanderen.be/id/postinfo/5020",
+            "objectId": "5020",
+            "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+            "versieId": "2020-02-10T12:42:50+01:00",
+            "nisCodes": [],
+            "attributen": [
+                {
+                    "naam": "postnamen",
+                    "oudeWaarde": [
+                        {
+                            "spelling": "Champion",
+                            "taal": "fr"
+                        }
+                    ],
+                    "nieuweWaarde": [
+                        {
+                            "spelling": "Champion",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Daussoulx",
+                            "taal": "fr"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "specversion": "1.0",
+        "id": "1360",
+        "time": "2020-02-10T12:42:50.6472584+01:00",
+        "type": "basisregisters.postalinformation.update.v1",
+        "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+        "datacontenttype": "application/json",
+        "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+        "basisregisterseventtype": "PostalInformationPostalNameWasAdded",
+        "basisregisterscausationid": "ccd8bca1-17f2-54a5-bca0-96b896f07e02",
+        "data": {
+            "@id": "https://data.vlaanderen.be/id/postinfo/5020",
+            "objectId": "5020",
+            "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+            "versieId": "2020-02-10T12:42:50+01:00",
+            "nisCodes": [],
+            "attributen": [
+                {
+                    "naam": "postnamen",
+                    "oudeWaarde": [
+                        {
+                            "spelling": "Champion",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Daussoulx",
+                            "taal": "fr"
+                        }
+                    ],
+                    "nieuweWaarde": [
+                        {
+                            "spelling": "Champion",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Daussoulx",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Flawinne",
+                            "taal": "fr"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "specversion": "1.0",
+        "id": "1361",
+        "time": "2020-02-10T12:42:50.6472584+01:00",
+        "type": "basisregisters.postalinformation.update.v1",
+        "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+        "datacontenttype": "application/json",
+        "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+        "basisregisterseventtype": "PostalInformationPostalNameWasAdded",
+        "basisregisterscausationid": "ccd8bca1-17f2-54a5-bca0-96b896f07e02",
+        "data": {
+            "@id": "https://data.vlaanderen.be/id/postinfo/5020",
+            "objectId": "5020",
+            "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+            "versieId": "2020-02-10T12:42:50+01:00",
+            "nisCodes": [],
+            "attributen": [
+                {
+                    "naam": "postnamen",
+                    "oudeWaarde": [
+                        {
+                            "spelling": "Champion",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Daussoulx",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Flawinne",
+                            "taal": "fr"
+                        }
+                    ],
+                    "nieuweWaarde": [
+                        {
+                            "spelling": "Champion",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Daussoulx",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Flawinne",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Malonne",
+                            "taal": "fr"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "specversion": "1.0",
+        "id": "1362",
+        "time": "2020-02-10T12:42:50.6472584+01:00",
+        "type": "basisregisters.postalinformation.update.v1",
+        "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+        "datacontenttype": "application/json",
+        "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+        "basisregisterseventtype": "PostalInformationPostalNameWasAdded",
+        "basisregisterscausationid": "ccd8bca1-17f2-54a5-bca0-96b896f07e02",
+        "data": {
+            "@id": "https://data.vlaanderen.be/id/postinfo/5020",
+            "objectId": "5020",
+            "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+            "versieId": "2020-02-10T12:42:50+01:00",
+            "nisCodes": [],
+            "attributen": [
+                {
+                    "naam": "postnamen",
+                    "oudeWaarde": [
+                        {
+                            "spelling": "Champion",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Daussoulx",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Flawinne",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Malonne",
+                            "taal": "fr"
+                        }
+                    ],
+                    "nieuweWaarde": [
+                        {
+                            "spelling": "Champion",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Daussoulx",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Flawinne",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Malonne",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Suarlée",
+                            "taal": "fr"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "specversion": "1.0",
+        "id": "1363",
+        "time": "2020-02-10T12:42:50.6472584+01:00",
+        "type": "basisregisters.postalinformation.update.v1",
+        "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+        "datacontenttype": "application/json",
+        "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+        "basisregisterseventtype": "PostalInformationPostalNameWasAdded",
+        "basisregisterscausationid": "ccd8bca1-17f2-54a5-bca0-96b896f07e02",
+        "data": {
+            "@id": "https://data.vlaanderen.be/id/postinfo/5020",
+            "objectId": "5020",
+            "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+            "versieId": "2020-02-10T12:42:50+01:00",
+            "nisCodes": [],
+            "attributen": [
+                {
+                    "naam": "postnamen",
+                    "oudeWaarde": [
+                        {
+                            "spelling": "Champion",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Daussoulx",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Flawinne",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Malonne",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Suarlée",
+                            "taal": "fr"
+                        }
+                    ],
+                    "nieuweWaarde": [
+                        {
+                            "spelling": "Champion",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Daussoulx",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Flawinne",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Malonne",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Suarlée",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Temploux",
+                            "taal": "fr"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "specversion": "1.0",
+        "id": "1364",
+        "time": "2020-02-10T12:42:50.6472584+01:00",
+        "type": "basisregisters.postalinformation.update.v1",
+        "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+        "datacontenttype": "application/json",
+        "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+        "basisregisterseventtype": "PostalInformationPostalNameWasAdded",
+        "basisregisterscausationid": "ccd8bca1-17f2-54a5-bca0-96b896f07e02",
+        "data": {
+            "@id": "https://data.vlaanderen.be/id/postinfo/5020",
+            "objectId": "5020",
+            "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+            "versieId": "2020-02-10T12:42:50+01:00",
+            "nisCodes": [],
+            "attributen": [
+                {
+                    "naam": "postnamen",
+                    "oudeWaarde": [
+                        {
+                            "spelling": "Champion",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Daussoulx",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Flawinne",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Malonne",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Suarlée",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Temploux",
+                            "taal": "fr"
+                        }
+                    ],
+                    "nieuweWaarde": [
+                        {
+                            "spelling": "Champion",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Daussoulx",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Flawinne",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Malonne",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Suarlée",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Temploux",
+                            "taal": "fr"
+                        },
+                        {
+                            "spelling": "Vedrin",
+                            "taal": "fr"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "specversion": "1.0",
+        "id": "5874",
+        "time": "2020-02-10T12:44:14.6895759+01:00",
+        "type": "basisregisters.postalinformation.update.v1",
+        "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+        "datacontenttype": "application/json",
+        "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+        "basisregisterseventtype": "MunicipalityWasAttached",
+        "basisregisterscausationid": "e5065967-787e-587a-ad16-ba192f9191f4",
+        "data": {
+            "@id": "https://data.vlaanderen.be/id/postinfo/5020",
+            "objectId": "5020",
+            "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+            "versieId": "2020-02-10T12:44:14+01:00",
+            "nisCodes": [
+                "92094"
+            ],
+            "attributen": [
+                {
+                    "naam": "gemeente.id",
+                    "oudeWaarde": null,
+                    "nieuweWaarde": "https://data.vlaanderen.be/id/gemeente/92094"
+                }
+            ]
+        }
+    },
+    {
+        "specversion": "1.0",
+        "id": "6730",
+        "time": "2025-09-16T13:50:15.2775626+02:00",
+        "type": "basisregisters.postalinformation.delete.v1",
+        "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+        "datacontenttype": "application/json",
+        "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+        "basisregisterseventtype": "PostalInformationWasRemoved",
+        "basisregisterscausationid": "bfa74ee0-9f6a-5eb3-972c-576037c8c328",
+        "data": {
+            "@id": "https://data.vlaanderen.be/id/postinfo/5020",
+            "objectId": "5020",
+            "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+            "versieId": "2025-09-16T13:50:15+02:00",
+            "nisCodes": [
+                "92094"
+            ],
+            "attributen": []
+        }
+    }
+]

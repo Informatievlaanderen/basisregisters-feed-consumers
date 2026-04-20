@@ -61,6 +61,7 @@ public sealed class MunicipalityConfiguration : IEntityTypeConfiguration<Municip
 
         builder.Property(x => x.NisCode)
             .HasColumnName("nis_code")
+            .HasMaxLength(5)
             .IsRequired();
 
         builder.Property(x => x.Status)

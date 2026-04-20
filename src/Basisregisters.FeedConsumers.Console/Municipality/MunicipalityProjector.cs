@@ -70,6 +70,7 @@ public class MunicipalityProjector : FeedProjectorBase
 
     private static void ProcessMunicipalityAttributes(CloudEventData data, Municipality municipality)
     {
+        municipality.VersionId = data.VersieId;
         foreach (var attribute in data.Attributen)
         {
             switch (attribute.Naam)

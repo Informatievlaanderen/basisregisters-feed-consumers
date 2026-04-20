@@ -1,5 +1,6 @@
 namespace Basisregisters.FeedConsumers.Test;
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -19,8 +20,8 @@ public class PostalInformationProjectorTests
     private readonly FakeFeedPageFetcher _feedPageFetcher;
     private readonly PostalInformationProjector _projector;
 
-    private const string PuriPostalInfo9000 = "https://data.vlaanderen.be/id/postinfo/9000";
-    private const string PuriPostalInfo1000 = "https://data.vlaanderen.be/id/postinfo/1000";
+    private const string PuriPostalInfo9050 = "https://data.vlaanderen.be/id/postinfo/9050";
+    private const string PuriPostalInfo5020 = "https://data.vlaanderen.be/id/postinfo/5020";
     private const string PostalInformationFeedName = "PostalInformationFeed";
 
     public PostalInformationProjectorTests()
@@ -50,7 +51,7 @@ public class PostalInformationProjectorTests
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "postalinformation-create-update.json"));
 
-        var createEvents = events.Where(e => e.Id == "100").ToList();
+        var createEvents = events.Where(e => e.Id == "3596").ToList();
         _feedPageFetcher.SetupPage(1, createEvents.ToFeedPage(isPageComplete: false));
 
         using var cts = new CancellationTokenSource();
@@ -60,24 +61,24 @@ public class PostalInformationProjectorTests
 
         await using var context = _contextFactory.CreateDbContext();
 
-        var postalInformation = await context.PostalInformations.FindAsync([PuriPostalInfo9000], TestContext.Current.CancellationToken);
+        var postalInformation = await context.PostalInformations.FindAsync([PuriPostalInfo9050], TestContext.Current.CancellationToken);
 
         postalInformation.Should().NotBeNull();
-        postalInformation!.PostalCode.Should().Be("9000");
+        postalInformation!.PostalCode.Should().Be("9050");
         postalInformation.Status.Should().Be(PostalInformationStatus.Realized);
         postalInformation.NisCode.Should().BeNull();
         postalInformation.IsRemoved.Should().BeFalse();
     }
 
     [Fact]
-    public async Task CreateAndUpdateEvents_ShouldApplyMunicipalityAndNames()
+    public async Task CreateAndUpdateEvents_ShouldApplyStatusAndNames()
     {
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "postalinformation-create-update.json"));
 
-        // Take create + municipality + first naming events (ids 100-102)
+        // Take create + status + first naming + second naming events (ids 3596-3601)
         var relevantEvents = events
-            .Where(e => long.Parse(e.Id!) <= 102)
+            .Where(e => long.Parse(e.Id!) <= 3601)
             .ToList();
         _feedPageFetcher.SetupPage(1, relevantEvents.ToFeedPage(isPageComplete: false));
 
@@ -89,14 +90,15 @@ public class PostalInformationProjectorTests
         await using var context = _contextFactory.CreateDbContext();
         var postalInformation = await context.PostalInformations
             .Include(p => p.PostalNames)
-            .FirstOrDefaultAsync(p => p.PersistentUri == PuriPostalInfo9000, TestContext.Current.CancellationToken);
+            .FirstOrDefaultAsync(p => p.PersistentUri == PuriPostalInfo9050, TestContext.Current.CancellationToken);
 
         postalInformation.Should().NotBeNull();
-        postalInformation!.PostalCode.Should().Be("9000");
-        postalInformation.NisCode.Should().Be("44021");
+        postalInformation!.PostalCode.Should().Be("9050");
+        postalInformation.NisCode.Should().BeNull();
         postalInformation.Status.Should().Be(PostalInformationStatus.Realized);
-        postalInformation.PostalNames.Should().HaveCount(1);
-        postalInformation.PostalNames.Should().Contain(n => n.Name == "Gent" && n.Language == Language.Nl);
+        postalInformation.PostalNames.Should().HaveCount(2);
+        postalInformation.PostalNames.Should().Contain(n => n.Name == "Gentbrugge" && n.Language == Language.Nl);
+        postalInformation.PostalNames.Should().Contain(n => n.Name == "Ledeberg" && n.Language == Language.Nl);
         postalInformation.IsRemoved.Should().BeFalse();
     }
 
@@ -106,11 +108,8 @@ public class PostalInformationProjectorTests
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "postalinformation-create-update.json"));
 
-        // Take create + municipality + both naming events (ids 100-103)
-        var relevantEvents = events
-            .Where(e => long.Parse(e.Id!) <= 103)
-            .ToList();
-        _feedPageFetcher.SetupPage(1, relevantEvents.ToFeedPage(isPageComplete: false));
+        // Take all events
+        _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: false));
 
         using var cts = new CancellationTokenSource();
         cts.CancelAfter(5000);
@@ -120,16 +119,16 @@ public class PostalInformationProjectorTests
         await using var context = _contextFactory.CreateDbContext();
         var postalInformation = await context.PostalInformations
             .Include(p => p.PostalNames)
-            .FirstOrDefaultAsync(p => p.PersistentUri == PuriPostalInfo9000, TestContext.Current.CancellationToken);
+            .FirstOrDefaultAsync(p => p.PersistentUri == PuriPostalInfo9050, TestContext.Current.CancellationToken);
 
         postalInformation.Should().NotBeNull();
         postalInformation!.PostalNames.Should().HaveCount(2);
-        postalInformation.PostalNames.Should().Contain(n => n.Name == "Gent" && n.Language == Language.Nl);
-        postalInformation.PostalNames.Should().Contain(n => n.Name == "Gand" && n.Language == Language.Fr);
+        postalInformation.PostalNames.Should().Contain(n => n.Name == "Gentbrugge" && n.Language == Language.Nl);
+        postalInformation.PostalNames.Should().Contain(n => n.Name == "Ledeberg" && n.Language == Language.Nl);
     }
 
     [Fact]
-    public async Task FullCreateUpdateSequence_ShouldResultInRetiredPostalInformation()
+    public async Task FullCreateUpdateSequence_ShouldResultInPostalInformationWithMunicipality()
     {
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "postalinformation-create-update.json"));
@@ -144,16 +143,18 @@ public class PostalInformationProjectorTests
         await using var context = _contextFactory.CreateDbContext();
         var postalInformation = await context.PostalInformations
             .Include(p => p.PostalNames)
-            .FirstOrDefaultAsync(p => p.PersistentUri == PuriPostalInfo9000, TestContext.Current.CancellationToken);
+            .FirstOrDefaultAsync(p => p.PersistentUri == PuriPostalInfo9050, TestContext.Current.CancellationToken);
 
         postalInformation.Should().NotBeNull();
-        postalInformation!.PostalCode.Should().Be("9000");
+        postalInformation!.PostalCode.Should().Be("9050");
         postalInformation.NisCode.Should().Be("44021");
-        postalInformation.Status.Should().Be(PostalInformationStatus.Retired);
+        postalInformation.Status.Should().Be(PostalInformationStatus.Realized);
         postalInformation.PostalNames.Should().HaveCount(2);
-        postalInformation.PostalNames.Should().Contain(n => n.Name == "Gent" && n.Language == Language.Nl);
-        postalInformation.PostalNames.Should().Contain(n => n.Name == "Gand" && n.Language == Language.Fr);
+        postalInformation.PostalNames.Should().Contain(n => n.Name == "Gentbrugge" && n.Language == Language.Nl);
+        postalInformation.PostalNames.Should().Contain(n => n.Name == "Ledeberg" && n.Language == Language.Nl);
         postalInformation.IsRemoved.Should().BeFalse();
+        //2020-02-10T12:44:14+01:00
+        postalInformation.VersionId.Should().BeCloseTo(new DateTimeOffset(2020, 2, 10, 12, 44, 14, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
     }
 
     [Fact]
@@ -170,7 +171,7 @@ public class PostalInformationProjectorTests
         await RunOneCycleAsync(cts.Token);
 
         await using var context = _contextFactory.CreateDbContext();
-        var postalInformation = await context.PostalInformations.FindAsync([PuriPostalInfo1000], TestContext.Current.CancellationToken);
+        var postalInformation = await context.PostalInformations.FindAsync([PuriPostalInfo5020], TestContext.Current.CancellationToken);
 
         postalInformation.Should().NotBeNull();
         postalInformation!.IsRemoved.Should().BeTrue();
@@ -192,15 +193,20 @@ public class PostalInformationProjectorTests
         await using var context = _contextFactory.CreateDbContext();
         var postalInformation = await context.PostalInformations
             .Include(p => p.PostalNames)
-            .FirstOrDefaultAsync(p => p.PersistentUri == PuriPostalInfo1000, TestContext.Current.CancellationToken);
+            .FirstOrDefaultAsync(p => p.PersistentUri == PuriPostalInfo5020, TestContext.Current.CancellationToken);
 
         postalInformation.Should().NotBeNull();
-        postalInformation!.PostalCode.Should().Be("1000");
-        postalInformation.NisCode.Should().Be("21004");
+        postalInformation!.PostalCode.Should().Be("5020");
+        postalInformation.NisCode.Should().Be("92094");
         postalInformation.Status.Should().Be(PostalInformationStatus.Realized);
-        postalInformation.PostalNames.Should().HaveCount(2);
-        postalInformation.PostalNames.Should().Contain(n => n.Name == "Brussel" && n.Language == Language.Nl);
-        postalInformation.PostalNames.Should().Contain(n => n.Name == "Bruxelles" && n.Language == Language.Fr);
+        postalInformation.PostalNames.Should().HaveCount(7);
+        postalInformation.PostalNames.Should().Contain(n => n.Name == "Champion" && n.Language == Language.Fr);
+        postalInformation.PostalNames.Should().Contain(n => n.Name == "Daussoulx" && n.Language == Language.Fr);
+        postalInformation.PostalNames.Should().Contain(n => n.Name == "Flawinne" && n.Language == Language.Fr);
+        postalInformation.PostalNames.Should().Contain(n => n.Name == "Malonne" && n.Language == Language.Fr);
+        postalInformation.PostalNames.Should().Contain(n => n.Name == "Suarlée" && n.Language == Language.Fr);
+        postalInformation.PostalNames.Should().Contain(n => n.Name == "Temploux" && n.Language == Language.Fr);
+        postalInformation.PostalNames.Should().Contain(n => n.Name == "Vedrin" && n.Language == Language.Fr);
         postalInformation.IsRemoved.Should().BeTrue();
     }
 
@@ -210,11 +216,8 @@ public class PostalInformationProjectorTests
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "postalinformation-create-update.json"));
 
-        // Take create + municipality attachment (ids 100-101)
-        var relevantEvents = events
-            .Where(e => long.Parse(e.Id!) <= 101)
-            .ToList();
-        _feedPageFetcher.SetupPage(1, relevantEvents.ToFeedPage(isPageComplete: false));
+        // Take all events including municipality attachment
+        _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: false));
 
         using var cts = new CancellationTokenSource();
         cts.CancelAfter(5000);
@@ -222,7 +225,7 @@ public class PostalInformationProjectorTests
         await RunOneCycleAsync(cts.Token);
 
         await using var context = _contextFactory.CreateDbContext();
-        var postalInformation = await context.PostalInformations.FindAsync([PuriPostalInfo9000], TestContext.Current.CancellationToken);
+        var postalInformation = await context.PostalInformations.FindAsync([PuriPostalInfo9050], TestContext.Current.CancellationToken);
 
         postalInformation.Should().NotBeNull();
         // NIS code should be extracted from "https://data.vlaanderen.be/id/gemeente/44021"
@@ -246,8 +249,8 @@ public class PostalInformationProjectorTests
         var feedState = await context.FeedStates.FindAsync([PostalInformationFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        // Highest event id in the file is 104
-        feedState!.EventPosition.Should().Be(104);
+        // Highest event id in the file is 6243
+        feedState!.EventPosition.Should().Be(6243);
         // Page not complete, should remain 1
         feedState.Page.Should().Be(1);
     }
@@ -269,7 +272,7 @@ public class PostalInformationProjectorTests
         var feedState = await context.FeedStates.FindAsync([PostalInformationFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(104);
+        feedState!.EventPosition.Should().Be(6243);
         // Page was marked complete, should advance to 2
         feedState.Page.Should().Be(2);
     }

@@ -76,6 +76,7 @@ public sealed class PostalInformationConfiguration : IEntityTypeConfiguration<Po
             .HasColumnName("postal_code");
 
         builder.Property(p => p.NisCode)
+            .HasMaxLength(5)
             .HasColumnName("nis_code");
 
         builder.Property(x => x.Status)
@@ -85,6 +86,7 @@ public sealed class PostalInformationConfiguration : IEntityTypeConfiguration<Po
 
         builder.HasMany(p => p.PostalNames)
             .WithOne()
+            .HasPrincipalKey(p => p.PostalCode)
             .HasForeignKey(p => p.PostalCode);
 
         builder.Property(x => x.VersionId)
@@ -93,6 +95,13 @@ public sealed class PostalInformationConfiguration : IEntityTypeConfiguration<Po
                 v => v.ToUniversalTime(),
                 v => v.ToUniversalTime())
             .IsRequired();
+
+        builder.Property(x => x.IsRemoved)
+            .HasColumnName("is_removed")
+            .IsRequired();
+
+        builder.HasIndex(x => x.PostalCode)
+            .IsUnique();
 
         builder.HasIndex(x => x.NisCode);
     }

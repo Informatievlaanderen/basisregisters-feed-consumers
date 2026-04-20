@@ -2,8 +2,8 @@ namespace Basisregisters.FeedConsumers.Console.PostalInformation;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -28,11 +28,16 @@ public class PostalInformationProjector : FeedProjectorBase
         When(CreateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
+            var statusAttribute = data.Attributen.FirstOrDefault(a => a.Naam == PostalInformationAttributes.Status);
+            var status = statusAttribute is not null
+                ? MapStatus(statusAttribute.NieuweWaarde.ToString()!)
+                : PostalInformationStatus.Realized;
+
             var postalInformation = new PostalInformation(
                 data.Id.ToString(),
                 data.ObjectId,
                 null,
-                MapStatus(data.Attributen.GetRequired(PostalInformationAttributes.Status).NieuweWaarde.ToString()!),
+                status,
                 data.VersieId);
 
             ProcessPostalInformationAttributes(data, postalInformation);
@@ -65,6 +70,7 @@ public class PostalInformationProjector : FeedProjectorBase
 
     private static void ProcessPostalInformationAttributes(CloudEventData data, PostalInformation postalInformation)
     {
+        postalInformation.VersionId = data.VersieId;
         foreach (var attribute in data.Attributen)
         {
             switch (attribute.Naam)
@@ -114,7 +120,7 @@ public class PostalInformationProjector : FeedProjectorBase
 
     private static Language MapLanguage(string language)
     {
-        return language switch
+        return language.ToLowerInvariant() switch
         {
             "nl" => Language.Nl,
             "fr" => Language.Fr,

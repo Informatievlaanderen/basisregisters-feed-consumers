@@ -1,5 +1,6 @@
 namespace Basisregisters.FeedConsumers.Test;
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -98,6 +99,8 @@ public class MunicipalityProjectorTests
         municipality.OfficialLanguageEnglish.Should().BeFalse();
         municipality.NameDutch.Should().Be("Hasselt");
         municipality.IsRemoved.Should().BeFalse();
+        //2002-08-13T16:33:18+02:00
+        municipality.VersionId.Should().BeCloseTo(new DateTimeOffset(2002, 08, 13, 16, 33, 18, TimeSpan.FromHours(2)), TimeSpan.FromSeconds(1));
     }
 
     [Fact]
@@ -143,6 +146,8 @@ public class MunicipalityProjectorTests
         municipality.OfficialLanguageDutch.Should().BeTrue();
         municipality.NameDutch.Should().Be("Hasselt");
         municipality.IsRemoved.Should().BeFalse();
+        //2025-01-01T01:04:15+01:00
+        municipality.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 01, 01, 01, 04, 15, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
     }
 
     [Fact]

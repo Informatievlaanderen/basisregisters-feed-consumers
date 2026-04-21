@@ -38,7 +38,7 @@ public sealed class StreetName
     }
 }
 
-public sealed class StreetNameLatestItemConfiguration : IEntityTypeConfiguration<StreetName>
+public sealed class StreetNameConfiguration : IEntityTypeConfiguration<StreetName>
 {
     internal const string TableName = "streetnames";
 

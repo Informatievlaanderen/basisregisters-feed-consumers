@@ -2,6 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+<<<<<<< HEAD
+=======
+using System.Linq;
+>>>>>>> 0494f61 (feat: complete StreetNameProjector with event handlers and tests)
 using System.Text.Json;
 using System.Threading.Tasks;
 using Common;

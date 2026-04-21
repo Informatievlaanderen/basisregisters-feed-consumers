@@ -1,0 +1,186 @@
+﻿[
+  {
+    "specversion": "1.0",
+    "id": "4419551",
+    "time": "2024-11-28T10:17:18.502694+01:00",
+    "type": "basisregisters.address.create.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
+    "basisregisterseventtype": "AddressWasProposedBecauseOfReaddress",
+    "basisregisterscausationid": "11fb97aa-c146-590d-8738-549e2326fb79",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/adres/30411696",
+      "objectId": "30411696",
+      "naamruimte": "https://data.vlaanderen.be/id/adres",
+      "versieId": "2024-11-28T10:17:18+01:00",
+      "nisCodes": [
+        "46003"
+      ],
+      "attributen": [
+        {
+          "naam": "straatnaam.id",
+          "oudeWaarde": null,
+          "nieuweWaarde": "https://data.vlaanderen.be/id/straatnaam/76256"
+        },
+        {
+          "naam": "adresStatus",
+          "oudeWaarde": null,
+          "nieuweWaarde": "voorgesteld"
+        },
+        {
+          "naam": "huisnummer",
+          "oudeWaarde": null,
+          "nieuweWaarde": "30"
+        },
+        {
+          "naam": "postcode",
+          "oudeWaarde": null,
+          "nieuweWaarde": "9120"
+        },
+        {
+          "naam": "officieelToegekend",
+          "oudeWaarde": null,
+          "nieuweWaarde": true
+        },
+        {
+          "naam": "positieGeometrieMethode",
+          "oudeWaarde": null,
+          "nieuweWaarde": "aangeduidDoorBeheerder"
+        },
+        {
+          "naam": "positieSpecificatie",
+          "oudeWaarde": null,
+          "nieuweWaarde": "gebouweenheid"
+        },
+        {
+          "naam": "adresPositie",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>143791.29 211105.94</gml:pos></gml:Point>"
+            },
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>643786.19 711105.37</gml:pos></gml:Point>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "4419555",
+    "time": "2024-11-28T10:17:18.502694+01:00",
+    "type": "basisregisters.address.transform.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres-transform.json",
+    "basisregisterseventtype": "StreetNameWasReaddressed",
+    "basisregisterscausationid": "11fb97aa-c146-590d-8738-549e2326fb79",
+    "data": {
+      "transformaties": [
+        {
+          "vanId": "963208",
+          "naarId": "30411696"
+        },
+        {
+          "vanId": "1767836",
+          "naarId": "30411697"
+        },
+        {
+          "vanId": "1067347",
+          "naarId": "30411698"
+        },
+        {
+          "vanId": "975377",
+          "naarId": "30411699"
+        }
+      ],
+      "nisCodes": [
+        "46003"
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "4419556",
+    "time": "2024-11-28T10:17:18.502694+01:00",
+    "type": "basisregisters.address.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
+    "basisregisterseventtype": "StreetNameWasReaddressed",
+    "basisregisterscausationid": "11fb97aa-c146-590d-8738-549e2326fb79",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/adres/30411696",
+      "objectId": "30411696",
+      "naamruimte": "https://data.vlaanderen.be/id/adres",
+      "versieId": "2024-11-28T10:17:18+01:00",
+      "nisCodes": [
+        "46003"
+      ],
+      "attributen": [
+        {
+          "naam": "adresStatus",
+          "oudeWaarde": "voorgesteld",
+          "nieuweWaarde": "inGebruik"
+        }
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "5086475",
+    "time": "2025-01-01T01:18:19.0988512+01:00",
+    "type": "basisregisters.address.transform.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres-transform.json",
+    "basisregisterseventtype": "AddressWasRetiredBecauseOfMunicipalityMerger",
+    "basisregisterscausationid": "654ec33c-e82e-5772-af1c-14a9a9f6712a",
+    "data": {
+      "transformaties": [
+        {
+          "vanId": "30411696",
+          "naarId": "31295628"
+        }
+      ],
+      "nisCodes": [
+        "46003",
+        "46030"
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "5086476",
+    "time": "2025-01-01T01:18:19.0988512+01:00",
+    "type": "basisregisters.address.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
+    "basisregisterseventtype": "AddressWasRetiredBecauseOfMunicipalityMerger",
+    "basisregisterscausationid": "654ec33c-e82e-5772-af1c-14a9a9f6712a",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/adres/30411696",
+      "objectId": "30411696",
+      "naamruimte": "https://data.vlaanderen.be/id/adres",
+      "versieId": "2025-01-01T01:18:19+01:00",
+      "nisCodes": [
+        "46003"
+      ],
+      "attributen": [
+        {
+          "naam": "adresStatus",
+          "oudeWaarde": "inGebruik",
+          "nieuweWaarde": "gehistoreerd"
+        }
+      ]
+    }
+  }
+]

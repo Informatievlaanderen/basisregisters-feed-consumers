@@ -7,6 +7,7 @@ using Basisregisters.FeedConsumers;
 using Basisregisters.FeedConsumers.Console.Common;
 using Basisregisters.FeedConsumers.Console.Municipality;
 using Basisregisters.FeedConsumers.Console.PostalInformation;
+using Basisregisters.FeedConsumers.Console.StreetName;
 using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -90,6 +91,17 @@ var host = new HostBuilder()
                 hostContext.Configuration.GetValue<bool>("PostalInformationFeed:IgnoreNoEventHandlers", false)
         };
 
+        var streetNameFeedOptions = new FeedProjectorOptions
+        {
+            Name = hostContext.Configuration["StreetNameFeed:Name"] ?? "StreetNameFeed",
+            FeedUrl = hostContext.Configuration["StreetNameFeed:FeedUrl"] ??
+                      throw new ArgumentNullException("StreetNameFeed:FeedUrl"),
+            PollingIntervalInMinutes =
+                hostContext.Configuration.GetValue<int>("StreetNameFeed:PollingIntervalInMinutes", 1440),
+            IgnoreNoEventHandlers =
+                hostContext.Configuration.GetValue<bool>("StreetNameFeed:IgnoreNoEventHandlers", false)
+        };
+
         services.AddDbContextFactory<FeedContext>((provider, options) =>
         {
             options.UseLoggerFactory(provider.GetRequiredService<ILoggerFactory>());
@@ -107,6 +119,12 @@ var host = new HostBuilder()
         });
 
         services.AddHttpClient(postalInformationFeedOptions.Name, client =>
+        {
+            client.BaseAddress = new Uri(baseUrl);
+            client.DefaultRequestHeaders.Add("x-api-key", apiKey);
+        });
+
+        services.AddHttpClient(streetNameFeedOptions.Name, client =>
         {
             client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Add("x-api-key", apiKey);
@@ -136,6 +154,21 @@ var host = new HostBuilder()
             var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
             return new PostalInformationProjector(
                 postalInformationFeedOptions,
+                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+                feedPageFetcher,
+                jsonSchemaValidator,
+                loggerFactory);
+        });
+
+        services.AddHostedService(provider =>
+        {
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient(streetNameFeedOptions.Name);
+            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, streetNameFeedOptions.FeedUrl);
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            return new StreetNameProjector(
+                streetNameFeedOptions,
                 provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
                 feedPageFetcher,
                 jsonSchemaValidator,

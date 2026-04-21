@@ -55,7 +55,9 @@ public sealed class StreetNameLatestItemConfiguration : IEntityTypeConfiguration
             .IsRequired()
             .HasColumnName("persistent_local_id");
 
-        builder.Property(x => x.NisCode).HasColumnName("nis_code");
+        builder.Property(x => x.NisCode)
+            .HasMaxLength(5)
+            .HasColumnName("nis_code");
 
         builder.Property(x => x.Status)
             .HasConversion<string>()

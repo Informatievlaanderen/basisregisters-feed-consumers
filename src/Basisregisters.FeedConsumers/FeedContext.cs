@@ -11,6 +11,7 @@ public class FeedContext : DbContext
     public DbSet<FeedState> FeedStates => Set<FeedState>();
     public DbSet<Municipality> Municipalities => Set<Municipality>();
     public DbSet<PostalInformation> PostalInformations => Set<PostalInformation>();
+    public DbSet<StreetName> StreetNames => Set<StreetName>();
 
     public FeedContext(DbContextOptions<FeedContext> options) : base(options) { }
 

@@ -1,0 +1,112 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "159199",
+    "time": "2023-11-01T09:17:44.3001846+01:00",
+    "type": "basisregisters.streetname.create.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/straatnamen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/straatnaam/2026-01-21/straatnaam.json",
+    "basisregisterseventtype": "StreetNameWasMigratedToMunicipality",
+    "basisregisterscausationid": "b93bc5b7-43fe-570a-9d2a-17bd2e5a2189",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/straatnaam/227570",
+      "objectId": "227570",
+      "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
+      "versieId": "2023-11-01T09:17:44+01:00",
+      "nisCodes": [
+        "44083"
+      ],
+      "attributen": [
+        {
+          "naam": "gemeente.id",
+          "oudeWaarde": null,
+          "nieuweWaarde": "https://data.vlaanderen.be/id/gemeente/44083"
+        },
+        {
+          "naam": "straatnaamStatus",
+          "oudeWaarde": null,
+          "nieuweWaarde": "voorgesteld"
+        },
+        {
+          "naam": "straatnamen",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            {
+              "spelling": "Kouterslag",
+              "taal": "nl"
+            }
+          ]
+        },
+        {
+          "naam": "homoniemToevoegingen",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            {
+              "spelling": "zij",
+              "taal": "nl"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "159617",
+    "time": "2024-02-15T15:45:33.5552549+01:00",
+    "type": "basisregisters.streetname.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/straatnamen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/straatnaam/2026-01-21/straatnaam.json",
+    "basisregisterseventtype": "StreetNameNamesWereCorrected",
+    "basisregisterscausationid": "0eb58af2-a311-58b0-a61b-d1ef3112b465",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/straatnaam/227570",
+      "objectId": "227570",
+      "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
+      "versieId": "2024-02-15T15:45:33+01:00",
+      "nisCodes": [
+        "44083"
+      ],
+      "attributen": [
+        {
+          "naam": "straatnamen",
+          "oudeWaarde": [
+            {
+              "spelling": "Kouterslag",
+              "taal": "nl"
+            }
+          ],
+          "nieuweWaarde": [
+            {
+              "spelling": "Kouterslag_zij",
+              "taal": "nl"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "159919",
+    "time": "2024-06-12T10:58:52.4579049+02:00",
+    "type": "basisregisters.streetname.delete.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/straatnamen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/straatnaam/2026-01-21/straatnaam.json",
+    "basisregisterseventtype": "StreetNameWasRemovedV2",
+    "basisregisterscausationid": "254f6cb5-751e-5e1f-b630-28e1ed24fc9e",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/straatnaam/227570",
+      "objectId": "227570",
+      "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
+      "versieId": "2024-06-12T10:58:52+02:00",
+      "nisCodes": [
+        "44083"
+      ],
+      "attributen": []
+    }
+  }
+]

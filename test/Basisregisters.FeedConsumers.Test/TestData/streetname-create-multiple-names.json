@@ -1,0 +1,48 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "18764",
+    "time": "2023-11-01T08:23:50.5552808+01:00",
+    "type": "basisregisters.streetname.create.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/straatnamen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/straatnaam/2026-01-21/straatnaam.json",
+    "basisregisterseventtype": "StreetNameWasMigratedToMunicipality",
+    "basisregisterscausationid": "1a68eb1f-f521-5c7f-8e4c-d63895198d53",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/straatnaam/18618",
+      "objectId": "18618",
+      "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
+      "versieId": "2023-11-01T08:23:50+01:00",
+      "nisCodes": [
+        "21001"
+      ],
+      "attributen": [
+        {
+          "naam": "gemeente.id",
+          "oudeWaarde": null,
+          "nieuweWaarde": "https://data.vlaanderen.be/id/gemeente/21001"
+        },
+        {
+          "naam": "straatnaamStatus",
+          "oudeWaarde": null,
+          "nieuweWaarde": "inGebruik"
+        },
+        {
+          "naam": "straatnamen",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            {
+              "spelling": "Aakaai",
+              "taal": "nl"
+            },
+            {
+              "spelling": "Quai d'Aa",
+              "taal": "fr"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

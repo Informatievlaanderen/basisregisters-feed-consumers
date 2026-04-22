@@ -36,12 +36,6 @@ public sealed class PostalInformation
     }
 }
 
-public enum PostalInformationStatus
-{
-    Realized,
-    Retired
-}
-
 public sealed class PostalInformationName
 {
     public Guid Id { get; set; }

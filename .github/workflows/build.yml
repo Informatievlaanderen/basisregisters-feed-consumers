@@ -87,7 +87,7 @@ jobs:
 
     - name: Test
       shell: bash
-      run: dotCover cover --xml-report-output=dotCover.Output.xml -- test --nologo --no-build --filter 'FullyQualifiedName!~IntegrationTests' Basisregisters.FeedConsumers.sln
+      run: dotCover cover --target-working-directory . --xml-report-output=dotCover.Output.xml -- test --nologo --no-build --filter 'FullyQualifiedName!~IntegrationTests' Basisregisters.FeedConsumers.sln
 
     - name: Sonar end build & analyze
       env:

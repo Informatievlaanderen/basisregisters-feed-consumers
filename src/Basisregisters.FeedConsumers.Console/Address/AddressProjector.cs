@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging;
 using Model;
 using NetTopologySuite.IO.GML2;
 using Geometry = NetTopologySuite.Geometries.Geometry;

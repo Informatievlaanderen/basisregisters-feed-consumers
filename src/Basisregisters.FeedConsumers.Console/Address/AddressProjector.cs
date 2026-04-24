@@ -1,8 +1,13 @@
-﻿namespace Basisregisters.FeedConsumers.Console.Address;
+namespace Basisregisters.FeedConsumers.Console.Address;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 using Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging;
 using Model;
 using NetTopologySuite.IO.GML2;
@@ -10,6 +15,11 @@ using Geometry = NetTopologySuite.Geometries.Geometry;
 
 public sealed class AddressProjector : FeedProjectorBase
 {
+    public static readonly BaseRegistriesCloudEventType CreateEvent = new("basisregisters.address.create.v1");
+    public static readonly BaseRegistriesCloudEventType UpdateEvent = new("basisregisters.address.update.v1");
+    public static readonly BaseRegistriesCloudEventType DeleteEvent = new("basisregisters.address.delete.v1");
+    public static readonly BaseRegistriesCloudEventType TransformEvent = new("basisregisters.address.transform.v1");
+
     private readonly GMLReader _gmlReader = GmlReaderFactory.CreateLambert2008GmlReader();
 
     public AddressProjector(
@@ -17,9 +27,118 @@ public sealed class AddressProjector : FeedProjectorBase
         IDbContextFactory<FeedContext> feedContextFactory,
         IFeedPageFetcher feedPageFetcher,
         IJsonSchemaValidator jsonSchemaValidator,
-        ILogger logger)
-        : base(options, feedContextFactory, feedPageFetcher, jsonSchemaValidator, logger)
-    { }
+        ILoggerFactory loggerFactory)
+        : base(options, feedContextFactory, feedPageFetcher, jsonSchemaValidator, loggerFactory.CreateLogger<AddressProjector>())
+    {
+        Logger.LogInformation("Starting AddressProjector");
+
+        When(CreateEvent, async (cloudEvent, data, context, cancellationToken) =>
+        {
+            Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
+            var address = new Address
+            {
+                PersistentUri = data.Id.ToString(),
+                PersistentLocalId = int.Parse(data.ObjectId),
+                StreetNamePersistentLocalId = ExtractPersistentLocalId(data.Attributen.GetRequired(AddressAttributes.StreetNameId).NieuweWaarde.ToString()!),
+                Status = MapStatus(data.Attributen.GetRequired(AddressAttributes.Status).NieuweWaarde.ToString()!),
+                HouseNumber = data.Attributen.GetRequired(AddressAttributes.HouseNumber).NieuweWaarde.ToString()!,
+                PostalCode = data.Attributen.GetRequired(AddressAttributes.PostalCode).NieuweWaarde.ToString()!,
+                OfficiallyAssigned = MapBoolean(data.Attributen.GetRequired(AddressAttributes.OfficiallyAssigned).NieuweWaarde),
+                PositionMethod = MapGeometryMethod(data.Attributen.GetRequired(AddressAttributes.PositionGeometryMethod).NieuweWaarde.ToString()!),
+                PositionSpecification = MapPositionSpecification(data.Attributen.GetRequired(AddressAttributes.PositionSpecification).NieuweWaarde.ToString()!),
+                IsRemoved = false,
+                VersionId = data.VersieId
+            };
+
+            ProcessAddressAttributes(data, address);
+
+            await context.Addresses.AddAsync(address, cancellationToken);
+        });
+
+        When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>
+        {
+            Logger.LogInformation("Processing update event: {EventId}", cloudEvent.Id);
+            var address = await context.Addresses.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            if (address == null)
+                throw new InvalidOperationException($"Address {data.Id} not found");
+
+            ProcessAddressAttributes(data, address);
+        });
+
+        When(DeleteEvent, async (cloudEvent, data, context, cancellationToken) =>
+        {
+            Logger.LogInformation("Processing delete event: {EventId}", cloudEvent.Id);
+            var address = await context.Addresses.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            if (address == null)
+                throw new InvalidOperationException($"Address {data.Id} not found");
+
+            address.IsRemoved = true;
+        });
+
+        When(TransformEvent, (_, _, _, _) =>
+        {
+            Logger.LogInformation("Ignoring transform event");
+            return Task.CompletedTask;
+        });
+    }
+
+    private void ProcessAddressAttributes(CloudEventData data, Address address)
+    {
+        address.VersionId = data.VersieId;
+        foreach (var attribute in data.Attributen)
+        {
+            switch (attribute.Naam)
+            {
+                case AddressAttributes.Status:
+                    address.Status = MapStatus(attribute.NieuweWaarde.ToString()!);
+                    break;
+
+                case AddressAttributes.StreetNameId:
+                    address.StreetNamePersistentLocalId = ExtractPersistentLocalId(attribute.NieuweWaarde.ToString()!);
+                    break;
+
+                case AddressAttributes.HouseNumber:
+                    address.HouseNumber = attribute.NieuweWaarde.ToString()!;
+                    break;
+
+                case AddressAttributes.BoxNumber:
+                    address.BoxNumber = attribute.NieuweWaarde?.ToString();
+                    break;
+
+                case AddressAttributes.PostalCode:
+                    address.PostalCode = attribute.NieuweWaarde.ToString()!;
+                    break;
+
+                case AddressAttributes.OfficiallyAssigned:
+                    address.OfficiallyAssigned = MapBoolean(attribute.NieuweWaarde);
+                    break;
+
+                case AddressAttributes.Position:
+                    var geometries = attribute.NieuweWaarde is JsonElement positionElement
+                        ? positionElement.Deserialize<List<GeometryData>>(CloudEventReader.JsonOptions)
+                        : [];
+
+                    var geometryData = geometries?
+                        .FirstOrDefault(x => x.IsLambert2008)
+                        ?? geometries?.FirstOrDefault();
+
+                    if (geometryData is not null)
+                        address.Geometry = MapGeometry(geometryData);
+                    break;
+
+                case AddressAttributes.PositionGeometryMethod:
+                    address.PositionMethod = MapGeometryMethod(attribute.NieuweWaarde.ToString()!);
+                    break;
+
+                case AddressAttributes.PositionSpecification:
+                    address.PositionSpecification = MapPositionSpecification(attribute.NieuweWaarde.ToString()!);
+                    break;
+
+                default:
+                    throw new InvalidOperationException($"Unknown address attribute: {attribute.Naam}");
+            }
+        }
+    }
 
     private static AddressStatus MapStatus(string status)
     {
@@ -74,6 +193,26 @@ public sealed class AddressProjector : FeedProjectorBase
             "ingang" => AddressPositionSpecification.Entry,
             "wegsegment" => AddressPositionSpecification.RoadSegment,
             _ => throw new ArgumentException($"Unknown position specification: {positionSpecification}")
+        };
+    }
+
+    private static int ExtractPersistentLocalId(string persistentUri)
+    {
+        var lastSlashIndex = persistentUri.LastIndexOf('/');
+        var persistentLocalId = lastSlashIndex >= 0
+            ? persistentUri[(lastSlashIndex + 1)..]
+            : persistentUri;
+
+        return int.Parse(persistentLocalId);
+    }
+
+    private static bool MapBoolean(object value)
+    {
+        return value switch
+        {
+            bool boolean => boolean,
+            JsonElement jsonElement when jsonElement.ValueKind == JsonValueKind.True || jsonElement.ValueKind == JsonValueKind.False => jsonElement.GetBoolean(),
+            _ => bool.Parse(value.ToString()!)
         };
     }
 }

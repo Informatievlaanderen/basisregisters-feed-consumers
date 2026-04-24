@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Basisregisters.FeedConsumers;
+using Basisregisters.FeedConsumers.Console.Address;
 using Basisregisters.FeedConsumers.Console.Common;
 using Basisregisters.FeedConsumers.Console.Municipality;
 using Basisregisters.FeedConsumers.Console.PostalInformation;
@@ -102,6 +103,17 @@ var host = new HostBuilder()
                 hostContext.Configuration.GetValue<bool>("StreetNameFeed:IgnoreNoEventHandlers", false)
         };
 
+        var addressFeedOptions = new FeedProjectorOptions
+        {
+            Name = hostContext.Configuration["AddressFeed:Name"] ?? "AddressFeed",
+            FeedUrl = hostContext.Configuration["AddressFeed:FeedUrl"] ??
+                      throw new ArgumentNullException("AddressFeed:FeedUrl"),
+            PollingIntervalInMinutes =
+                hostContext.Configuration.GetValue<int>("AddressFeed:PollingIntervalInMinutes", 1440),
+            IgnoreNoEventHandlers =
+                hostContext.Configuration.GetValue<bool>("AddressFeed:IgnoreNoEventHandlers", false)
+        };
+
         services.AddDbContextFactory<FeedContext>((provider, options) =>
         {
             options.UseLoggerFactory(provider.GetRequiredService<ILoggerFactory>());
@@ -125,6 +137,12 @@ var host = new HostBuilder()
         });
 
         services.AddHttpClient(streetNameFeedOptions.Name, client =>
+        {
+            client.BaseAddress = new Uri(baseUrl);
+            client.DefaultRequestHeaders.Add("x-api-key", apiKey);
+        });
+
+        services.AddHttpClient(addressFeedOptions.Name, client =>
         {
             client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Add("x-api-key", apiKey);
@@ -169,6 +187,21 @@ var host = new HostBuilder()
             var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
             return new StreetNameProjector(
                 streetNameFeedOptions,
+                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+                feedPageFetcher,
+                jsonSchemaValidator,
+                loggerFactory);
+        });
+
+        services.AddHostedService(provider =>
+        {
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient(addressFeedOptions.Name);
+            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, addressFeedOptions.FeedUrl);
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            return new AddressProjector(
+                addressFeedOptions,
                 provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
                 feedPageFetcher,
                 jsonSchemaValidator,

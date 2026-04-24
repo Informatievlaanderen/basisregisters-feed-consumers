@@ -187,6 +187,94 @@ public class AddressProjectorTests
     }
 
     [Fact]
+    public async Task CreateEvent_WithoutLambert2008Geometry_ShouldThrow()
+    {
+        var events = await CloudEventTestHelper.ReadEventsFromJsonAsync(
+            """
+            [
+              {
+                "specversion": "1.0",
+                "id": "9990001",
+                "time": "2025-04-18T11:52:12.5955391+02:00",
+                "type": "basisregisters.address.create.v1",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+                "datacontenttype": "application/json",
+                "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
+                "basisregisterseventtype": "AddressWasProposedV2",
+                "basisregisterscausationid": "bd0f564c-ad0e-514f-94b5-d1c889302e48",
+                "data": {
+                  "@id": "https://data.vlaanderen.be/id/adres/31319625",
+                  "objectId": "31319625",
+                  "naamruimte": "https://data.vlaanderen.be/id/adres",
+                  "versieId": "2025-04-18T11:52:12+02:00",
+                  "nisCodes": [ "41081" ],
+                  "attributen": [
+                    {
+                      "naam": "straatnaam.id",
+                      "oudeWaarde": null,
+                      "nieuweWaarde": "https://data.vlaanderen.be/id/straatnaam/64260"
+                    },
+                    {
+                      "naam": "adresStatus",
+                      "oudeWaarde": null,
+                      "nieuweWaarde": "voorgesteld"
+                    },
+                    {
+                      "naam": "huisnummer",
+                      "oudeWaarde": null,
+                      "nieuweWaarde": "30"
+                    },
+                    {
+                      "naam": "postcode",
+                      "oudeWaarde": null,
+                      "nieuweWaarde": "9620"
+                    },
+                    {
+                      "naam": "officieelToegekend",
+                      "oudeWaarde": null,
+                      "nieuweWaarde": true
+                    },
+                    {
+                      "naam": "positieGeometrieMethode",
+                      "oudeWaarde": null,
+                      "nieuweWaarde": "afgeleidVanObject"
+                    },
+                    {
+                      "naam": "positieSpecificatie",
+                      "oudeWaarde": null,
+                      "nieuweWaarde": "perceel"
+                    },
+                    {
+                      "naam": "adresPositie",
+                      "oudeWaarde": null,
+                      "nieuweWaarde": [
+                        {
+                          "type": "Point",
+                          "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+                          "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>109560.95 168981.82</gml:pos></gml:Point>"
+                        }
+                      ]
+                    },
+                    {
+                      "naam": "busnummer",
+                      "oudeWaarde": null,
+                      "nieuweWaarde": "002"
+                    }
+                  ]
+                }
+              }
+            ]
+            """);
+
+        _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: false));
+
+        var act = async () => await RunOneCycleAsync(CancellationToken.None);
+
+        await act.Should().ThrowAsync<ArgumentException>()
+            .WithMessage("*Lambert 2008 (EPSG:3812)*");
+    }
+
+    [Fact]
     public async Task DeleteEvent_ShouldMarkAddressAsRemoved()
     {
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(

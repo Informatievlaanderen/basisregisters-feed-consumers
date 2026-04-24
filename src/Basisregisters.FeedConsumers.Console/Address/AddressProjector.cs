@@ -118,11 +118,12 @@ public sealed class AddressProjector : FeedProjectorBase
                         : [];
 
                     var geometryData = geometries?
-                        .FirstOrDefault(x => x.IsLambert2008)
-                        ?? geometries?.FirstOrDefault();
+                        .FirstOrDefault(x => x.IsLambert2008);
 
-                    if (geometryData is not null)
-                        address.Geometry = MapGeometry(geometryData);
+                    if (geometryData is null)
+                        throw new ArgumentException("Address position must contain Lambert 2008 (EPSG:3812) geometry.");
+
+                    address.Geometry = MapGeometry(geometryData);
                     break;
 
                 case AddressAttributes.PositionGeometryMethod:

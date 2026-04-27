@@ -81,9 +81,7 @@ public class PostalInformationProjector : FeedProjectorBase
 
                 case PostalInformationAttributes.MunicipalityId:
                     var municipalityPuri = attribute.NieuweWaarde?.ToString();
-                    postalInformation.NisCode = municipalityPuri is not null
-                        ? ExtractNisCode(municipalityPuri)
-                        : null;
+                    postalInformation.NisCode = municipalityPuri?.ExtractPersistentLocalId();
                     break;
 
                 case PostalInformationAttributes.Names:
@@ -108,14 +106,6 @@ public class PostalInformationProjector : FeedProjectorBase
                     throw new InvalidOperationException($"Unknown postal information attribute: {attribute.Naam}");
             }
         }
-    }
-
-    private static string ExtractNisCode(string municipalityPuri)
-    {
-        var lastSlashIndex = municipalityPuri.LastIndexOf('/');
-        return lastSlashIndex >= 0
-            ? municipalityPuri[(lastSlashIndex + 1)..]
-            : municipalityPuri;
     }
 
     private static Language MapLanguage(string language)

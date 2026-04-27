@@ -30,7 +30,7 @@ public sealed class StreetNameProjector : FeedProjectorBase
         {
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
             var status = MapStatus(data.Attributen.GetRequired(StreetNameAttributes.Status).NieuweWaarde!.ToString()!);
-            var nisCode = ExtractNisCode(data.Attributen.GetRequired(StreetNameAttributes.MunicipalityId).NieuweWaarde!.ToString()!);
+            var nisCode = data.Attributen.GetRequired(StreetNameAttributes.MunicipalityId).NieuweWaarde!.ToString()!.ExtractPersistentLocalId();
             var persistentLocalId = int.Parse(data.ObjectId);
 
             var streetName = new StreetName(
@@ -84,7 +84,7 @@ public sealed class StreetNameProjector : FeedProjectorBase
                     break;
 
                 case StreetNameAttributes.MunicipalityId:
-                    streetName.NisCode = ExtractNisCode(attribute.NieuweWaarde!.ToString()!);
+                    streetName.NisCode = attribute.NieuweWaarde!.ToString()!.ExtractPersistentLocalId();
                     break;
 
                 case StreetNameAttributes.Names:
@@ -159,14 +159,6 @@ public sealed class StreetNameProjector : FeedProjectorBase
                     throw new InvalidOperationException($"Unknown streetname attribute: {attribute.Naam}");
             }
         }
-    }
-
-    private static string ExtractNisCode(string municipalityPuri)
-    {
-        var lastSlashIndex = municipalityPuri.LastIndexOf('/');
-        return lastSlashIndex >= 0
-            ? municipalityPuri[(lastSlashIndex + 1)..]
-            : municipalityPuri;
     }
 
     private static StreetNameStatus MapStatus(string status)

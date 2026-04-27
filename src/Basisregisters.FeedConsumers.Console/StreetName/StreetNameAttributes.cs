@@ -1,6 +1,6 @@
 namespace Basisregisters.FeedConsumers.Console.StreetName;
 
-public sealed class StreetNameAttributes
+public static class StreetNameAttributes
 {
     public const string Status = "straatnaamStatus";
     public const string Names = "straatnamen";

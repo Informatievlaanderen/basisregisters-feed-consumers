@@ -12,6 +12,7 @@ public class FeedContext : DbContext
     public DbSet<Municipality> Municipalities => Set<Municipality>();
     public DbSet<PostalInformation> PostalInformations => Set<PostalInformation>();
     public DbSet<StreetName> StreetNames => Set<StreetName>();
+    public DbSet<Address> Addresses => Set<Address>();
 
     public FeedContext(DbContextOptions<FeedContext> options) : base(options) { }
 

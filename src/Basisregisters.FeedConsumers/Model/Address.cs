@@ -102,7 +102,7 @@ public sealed class AddressConfiguration : IEntityTypeConfiguration<Address>
 
         builder.Property(x => x.IsRemoved)
             .IsRequired()
-            .HasColumnName("removed");
+            .HasColumnName("is_removed");
 
         builder.Property(x => x.VersionId)
             .HasColumnName("version_id")

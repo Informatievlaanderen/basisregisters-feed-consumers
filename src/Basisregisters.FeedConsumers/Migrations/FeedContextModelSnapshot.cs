@@ -47,7 +47,7 @@ namespace Basisregisters.FeedConsumers.Migrations
 
                     b.Property<bool>("IsRemoved")
                         .HasColumnType("boolean")
-                        .HasColumnName("removed");
+                        .HasColumnName("is_removed");
 
                     b.Property<bool>("OfficiallyAssigned")
                         .HasColumnType("boolean")

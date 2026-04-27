@@ -37,7 +37,7 @@ public sealed class BuildingProjector : FeedProjectorBase
                 int.Parse(data.ObjectId),
                 MapStatus(data.Attributen.GetRequired(BuildingAttributes.Status).NieuweWaarde!.ToString()!),
                 MapGeometryMethod(data.Attributen.GetRequired(BuildingAttributes.GeometryMethod).NieuweWaarde!.ToString()!),
-                MapGeometry(data.Attributen.GetRequired(BuildingAttributes.Geometry).NieuweWaarde),
+                ExtractLambert2008Geometry(data.Attributen.GetRequired(BuildingAttributes.Geometry).NieuweWaarde),
                 data.VersieId);
 
             ProcessBuildingAttributes(data, building);
@@ -82,11 +82,11 @@ public sealed class BuildingProjector : FeedProjectorBase
                     break;
 
                 case BuildingAttributes.Geometry:
-                    building.Geometry = MapGeometry(attribute.NieuweWaarde);
+                    building.Geometry = ExtractLambert2008Geometry(attribute.NieuweWaarde);
                     break;
 
                 default:
-                    throw new InvalidOperationException($"Unknown building attribute: {attribute.Naam}");
+                    throw new InvalidOperationException($"Unknown building attribute '{attribute.Naam}' for building {building.PersistentUri}");
             }
         }
     }
@@ -104,7 +104,7 @@ public sealed class BuildingProjector : FeedProjectorBase
         };
     }
 
-    private Geometry MapGeometry(object? geometry)
+    private Geometry ExtractLambert2008Geometry(object? geometry)
     {
         var geometries = geometry is JsonElement geometryElement
             ? geometryElement.Deserialize<List<GeometryData>>(CloudEventReader.JsonOptions)

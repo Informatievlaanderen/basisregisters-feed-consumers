@@ -16,6 +16,9 @@ public class FeedContext : DbContext
 
     public DbSet<Building> Buildings => Set<Building>();
 
+    public DbSet<BuildingUnit> BuildingUnits => Set<BuildingUnit>();
+    public DbSet<BuildingUnitAddress> BuildingUnitAddresses => Set<BuildingUnitAddress>();
+
     public FeedContext(DbContextOptions<FeedContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

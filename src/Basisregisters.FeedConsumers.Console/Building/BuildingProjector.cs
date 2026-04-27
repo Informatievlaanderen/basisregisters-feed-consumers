@@ -86,7 +86,7 @@ public sealed class BuildingProjector : FeedProjectorBase
                     break;
 
                 default:
-                    throw new InvalidOperationException($"Unknown building attribute '{attribute.Naam}' for building {building.PersistentUri}");
+                    throw new InvalidOperationException($"Unknown building attribute '{attribute.Naam}' for building {building.PersistentLocalId} ({building.PersistentUri})");
             }
         }
     }

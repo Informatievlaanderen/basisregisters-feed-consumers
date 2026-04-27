@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Debugging;
 
+//TODO: add version id as string
 AppDomain.CurrentDomain.FirstChanceException += (_, eventArgs) =>
     Log.Debug(
         eventArgs.Exception,

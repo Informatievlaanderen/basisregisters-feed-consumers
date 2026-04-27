@@ -2,45 +2,54 @@
 
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NetTopologySuite.Geometries;
 
-public sealed class Building
+public sealed class BuildingUnit
 {
     public string PersistentUri { get; set; }
     public int PersistentLocalId { get; set; }
-    public BuildingStatus Status { get; set; }
-    public BuildingGeometryMethod GeometryMethod { get; set; }
-    public Geometry Geometry { get; set; }
+    public int BuildingPersistentLocalId { get; set; }
+    public BuildingUnitStatus Status { get; set; }
+    public Geometry Position { get; set; }
+    public BuildingUnitGeometryMethod GeometryMethod { get; set; }
+    public BuildingUnitFunction Function { get; set; }
+    public bool HasDeviation { get; set; }
     public DateTimeOffset VersionId { get; set; }
-
     public bool IsRemoved { get; set; }
 
-    private Building() { }
+    private BuildingUnit() { }
 
-    public Building(
+    public BuildingUnit(
         string persistentUri,
         int persistentLocalId,
-        BuildingStatus status,
-        BuildingGeometryMethod geometryMethod,
-        Geometry geometry,
+        int buildingPersistentLocalId,
+        BuildingUnitStatus status,
+        Geometry position,
+        BuildingUnitGeometryMethod geometryMethod,
+        BuildingUnitFunction function,
+        bool hasDeviation,
         DateTimeOffset versionId)
     {
         PersistentUri = persistentUri;
         PersistentLocalId = persistentLocalId;
+        BuildingPersistentLocalId = buildingPersistentLocalId;
         Status = status;
+        Position = position;
         GeometryMethod = geometryMethod;
-        Geometry = geometry;
+        Function = function;
+        HasDeviation = hasDeviation;
         VersionId = versionId;
         IsRemoved = false;
     }
 }
 
-public sealed class BuildingConfiguration : IEntityTypeConfiguration<Building>
+public sealed class BuildingUnitConfiguration : IEntityTypeConfiguration<BuildingUnit>
 {
-    public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Building> builder)
+    public void Configure(EntityTypeBuilder<BuildingUnit> builder)
     {
         builder
-            .ToTable("buildings", FeedContext.Schema)
+            .ToTable("buildingunits", FeedContext.Schema)
             .HasKey(b => b.PersistentUri);
 
         builder.Property(b => b.PersistentUri)
@@ -50,6 +59,10 @@ public sealed class BuildingConfiguration : IEntityTypeConfiguration<Building>
 
         builder.Property(b => b.PersistentLocalId)
             .HasColumnName("persistent_local_id")
+            .IsRequired();
+
+        builder.Property(b => b.BuildingPersistentLocalId)
+            .HasColumnName("building_persistent_local_id")
             .IsRequired();
 
         builder.Property(b => b.Status)
@@ -62,9 +75,18 @@ public sealed class BuildingConfiguration : IEntityTypeConfiguration<Building>
             .HasConversion<string>()
             .HasColumnName("geometry_method");
 
-        builder.Property(b => b.Geometry)
+        builder.Property(b => b.Position)
             .IsRequired()
-            .HasColumnName("geometry");
+            .HasColumnName("position");
+
+        builder.Property(b => b.Function)
+            .IsRequired()
+            .HasConversion<string>()
+            .HasColumnName("function");
+
+        builder.Property(b => b.HasDeviation)
+            .HasColumnName("has_deviation")
+            .IsRequired();
 
         builder.Property(b => b.IsRemoved)
             .HasColumnName("is_removed")
@@ -78,8 +100,9 @@ public sealed class BuildingConfiguration : IEntityTypeConfiguration<Building>
             .IsRequired();
 
         builder.HasIndex(x => x.PersistentLocalId);
+        builder.HasIndex(x => x.BuildingPersistentLocalId);
 
-        builder.HasIndex(x => x.Geometry).HasMethod("GIST");
+        builder.HasIndex(x => x.Position).HasMethod("GIST");
         builder.HasIndex(x => x.IsRemoved);
         builder.HasIndex(x => x.Status);
     }

@@ -1,0 +1,113 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "544263",
+    "time": "2023-11-02T10:42:30.1398273+01:00",
+    "type": "basisregisters.building.create.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouwen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouw/2026-01-21/gebouw.json",
+    "basisregisterseventtype": "BuildingWasMigrated",
+    "basisregisterscausationid": "a701fb51-0581-5f11-8edf-64038e0b8aa1",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouw/5811158",
+      "objectId": "5811158",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouw",
+      "versieId": "2023-11-02T10:42:30+01:00",
+      "nisCodes": [
+        "23045"
+      ],
+      "attributen": [
+        {
+          "naam": "gebouwStatus",
+          "oudeWaarde": null,
+          "nieuweWaarde": "gerealiseerd"
+        },
+        {
+          "naam": "geometrieMethode",
+          "oudeWaarde": null,
+          "nieuweWaarde": "ingeschetst"
+        },
+        {
+          "naam": "gebouwGeometrie",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            {
+              "type": "Polygon",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+              "gml": "<gml:Polygon srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:exterior><gml:LinearRing><gml:posList>142534.85208049999 187064.83862719999 142533.98317409307 187059.90521990135 142528.05677408725 187056.73901189864 142532.28179809451 187049.13427589461 142545.07210093999 187056.24261001000 142540.42409165000 187064.11062575001 142534.85208049999 187064.83862719999</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>"
+            },
+            {
+              "type": "Polygon",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+              "gml": "<gml:Polygon srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:exterior><gml:LinearRing><gml:posList>642532.57819491671 687064.33192094043 642531.70991729491 687059.39846033882 642525.78400481143 687056.23158549517 642530.00991098490 687048.62742299493 642542.79912740272 687055.73719356023 642538.15020960174 687063.60458328295 642532.57819491671 687064.33192094043</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "6610849",
+    "time": "2025-02-24T15:10:21.6123635+01:00",
+    "type": "basisregisters.building.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouwen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouw/2026-01-21/gebouw.json",
+    "basisregisterseventtype": "BuildingUnitWasMovedOutOfBuilding",
+    "basisregisterscausationid": "a4035af4-f20d-5a3b-925e-8140a0f4e7e5",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouw/5811158",
+      "objectId": "5811158",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouw",
+      "versieId": "2025-02-24T15:10:21+01:00",
+      "nisCodes": [
+        "23045"
+      ],
+      "attributen": []
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "6610852",
+    "time": "2025-02-24T15:10:26.1919722+01:00",
+    "type": "basisregisters.building.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouwen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouw/2026-01-21/gebouw.json",
+    "basisregisterseventtype": "BuildingUnitWasMovedOutOfBuilding",
+    "basisregisterscausationid": "7f4aef38-7303-597d-b937-6ed619636818",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouw/5811158",
+      "objectId": "5811158",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouw",
+      "versieId": "2025-02-24T15:10:26+01:00",
+      "nisCodes": [
+        "23045"
+      ],
+      "attributen": []
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "6610857",
+    "time": "2025-02-24T15:11:29.4974075+01:00",
+    "type": "basisregisters.building.delete.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouwen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouw/2026-01-21/gebouw.json",
+    "basisregisterseventtype": "BuildingWasRemovedV2",
+    "basisregisterscausationid": "806bfda7-5a2f-540a-9f8e-a1cfc405b294",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouw/5811158",
+      "objectId": "5811158",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouw",
+      "versieId": "2025-02-24T15:11:29+01:00",
+      "nisCodes": [
+        "23045"
+      ],
+      "attributen": []
+    }
+  }
+]

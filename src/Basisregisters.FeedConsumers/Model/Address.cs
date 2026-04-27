@@ -10,7 +10,7 @@ public sealed class Address
     public string PersistentUri { get; set; }
 
     public int PersistentLocalId { get; set; }
-    public string PostalCode { get; set; } = null!; //TODO: check if nullable is needed
+    public string? PostalCode { get; set; }
     public int StreetNamePersistentLocalId { get; set; }
     public AddressStatus Status { get; set; }
     public string HouseNumber { get; set; }

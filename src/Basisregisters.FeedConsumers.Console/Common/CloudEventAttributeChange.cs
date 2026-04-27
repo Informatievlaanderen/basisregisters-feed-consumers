@@ -18,7 +18,7 @@ public sealed class CloudEventAttributeChange : object
 
     [JsonPropertyName("nieuweWaarde")]
     [Required]
-    public object NieuweWaarde { get; }
+    public object? NieuweWaarde { get; }
 
     [JsonConstructor]
     public CloudEventAttributeChange(string @naam, object @nieuweWaarde, object @oudeWaarde)

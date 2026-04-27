@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Common;
@@ -30,8 +29,8 @@ public sealed class StreetNameProjector : FeedProjectorBase
         When(CreateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
-            var status = MapStatus(data.Attributen.GetRequired(StreetNameAttributes.Status).NieuweWaarde.ToString()!);
-            var nisCode = ExtractNisCode(data.Attributen.GetRequired(StreetNameAttributes.MunicipalityId).NieuweWaarde.ToString()!);
+            var status = MapStatus(data.Attributen.GetRequired(StreetNameAttributes.Status).NieuweWaarde!.ToString()!);
+            var nisCode = ExtractNisCode(data.Attributen.GetRequired(StreetNameAttributes.MunicipalityId).NieuweWaarde!.ToString()!);
             var persistentLocalId = int.Parse(data.ObjectId);
 
             var streetName = new StreetName(
@@ -81,11 +80,11 @@ public sealed class StreetNameProjector : FeedProjectorBase
             switch (attribute.Naam)
             {
                 case StreetNameAttributes.Status:
-                    streetName.Status = MapStatus(attribute.NieuweWaarde.ToString()!);
+                    streetName.Status = MapStatus(attribute.NieuweWaarde!.ToString()!);
                     break;
 
                 case StreetNameAttributes.MunicipalityId:
-                    streetName.NisCode = ExtractNisCode(attribute.NieuweWaarde.ToString()!);
+                    streetName.NisCode = ExtractNisCode(attribute.NieuweWaarde!.ToString()!);
                     break;
 
                 case StreetNameAttributes.Names:

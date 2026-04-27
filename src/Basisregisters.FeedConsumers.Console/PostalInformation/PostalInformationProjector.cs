@@ -30,7 +30,7 @@ public class PostalInformationProjector : FeedProjectorBase
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
             var statusAttribute = data.Attributen.FirstOrDefault(a => a.Naam == PostalInformationAttributes.Status);
             var status = statusAttribute is not null
-                ? MapStatus(statusAttribute.NieuweWaarde.ToString()!)
+                ? MapStatus(statusAttribute.NieuweWaarde!.ToString()!)
                 : PostalInformationStatus.Realized;
 
             var postalInformation = new PostalInformation(
@@ -76,7 +76,7 @@ public class PostalInformationProjector : FeedProjectorBase
             switch (attribute.Naam)
             {
                 case PostalInformationAttributes.Status:
-                    postalInformation.Status = MapStatus(attribute.NieuweWaarde.ToString()!);
+                    postalInformation.Status = MapStatus(attribute.NieuweWaarde!.ToString()!);
                     break;
 
                 case PostalInformationAttributes.MunicipalityId:

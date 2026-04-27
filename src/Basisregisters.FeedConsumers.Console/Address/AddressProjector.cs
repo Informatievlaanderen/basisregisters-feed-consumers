@@ -34,20 +34,14 @@ public sealed class AddressProjector : FeedProjectorBase
         When(CreateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
-            var address = new Address
-            {
-                PersistentUri = data.Id.ToString(),
-                PersistentLocalId = int.Parse(data.ObjectId),
-                StreetNamePersistentLocalId = ExtractPersistentLocalId(data.Attributen.GetRequired(AddressAttributes.StreetNameId).NieuweWaarde.ToString()!),
-                Status = MapStatus(data.Attributen.GetRequired(AddressAttributes.Status).NieuweWaarde.ToString()!),
-                HouseNumber = data.Attributen.GetRequired(AddressAttributes.HouseNumber).NieuweWaarde.ToString()!,
-                PostalCode = data.Attributen.GetRequired(AddressAttributes.PostalCode).NieuweWaarde.ToString()!,
-                OfficiallyAssigned = MapBoolean(data.Attributen.GetRequired(AddressAttributes.OfficiallyAssigned).NieuweWaarde),
-                PositionMethod = MapGeometryMethod(data.Attributen.GetRequired(AddressAttributes.PositionGeometryMethod).NieuweWaarde.ToString()!),
-                PositionSpecification = MapPositionSpecification(data.Attributen.GetRequired(AddressAttributes.PositionSpecification).NieuweWaarde.ToString()!),
-                IsRemoved = false,
-                VersionId = data.VersieId
-            };
+            var address = new Address(
+                data.Id.ToString(),
+                int.Parse(data.ObjectId),
+                ExtractPersistentLocalId(data.Attributen.GetRequired(AddressAttributes.StreetNameId).NieuweWaarde.ToString()!),
+                data.Attributen.GetRequired(AddressAttributes.HouseNumber).NieuweWaarde.ToString()!,
+                MapStatus(data.Attributen.GetRequired(AddressAttributes.Status).NieuweWaarde.ToString()!),
+                data.VersieId
+            );
 
             ProcessAddressAttributes(data, address);
 

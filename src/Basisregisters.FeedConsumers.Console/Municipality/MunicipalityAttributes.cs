@@ -1,6 +1,6 @@
 namespace Basisregisters.FeedConsumers.Console.Municipality;
 
-public sealed class MunicipalityAttributes
+public static class MunicipalityAttributes
 {
     public const string Status = "gemeenteStatus";
     public const string OfficialLanguages = "officieleTalen";

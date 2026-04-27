@@ -1,6 +1,6 @@
 ﻿namespace Basisregisters.FeedConsumers.Console.Address;
 
-public sealed class AddressAttributes
+public static class AddressAttributes
 {
     public const string Status = "adresStatus";
     public const string StreetNameId = "straatnaam.id";

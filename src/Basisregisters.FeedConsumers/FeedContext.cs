@@ -17,6 +17,8 @@ public class FeedContext : DbContext
     public DbSet<Building> Buildings => Set<Building>();
     public DbSet<BuildingUnit> BuildingUnits => Set<BuildingUnit>();
     public DbSet<BuildingUnitAddress> BuildingUnitAddresses => Set<BuildingUnitAddress>();
+    public DbSet<Parcel> Parcels => Set<Parcel>();
+    public DbSet<ParcelAddress> ParcelAddresses => Set<ParcelAddress>();
 
     public FeedContext(DbContextOptions<FeedContext> options) : base(options) { }
 

@@ -10,6 +10,7 @@ using Basisregisters.FeedConsumers.Console.Building;
 using Basisregisters.FeedConsumers.Console.BuildingUnit;
 using Basisregisters.FeedConsumers.Console.Common;
 using Basisregisters.FeedConsumers.Console.Municipality;
+using Basisregisters.FeedConsumers.Console.Parcel;
 using Basisregisters.FeedConsumers.Console.PostalInformation;
 using Basisregisters.FeedConsumers.Console.StreetName;
 using Be.Vlaanderen.Basisregisters.Aws.DistributedMutex;
@@ -91,7 +92,8 @@ var host = new HostBuilder()
             new FeedRegistration("StreetNameFeed", "StreetNameFeed"),
             new FeedRegistration("AddressFeed", "AddressFeed"),
             new FeedRegistration("BuildingFeed", "BuildingFeed"),
-            new FeedRegistration("BuildingUnitFeed", "BuildingUnitFeed")
+            new FeedRegistration("BuildingUnitFeed", "BuildingUnitFeed"),
+            new FeedRegistration("ParcelFeed", "ParcelFeed")
         };
 
         var feedOptionsBySection = feedRegistrations.ToDictionary(
@@ -197,6 +199,22 @@ var host = new HostBuilder()
             var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
             return new BuildingUnitProjector(
                 buildingUnitFeedOptions,
+                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+                feedPageFetcher,
+                jsonSchemaValidator,
+                loggerFactory);
+        });
+
+        services.AddHostedService(provider =>
+        {
+            var parcelFeedOptions = feedOptionsBySection["ParcelFeed"];
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient(parcelFeedOptions.Name);
+            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, parcelFeedOptions.FeedUrl);
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            return new ParcelProjector(
+                parcelFeedOptions,
                 provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
                 feedPageFetcher,
                 jsonSchemaValidator,

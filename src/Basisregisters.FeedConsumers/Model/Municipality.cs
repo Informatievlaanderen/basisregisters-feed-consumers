@@ -9,6 +9,7 @@ public sealed class Municipality
     public string PersistentUri { get; set; } = null!;
     public string NisCode { get; set; } = null!;
     public DateTimeOffset VersionId { get; set; }
+    public string VersionIdAsString { get; set; } = null!;
     public MunicipalityStatus Status { get; set; }
 
     public bool? OfficialLanguageDutch { get; set; }
@@ -30,11 +31,12 @@ public sealed class Municipality
 
     private Municipality() { }
 
-    public Municipality(string persistentUri, string nisCode, DateTimeOffset versionId, MunicipalityStatus status, bool isRemoved)
+    public Municipality(string persistentUri, string nisCode, DateTimeOffset versionId, string versionIdAsString, MunicipalityStatus status, bool isRemoved)
     {
         PersistentUri = persistentUri;
         NisCode = nisCode;
         VersionId = versionId;
+        VersionIdAsString = versionIdAsString;
         Status = status;
         IsRemoved = isRemoved;
     }
@@ -57,6 +59,10 @@ public sealed class MunicipalityConfiguration : IEntityTypeConfiguration<Municip
             .HasConversion(
                 v => v.ToUniversalTime(),
                 v => v.ToUniversalTime())
+            .IsRequired();
+
+        builder.Property(x => x.VersionIdAsString)
+            .HasColumnName("version_id_as_string")
             .IsRequired();
 
         builder.Property(x => x.NisCode)

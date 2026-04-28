@@ -77,6 +77,7 @@ public class BuildingUnitProjectorTests
         buildingUnit.HasDeviation.Should().BeFalse();
         buildingUnit.IsRemoved.Should().BeFalse();
         buildingUnit.VersionId.Should().BeCloseTo(new DateTimeOffset(2023, 11, 2, 13, 17, 3, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        buildingUnit.VersionIdAsString.Should().Be(createEvents[^1].GetVersionIdAsString());
 
         buildingUnit.Position.Should().BeOfType<Point>();
         var point = (Point)buildingUnit.Position;
@@ -110,6 +111,7 @@ public class BuildingUnitProjectorTests
 
         buildingUnit.Should().NotBeNull();
         buildingUnit!.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 1, 1, 2, 17, 0, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        buildingUnit.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
         addressLinks.Should().ContainSingle();
         addressLinks[0].AddressPersistentLocalId.Should().Be(30720540);
     }
@@ -143,6 +145,7 @@ public class BuildingUnitProjectorTests
         buildingUnit.HasDeviation.Should().BeFalse();
         buildingUnit.IsRemoved.Should().BeFalse();
         buildingUnit.VersionId.Should().BeCloseTo(new DateTimeOffset(2026, 1, 27, 11, 23, 30, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        buildingUnit.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
 
         buildingUnit.Position.Should().BeOfType<Point>();
         var point = (Point)buildingUnit.Position;
@@ -181,6 +184,7 @@ public class BuildingUnitProjectorTests
         buildingUnit.HasDeviation.Should().BeFalse();
         buildingUnit.IsRemoved.Should().BeFalse();
         buildingUnit.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 1, 14, 11, 21, 5, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        buildingUnit.VersionIdAsString.Should().Be(relevantEvents[^1].GetVersionIdAsString());
 
         buildingUnit.Position.Should().BeOfType<Point>();
         var point = (Point)buildingUnit.Position;
@@ -211,7 +215,8 @@ public class BuildingUnitProjectorTests
         buildingUnit.Should().NotBeNull();
         buildingUnit!.Status.Should().Be(BuildingUnitStatus.Retired);
         buildingUnit.IsRemoved.Should().BeTrue();
-        buildingUnit.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 2, 24, 15, 10, 21, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        buildingUnit.VersionId.Should().Be(events[^1].GetVersionId());
+        buildingUnit.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
         addressLinks.Should().BeEmpty();
     }
 

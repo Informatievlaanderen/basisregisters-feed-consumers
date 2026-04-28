@@ -40,7 +40,8 @@ public sealed class AddressProjector : FeedProjectorBase
                 data.Attributen.GetRequired(AddressAttributes.StreetNameId).NieuweWaarde!.ToString()!.ExtractPersistentLocalIdAsInt(),
                 data.Attributen.GetRequired(AddressAttributes.HouseNumber).NieuweWaarde!.ToString()!,
                 MapStatus(data.Attributen.GetRequired(AddressAttributes.Status).NieuweWaarde!.ToString()!),
-                data.VersieId
+                data.VersieId,
+                data.VersieIdAsString
             );
 
             ProcessAddressAttributes(data, address);
@@ -65,6 +66,8 @@ public sealed class AddressProjector : FeedProjectorBase
             if (address == null)
                 throw new InvalidOperationException($"Address {data.Id} not found");
 
+            address.VersionId = data.VersieId;
+            address.VersionIdAsString = data.VersieIdAsString;
             address.IsRemoved = true;
         });
 
@@ -78,6 +81,7 @@ public sealed class AddressProjector : FeedProjectorBase
     private void ProcessAddressAttributes(CloudEventData data, Address address)
     {
         address.VersionId = data.VersieId;
+        address.VersionIdAsString = data.VersieIdAsString;
         foreach (var attribute in data.Attributen)
         {
             switch (attribute.Naam)

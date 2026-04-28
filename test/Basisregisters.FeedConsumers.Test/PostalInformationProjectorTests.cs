@@ -68,6 +68,7 @@ public class PostalInformationProjectorTests
         postalInformation.Status.Should().Be(PostalInformationStatus.Realized);
         postalInformation.NisCode.Should().BeNull();
         postalInformation.IsRemoved.Should().BeFalse();
+        postalInformation.VersionIdAsString.Should().Be(createEvents[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -155,6 +156,7 @@ public class PostalInformationProjectorTests
         postalInformation.IsRemoved.Should().BeFalse();
         //2020-02-10T12:44:14+01:00
         postalInformation.VersionId.Should().BeCloseTo(new DateTimeOffset(2020, 2, 10, 12, 44, 14, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        postalInformation.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -175,6 +177,7 @@ public class PostalInformationProjectorTests
 
         postalInformation.Should().NotBeNull();
         postalInformation!.IsRemoved.Should().BeTrue();
+        postalInformation.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -208,6 +211,7 @@ public class PostalInformationProjectorTests
         postalInformation.PostalNames.Should().Contain(n => n.Name == "Temploux" && n.Language == Language.Fr);
         postalInformation.PostalNames.Should().Contain(n => n.Name == "Vedrin" && n.Language == Language.Fr);
         postalInformation.IsRemoved.Should().BeTrue();
+        postalInformation.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]

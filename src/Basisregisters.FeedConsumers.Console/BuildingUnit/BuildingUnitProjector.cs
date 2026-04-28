@@ -43,7 +43,8 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
                 MapGeometryMethod(data.Attributen.GetRequired(BuildingUnitAttributes.GeometryMethod).NieuweWaarde!.ToString()!),
                 MapFunction(data.Attributen.GetRequired(BuildingUnitAttributes.BuildingUnitFunction).NieuweWaarde!.ToString()!),
                 data.Attributen.GetRequired(BuildingUnitAttributes.HasDeviation).NieuweWaarde!.ToBoolean(),
-                data.VersieId);
+                data.VersieId,
+                data.VersieIdAsString);
 
             await ProcessBuildingUnitAttributes(data, buildingUnit, context, cancellationToken);
 
@@ -67,6 +68,8 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
             if (buildingUnit == null)
                 throw new InvalidOperationException($"BuildingUnit {data.Id} not found");
 
+            buildingUnit.VersionId = data.VersieId;
+            buildingUnit.VersionIdAsString = data.VersieIdAsString;
             buildingUnit.IsRemoved = true;
         });
     }
@@ -74,6 +77,7 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
     private async Task ProcessBuildingUnitAttributes(CloudEventData data, Model.BuildingUnit buildingUnit, FeedContext context, CancellationToken cancellationToken)
     {
         buildingUnit.VersionId = data.VersieId;
+        buildingUnit.VersionIdAsString = data.VersieIdAsString;
         foreach (var attribute in data.Attributen)
         {
             switch (attribute.Naam)

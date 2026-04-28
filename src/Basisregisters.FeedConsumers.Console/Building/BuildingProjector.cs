@@ -38,7 +38,8 @@ public sealed class BuildingProjector : FeedProjectorBase
                 MapStatus(data.Attributen.GetRequired(BuildingAttributes.Status).NieuweWaarde!.ToString()!),
                 MapGeometryMethod(data.Attributen.GetRequired(BuildingAttributes.GeometryMethod).NieuweWaarde!.ToString()!),
                 ExtractLambert2008Geometry(data.Attributen.GetRequired(BuildingAttributes.Geometry).NieuweWaarde),
-                data.VersieId);
+                data.VersieId,
+                data.VersieIdAsString);
 
             ProcessBuildingAttributes(data, building);
 
@@ -62,6 +63,8 @@ public sealed class BuildingProjector : FeedProjectorBase
             if (building == null)
                 throw new InvalidOperationException($"Building {data.Id} not found");
 
+            building.VersionId = data.VersieId;
+            building.VersionIdAsString = data.VersieIdAsString;
             building.IsRemoved = true;
         });
     }
@@ -69,6 +72,7 @@ public sealed class BuildingProjector : FeedProjectorBase
     private void ProcessBuildingAttributes(CloudEventData data, Building building)
     {
         building.VersionId = data.VersieId;
+        building.VersionIdAsString = data.VersieIdAsString;
         foreach (var attribute in data.Attributen)
         {
             switch (attribute.Naam)

@@ -34,7 +34,8 @@ public sealed class ParcelProjector : FeedProjectorBase
                 data.ObjectId,
                 data.ObjectId.Replace('-', '/'),
                 MapStatus(data.Attributen.GetRequired(ParcelAttributes.Status).NieuweWaarde!.ToString()!),
-                data.VersieId);
+                data.VersieId,
+                data.VersieIdAsString);
 
             await ProcessParcelAttributes(data, parcel, context, cancellationToken);
 
@@ -59,6 +60,7 @@ public sealed class ParcelProjector : FeedProjectorBase
         CancellationToken cancellationToken)
     {
         parcel.VersionId = data.VersieId;
+        parcel.VersionIdAsString = data.VersieIdAsString;
         foreach (var attribute in data.Attributen)
         {
             switch (attribute.Naam)

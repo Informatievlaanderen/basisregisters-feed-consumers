@@ -49,7 +49,7 @@ public class ParcelProjectorTests
     public async Task CreateEvent_ShouldAddParcelWithCorrectDataAndAddresses()
     {
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
-            Path.Combine("TestData", "parcel-create-retire.json"));
+            Path.Combine("TestData", "parcel-create-multiple-addresses-only-versionchanges.json"));
 
         var createEvents = events.Where(e => e.Id == "1093704").ToList();
         _feedPageFetcher.SetupPage(1, createEvents.ToFeedPage(isPageComplete: false));
@@ -79,7 +79,7 @@ public class ParcelProjectorTests
     public async Task UpdateEvents_WithOnlyVersionChanges_ShouldUpdateVersionAndKeepAddresses()
     {
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
-            Path.Combine("TestData", "parcel-create-retire.json"));
+            Path.Combine("TestData", "parcel-create-multiple-addresses-only-versionchanges.json"));
 
         _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: false));
 
@@ -105,7 +105,7 @@ public class ParcelProjectorTests
     public async Task FullCreateUpdateRetireSequence_ShouldRetireParcelAndRemoveAddresses()
     {
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
-            Path.Combine("TestData", "parcel-create-multiple-addresses-only-versionchanges.json"));
+            Path.Combine("TestData", "parcel-create-retire.json"));
 
         _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: false));
 
@@ -130,7 +130,7 @@ public class ParcelProjectorTests
     public async Task FeedState_ShouldTrackPositionAfterProcessingEvents()
     {
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
-            Path.Combine("TestData", "parcel-create-multiple-addresses-only-versionchanges.json"));
+            Path.Combine("TestData", "parcel-create-retire.json"));
 
         _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: false));
 
@@ -151,7 +151,7 @@ public class ParcelProjectorTests
     public async Task FeedState_ShouldIncrementPageWhenComplete()
     {
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
-            Path.Combine("TestData", "parcel-create-multiple-addresses-only-versionchanges.json"));
+            Path.Combine("TestData", "parcel-create-retire.json"));
 
         _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: true));
 

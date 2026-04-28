@@ -8,6 +8,8 @@ using System.Text.Json.Serialization;
 
 public sealed class CloudEventData
 {
+    private DateTimeOffset? _versieId;
+
     /// <summary>
     /// Canonical identifier URI of the object
     /// </summary>
@@ -33,7 +35,7 @@ public sealed class CloudEventData
     /// Version timestamp of the object state
     /// </summary>
     [JsonIgnore]
-    public DateTimeOffset VersieId => DateTimeOffset.Parse(VersieIdAsString, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+    public DateTimeOffset VersieId => _versieId ??= ParseVersionId(VersieIdAsString);
 
     [JsonPropertyName("versieId")]
     [Required]
@@ -69,5 +71,10 @@ public sealed class CloudEventData
         VersieIdAsString = versieIdAsString;
         NisCodes = @nisCodes;
         Attributen = @attributen;
+    }
+
+    private static DateTimeOffset ParseVersionId(string versieIdAsString)
+    {
+        return DateTimeOffset.Parse(versieIdAsString, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
     }
 }

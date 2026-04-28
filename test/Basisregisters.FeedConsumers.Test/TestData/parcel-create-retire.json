@@ -1,0 +1,113 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "3051",
+    "time": "2023-11-02T07:37:34.5890604+01:00",
+    "type": "basisregisters.parcel.create.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/percelen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/perceel/2026-01-21/perceel.json",
+    "basisregisterseventtype": "ParcelWasMigrated",
+    "basisregisterscausationid": "9e3f19b7-9930-5577-8569-83bd08431e47",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/perceel/11001B0026-00A004",
+      "objectId": "11001B0026-00A004",
+      "naamruimte": "https://data.vlaanderen.be/id/perceel",
+      "versieId": "2023-11-02T07:37:34+01:00",
+      "nisCodes": [
+        "11001"
+      ],
+      "attributen": [
+        {
+          "naam": "perceelStatus",
+          "oudeWaarde": null,
+          "nieuweWaarde": "gerealiseerd"
+        },
+        {
+          "naam": "adresIds",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            "https://data.vlaanderen.be/id/adres/20732603"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "7675071",
+    "time": "2025-05-25T08:03:00.3607592+02:00",
+    "type": "basisregisters.parcel.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/percelen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/perceel/2026-01-21/perceel.json",
+    "basisregisterseventtype": "ParcelGeometryWasChanged",
+    "basisregisterscausationid": "82f4e7dc-5862-584f-96fc-b36d66defc4b",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/perceel/11001B0026-00A004",
+      "objectId": "11001B0026-00A004",
+      "naamruimte": "https://data.vlaanderen.be/id/perceel",
+      "versieId": "2025-05-25T08:03:00+02:00",
+      "nisCodes": [
+        "11001"
+      ],
+      "attributen": []
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "7893336",
+    "time": "2025-09-18T08:03:17.4797066+02:00",
+    "type": "basisregisters.parcel.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/percelen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/perceel/2026-01-21/perceel.json",
+    "basisregisterseventtype": "ParcelAddressWasDetachedV2",
+    "basisregisterscausationid": "70c7a598-5940-5c32-b622-9cd5d2473a37",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/perceel/11001B0026-00A004",
+      "objectId": "11001B0026-00A004",
+      "naamruimte": "https://data.vlaanderen.be/id/perceel",
+      "versieId": "2025-09-18T08:03:17+02:00",
+      "nisCodes": [
+        "11001"
+      ],
+      "attributen": [
+        {
+          "naam": "adresIds",
+          "oudeWaarde": [
+            "https://data.vlaanderen.be/id/adres/20732603"
+          ],
+          "nieuweWaarde": []
+        }
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "7893337",
+    "time": "2025-09-18T08:03:17.4797066+02:00",
+    "type": "basisregisters.parcel.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/percelen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/perceel/2026-01-21/perceel.json",
+    "basisregisterseventtype": "ParcelWasRetiredV2",
+    "basisregisterscausationid": "70c7a598-5940-5c32-b622-9cd5d2473a37",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/perceel/11001B0026-00A004",
+      "objectId": "11001B0026-00A004",
+      "naamruimte": "https://data.vlaanderen.be/id/perceel",
+      "versieId": "2025-09-18T08:03:17+02:00",
+      "nisCodes": [
+        "11001"
+      ],
+      "attributen": [
+        {
+          "naam": "perceelStatus",
+          "oudeWaarde": "gerealiseerd",
+          "nieuweWaarde": "gehistoreerd"
+        }
+      ]
+    }
+  }
+]

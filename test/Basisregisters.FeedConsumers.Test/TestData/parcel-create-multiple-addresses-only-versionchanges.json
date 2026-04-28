@@ -1,0 +1,80 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "1093704",
+    "time": "2023-11-02T11:02:22.3319244+01:00",
+    "type": "basisregisters.parcel.create.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/percelen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/perceel/2026-01-21/perceel.json",
+    "basisregisterseventtype": "ParcelWasMigrated",
+    "basisregisterscausationid": "ae4c909c-de71-53e3-965a-e1eeb924a3ed",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/perceel/72015B0517-00B002",
+      "objectId": "72015B0517-00B002",
+      "naamruimte": "https://data.vlaanderen.be/id/perceel",
+      "versieId": "2023-11-02T11:02:22+01:00",
+      "nisCodes": [
+        "72039"
+      ],
+      "attributen": [
+        {
+          "naam": "perceelStatus",
+          "oudeWaarde": null,
+          "nieuweWaarde": "gerealiseerd"
+        },
+        {
+          "naam": "adresIds",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            "https://data.vlaanderen.be/id/adres/4354739",
+            "https://data.vlaanderen.be/id/adres/5266486",
+            "https://data.vlaanderen.be/id/adres/1097598"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "6659071",
+    "time": "2024-08-01T05:03:32.2140011+02:00",
+    "type": "basisregisters.parcel.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/percelen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/perceel/2026-01-21/perceel.json",
+    "basisregisterseventtype": "ParcelGeometryWasChanged",
+    "basisregisterscausationid": "50ff8f77-7010-5d61-996b-6bb46da9117e",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/perceel/72015B0517-00B002",
+      "objectId": "72015B0517-00B002",
+      "naamruimte": "https://data.vlaanderen.be/id/perceel",
+      "versieId": "2024-08-01T05:03:32+02:00",
+      "nisCodes": [
+        "72039"
+      ],
+      "attributen": []
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "7861986",
+    "time": "2025-09-03T08:03:25.8889167+02:00",
+    "type": "basisregisters.parcel.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/percelen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/perceel/2026-01-21/perceel.json",
+    "basisregisterseventtype": "ParcelGeometryWasChanged",
+    "basisregisterscausationid": "d02a0d6a-9957-5f64-969f-6db5034038ce",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/perceel/72015B0517-00B002",
+      "objectId": "72015B0517-00B002",
+      "naamruimte": "https://data.vlaanderen.be/id/perceel",
+      "versieId": "2025-09-03T08:03:25+02:00",
+      "nisCodes": [
+        "72039"
+      ],
+      "attributen": []
+    }
+  }
+]

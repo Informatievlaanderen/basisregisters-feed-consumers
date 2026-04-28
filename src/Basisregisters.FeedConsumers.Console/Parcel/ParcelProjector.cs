@@ -32,7 +32,7 @@ public sealed class ParcelProjector : FeedProjectorBase
             var parcel = new Model.Parcel(
                 data.Id.ToString(),
                 data.ObjectId,
-                data.ObjectId,
+                data.ObjectId.Replace('-', '/'),
                 MapStatus(data.Attributen.GetRequired(ParcelAttributes.Status).NieuweWaarde!.ToString()!),
                 data.VersieId);
 

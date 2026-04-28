@@ -68,7 +68,7 @@ public class ParcelProjectorTests
 
         parcel.Should().NotBeNull();
         parcel!.VbrCaPaKey.Should().Be("72015B0517-00B002");
-        parcel.CaPaKey.Should().Be("72015B0517-00B002");
+        parcel.CaPaKey.Should().Be("72015B0517/00B002");
         parcel.Status.Should().Be(ParcelStatus.Current);
         parcel.VersionId.Should().BeCloseTo(new DateTimeOffset(2023, 11, 2, 11, 2, 22, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
 

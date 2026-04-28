@@ -22,6 +22,7 @@ public sealed class Address
     public bool IsRemoved { get; set; }
 
     public DateTimeOffset VersionId { get; set; }
+    public string VersionIdAsString { get; set; } = null!;
 
     private Address() { }
 
@@ -31,7 +32,8 @@ public sealed class Address
         int streetNamePersistentLocalId,
         string houseNumber,
         AddressStatus status,
-        DateTimeOffset versionId)
+        DateTimeOffset versionId,
+        string versionIdAsString)
     {
         PersistentUri = persistentUri;
         PersistentLocalId = persistentLocalId;
@@ -39,6 +41,7 @@ public sealed class Address
         HouseNumber = houseNumber;
         Status = status;
         VersionId = versionId;
+        VersionIdAsString = versionIdAsString;
         IsRemoved = false;
     }
 }
@@ -109,6 +112,10 @@ public sealed class AddressConfiguration : IEntityTypeConfiguration<Address>
             .HasConversion(
                 v => v.ToUniversalTime(),
                 v => v.ToUniversalTime())
+            .IsRequired();
+
+        builder.Property(x => x.VersionIdAsString)
+            .HasColumnName("version_id_as_string")
             .IsRequired();
 
         builder.HasIndex(x => x.PersistentLocalId);

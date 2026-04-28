@@ -12,6 +12,7 @@ public sealed class Parcel
 
     public ParcelStatus Status { get; set; }
     public DateTimeOffset VersionId { get; set; }
+    public string VersionIdAsString { get; set; } = null!;
 
     private Parcel() { }
 
@@ -20,13 +21,15 @@ public sealed class Parcel
         string vbrCaPaKey,
         string caPaKey,
         ParcelStatus status,
-        DateTimeOffset versionId)
+        DateTimeOffset versionId,
+        string versionIdAsString)
     {
         PersistentUri = persistentUri;
         VbrCaPaKey = vbrCaPaKey;
         CaPaKey = caPaKey;
         Status = status;
         VersionId = versionId;
+        VersionIdAsString = versionIdAsString;
     }
 }
 
@@ -64,6 +67,10 @@ public sealed class ParcelConfiguration : IEntityTypeConfiguration<Parcel>
             .HasConversion(
                 v => v.ToUniversalTime(),
                 v => v.ToUniversalTime())
+            .IsRequired();
+
+        builder.Property(x => x.VersionIdAsString)
+            .HasColumnName("version_id_as_string")
             .IsRequired();
     }
 }

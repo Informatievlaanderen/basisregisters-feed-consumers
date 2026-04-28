@@ -43,4 +43,9 @@ public static class CloudEventTestHelper
     {
         return new CloudEventsResult(events.ToList(), isPageComplete);
     }
+
+    public static string GetVersionIdAsString(this CloudEvent cloudEvent)
+    {
+        return ((CloudEventData)cloudEvent.Data!).VersieIdAsString;
+    }
 }

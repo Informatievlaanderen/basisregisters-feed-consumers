@@ -38,7 +38,8 @@ public class PostalInformationProjector : FeedProjectorBase
                 data.ObjectId,
                 null,
                 status,
-                data.VersieId);
+                data.VersieId,
+                data.VersieIdAsString);
 
             ProcessPostalInformationAttributes(data, postalInformation);
 
@@ -64,6 +65,8 @@ public class PostalInformationProjector : FeedProjectorBase
             if (postalInformation == null)
                 throw new InvalidOperationException($"PostalInformation {data.Id} not found");
 
+            postalInformation.VersionId = data.VersieId;
+            postalInformation.VersionIdAsString = data.VersieIdAsString;
             postalInformation.IsRemoved = true;
         });
     }
@@ -71,6 +74,7 @@ public class PostalInformationProjector : FeedProjectorBase
     private static void ProcessPostalInformationAttributes(CloudEventData data, PostalInformation postalInformation)
     {
         postalInformation.VersionId = data.VersieId;
+        postalInformation.VersionIdAsString = data.VersieIdAsString;
         foreach (var attribute in data.Attributen)
         {
             switch (attribute.Naam)

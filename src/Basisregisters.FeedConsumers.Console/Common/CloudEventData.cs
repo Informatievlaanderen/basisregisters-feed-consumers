@@ -3,6 +3,7 @@ namespace Basisregisters.FeedConsumers.Console.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Text.Json.Serialization;
 
 public sealed class CloudEventData
@@ -31,9 +32,12 @@ public sealed class CloudEventData
     /// <summary>
     /// Version timestamp of the object state
     /// </summary>
+    [JsonIgnore]
+    public DateTimeOffset VersieId => DateTimeOffset.Parse(VersieIdAsString, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+
     [JsonPropertyName("versieId")]
     [Required]
-    public DateTimeOffset VersieId { get; }
+    public string VersieIdAsString { get; init; } = null!;
 
     /// <summary>
     /// List of NIS codes associated with the object
@@ -55,14 +59,14 @@ public sealed class CloudEventData
         Uri @id,
         Uri @naamruimte,
         string @objectId,
-        DateTimeOffset @versieId,
+        string versieIdAsString,
         ICollection<string> @nisCodes,
         ICollection<CloudEventAttributeChange> @attributen)
     {
         Id = @id;
         Naamruimte = @naamruimte;
         ObjectId = @objectId;
-        VersieId = @versieId;
+        VersieIdAsString = versieIdAsString;
         NisCodes = @nisCodes;
         Attributen = @attributen;
     }

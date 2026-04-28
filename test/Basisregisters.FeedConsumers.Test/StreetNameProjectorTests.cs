@@ -91,6 +91,7 @@ public class StreetNameProjectorTests
         streetName.NameEnglish.Should().BeNull();
         // 2023-11-01T08:23:50+01:00
         streetName.VersionId.Should().BeCloseTo(new DateTimeOffset(2023, 11, 1, 8, 23, 50, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        streetName.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -120,6 +121,7 @@ public class StreetNameProjectorTests
         streetName.IsRemoved.Should().BeFalse();
         // 2023-11-21T10:28:42+01:00
         streetName.VersionId.Should().BeCloseTo(new DateTimeOffset(2023, 11, 21, 10, 28, 42, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        streetName.VersionIdAsString.Should().Be(relevantEvents[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -170,6 +172,7 @@ public class StreetNameProjectorTests
         streetName.IsRemoved.Should().BeFalse();
         // 2025-01-01T01:05:17+01:00
         streetName.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 1, 1, 1, 5, 17, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        streetName.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -218,6 +221,7 @@ public class StreetNameProjectorTests
 
         streetName.Should().NotBeNull();
         streetName!.IsRemoved.Should().BeTrue();
+        streetName.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -242,6 +246,7 @@ public class StreetNameProjectorTests
         streetName.NameDutch.Should().Be("Kouterslag_zij");
         streetName.HomonymAdditionDutch.Should().Be("zij");
         streetName.IsRemoved.Should().BeTrue();
+        streetName.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]

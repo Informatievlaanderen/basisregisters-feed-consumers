@@ -69,6 +69,7 @@ public class BuildingProjectorTests
         building.GeometryMethod.Should().Be(BuildingGeometryMethod.Outlined);
         building.IsRemoved.Should().BeFalse();
         building.VersionId.Should().BeCloseTo(new DateTimeOffset(2023, 11, 2, 10, 42, 30, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        building.VersionIdAsString.Should().Be(createEvents[^1].GetVersionIdAsString());
 
         building.Geometry.Should().BeOfType<Polygon>();
         var polygon = (Polygon)building.Geometry;
@@ -98,6 +99,7 @@ public class BuildingProjectorTests
         building.GeometryMethod.Should().Be(BuildingGeometryMethod.MeasuredByGrb);
         building.IsRemoved.Should().BeFalse();
         building.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 1, 25, 23, 10, 42, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        building.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
 
         building.Geometry.Should().BeOfType<Polygon>();
         var polygon = (Polygon)building.Geometry;
@@ -127,6 +129,7 @@ public class BuildingProjectorTests
         building.GeometryMethod.Should().Be(BuildingGeometryMethod.MeasuredByGrb);
         building.IsRemoved.Should().BeFalse();
         building.VersionId.Should().BeCloseTo(new DateTimeOffset(2024, 11, 9, 19, 11, 6, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        building.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -149,6 +152,7 @@ public class BuildingProjectorTests
         building!.Status.Should().Be(BuildingStatus.Realized);
         building.IsRemoved.Should().BeTrue();
         building.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 2, 24, 15, 10, 26, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        building.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]

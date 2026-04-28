@@ -25,16 +25,18 @@ public sealed class StreetName
     public bool IsRemoved { get; set; }
 
     public DateTimeOffset VersionId { get; set; }
+    public string VersionIdAsString { get; set; } = null!;
 
     private StreetName() { }
 
-    public StreetName(string persistentUri, int persistentLocalId, string nisCode, StreetNameStatus status, DateTimeOffset versionId)
+    public StreetName(string persistentUri, int persistentLocalId, string nisCode, StreetNameStatus status, DateTimeOffset versionId, string versionIdAsString)
     {
         PersistentUri = persistentUri;
         PersistentLocalId = persistentLocalId;
         NisCode = nisCode;
         Status = status;
         VersionId = versionId;
+        VersionIdAsString = versionIdAsString;
     }
 }
 
@@ -69,6 +71,10 @@ public sealed class StreetNameConfiguration : IEntityTypeConfiguration<StreetNam
             .HasConversion(
                 v => v.ToUniversalTime(),
                 v => v.ToUniversalTime())
+            .IsRequired();
+
+        builder.Property(x => x.VersionIdAsString)
+            .HasColumnName("version_id_as_string")
             .IsRequired();
 
         builder.Property(x => x.NameDutch).HasColumnName("name_dutch");

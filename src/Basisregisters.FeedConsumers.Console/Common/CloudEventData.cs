@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 public sealed class CloudEventData
 {
-    private DateTimeOffset? _versieId;
+    private DateTimeOffset? _parsedVersieId;
 
     /// <summary>
     /// Canonical identifier URI of the object
@@ -35,7 +35,7 @@ public sealed class CloudEventData
     /// Version timestamp of the object state
     /// </summary>
     [JsonIgnore]
-    public DateTimeOffset VersieId => _versieId ??= ParseVersionId(VersieIdAsString);
+    public DateTimeOffset VersieId => _parsedVersieId ??= ParseVersionId(VersieIdAsString);
 
     [JsonPropertyName("versieId")]
     [Required]

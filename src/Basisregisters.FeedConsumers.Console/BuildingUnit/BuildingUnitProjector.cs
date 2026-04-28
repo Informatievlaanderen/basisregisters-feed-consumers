@@ -189,19 +189,13 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
             .Select(addressId => addressId.ExtractPersistentLocalIdAsInt())
             .ToHashSet();
 
-        var existingAddresses = await context.BuildingUnitAddresses
-            .Where(x => x.BuildingUnitPersistentLocalId == buildingUnitPersistentLocalId)
-            .ToListAsync(cancellationToken);
-
-        var existingAddressKeys = existingAddresses
-            .Select(x => (x.BuildingUnitPersistentLocalId, x.AddressPersistentLocalId))
-            .ToHashSet();
-
-        foreach (var trackedAddress in context.BuildingUnitAddresses.Local.Where(x => x.BuildingUnitPersistentLocalId == buildingUnitPersistentLocalId))
-        {
-            if (existingAddressKeys.Add((trackedAddress.BuildingUnitPersistentLocalId, trackedAddress.AddressPersistentLocalId)))
-                existingAddresses.Add(trackedAddress);
-        }
+        var existingAddresses = (await context.BuildingUnitAddresses
+                .Where(x => x.BuildingUnitPersistentLocalId == buildingUnitPersistentLocalId)
+                .ToListAsync(cancellationToken))
+            .UnionBy(
+                context.BuildingUnitAddresses.Local.Where(x => x.BuildingUnitPersistentLocalId == buildingUnitPersistentLocalId),
+                x => (x.BuildingUnitPersistentLocalId, x.AddressPersistentLocalId))
+            .ToList();
 
         foreach (var existingAddress in existingAddresses.Where(x => !updatedAddressPersistentLocalIds.Contains(x.AddressPersistentLocalId)))
             context.BuildingUnitAddresses.Remove(existingAddress);

@@ -68,6 +68,7 @@ public class MunicipalityProjectorTests
         municipality!.NisCode.Should().Be("71022");
         municipality.Status.Should().Be(MunicipalityStatus.Proposed);
         municipality.IsRemoved.Should().BeFalse();
+        municipality.VersionIdAsString.Should().Be(createEvents[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -101,6 +102,7 @@ public class MunicipalityProjectorTests
         municipality.IsRemoved.Should().BeFalse();
         //2002-08-13T16:33:18+02:00
         municipality.VersionId.Should().BeCloseTo(new DateTimeOffset(2002, 08, 13, 16, 33, 18, TimeSpan.FromHours(2)), TimeSpan.FromSeconds(1));
+        municipality.VersionIdAsString.Should().Be(relevantEvents[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -148,6 +150,7 @@ public class MunicipalityProjectorTests
         municipality.IsRemoved.Should().BeFalse();
         //2025-01-01T01:04:15+01:00
         municipality.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 01, 01, 01, 04, 15, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        municipality.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -168,6 +171,7 @@ public class MunicipalityProjectorTests
 
         municipality.Should().NotBeNull();
         municipality!.IsRemoved.Should().BeTrue();
+        municipality.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -233,6 +237,7 @@ public class MunicipalityProjectorTests
         municipality.NameFrench.Should().Be("Anderlecht");
         municipality.NameDutch.Should().Be("Anderlecht");
         municipality.IsRemoved.Should().BeTrue();
+        municipality.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]

@@ -33,6 +33,7 @@ public class MunicipalityProjector : FeedProjectorBase
                 data.Id.ToString(),
                 data.ObjectId,
                 data.VersieId,
+                data.VersieIdAsString,
                 MapStatus(data.Attributen.GetRequired(MunicipalityAttributes.Status).NieuweWaarde!.ToString()!),
                 false);
 
@@ -58,6 +59,8 @@ public class MunicipalityProjector : FeedProjectorBase
             if (municipality == null)
                 throw new InvalidOperationException($"Municipality {data.Id} not found");
 
+            municipality.VersionId = data.VersieId;
+            municipality.VersionIdAsString = data.VersieIdAsString;
             municipality.IsRemoved = true;
         });
 
@@ -71,6 +74,7 @@ public class MunicipalityProjector : FeedProjectorBase
     private static void ProcessMunicipalityAttributes(CloudEventData data, Municipality municipality)
     {
         municipality.VersionId = data.VersieId;
+        municipality.VersionIdAsString = data.VersieIdAsString;
         foreach (var attribute in data.Attributen)
         {
             switch (attribute.Naam)

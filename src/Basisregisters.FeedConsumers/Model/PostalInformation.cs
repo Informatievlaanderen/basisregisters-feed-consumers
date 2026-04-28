@@ -16,6 +16,7 @@ public sealed class PostalInformation
     public bool IsRemoved { get; set; }
 
     public DateTimeOffset VersionId { get; set; }
+    public string VersionIdAsString { get; set; } = null!;
 
     private PostalInformation() { }
 
@@ -24,13 +25,15 @@ public sealed class PostalInformation
         string postalCode,
         string? nisCode,
         PostalInformationStatus status,
-        DateTimeOffset versionId)
+        DateTimeOffset versionId,
+        string versionIdAsString)
     {
         PersistentUri = persistentUri;
         PostalCode = postalCode;
         NisCode = nisCode;
         Status = status;
         VersionId = versionId;
+        VersionIdAsString = versionIdAsString;
         PostalNames = [];
         IsRemoved = false;
     }
@@ -88,6 +91,10 @@ public sealed class PostalInformationConfiguration : IEntityTypeConfiguration<Po
             .HasConversion(
                 v => v.ToUniversalTime(),
                 v => v.ToUniversalTime())
+            .IsRequired();
+
+        builder.Property(x => x.VersionIdAsString)
+            .HasColumnName("version_id_as_string")
             .IsRequired();
 
         builder.Property(x => x.IsRemoved)

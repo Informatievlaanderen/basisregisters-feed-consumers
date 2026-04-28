@@ -12,6 +12,7 @@ public sealed class Building
     public BuildingGeometryMethod GeometryMethod { get; set; }
     public Geometry Geometry { get; set; }
     public DateTimeOffset VersionId { get; set; }
+    public string VersionIdAsString { get; set; } = null!;
 
     public bool IsRemoved { get; set; }
 
@@ -23,7 +24,8 @@ public sealed class Building
         BuildingStatus status,
         BuildingGeometryMethod geometryMethod,
         Geometry geometry,
-        DateTimeOffset versionId)
+        DateTimeOffset versionId,
+        string versionIdAsString)
     {
         PersistentUri = persistentUri;
         PersistentLocalId = persistentLocalId;
@@ -31,6 +33,7 @@ public sealed class Building
         GeometryMethod = geometryMethod;
         Geometry = geometry;
         VersionId = versionId;
+        VersionIdAsString = versionIdAsString;
         IsRemoved = false;
     }
 }
@@ -75,6 +78,10 @@ public sealed class BuildingConfiguration : IEntityTypeConfiguration<Building>
             .HasConversion(
                 v => v.ToUniversalTime(),
                 v => v.ToUniversalTime())
+            .IsRequired();
+
+        builder.Property(x => x.VersionIdAsString)
+            .HasColumnName("version_id_as_string")
             .IsRequired();
 
         builder.HasIndex(x => x.PersistentLocalId);

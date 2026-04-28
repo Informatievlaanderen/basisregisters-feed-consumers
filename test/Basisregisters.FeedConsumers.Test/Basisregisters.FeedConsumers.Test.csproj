@@ -34,12 +34,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Basisregisters.FeedConsumers.Console\Basisregisters.FeedConsumers.Console.csproj" />
+
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit.v3" />
     <PackageReference Include="xunit.v3.core" />
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="AutoFixture" />
     <PackageReference Include="Moq" />
   </ItemGroup>

@@ -16,6 +16,7 @@ public sealed class BuildingUnit
     public BuildingUnitFunction Function { get; set; }
     public bool HasDeviation { get; set; }
     public DateTimeOffset VersionId { get; set; }
+    public string VersionIdAsString { get; set; } = null!;
     public bool IsRemoved { get; set; }
 
     private BuildingUnit() { }
@@ -29,7 +30,8 @@ public sealed class BuildingUnit
         BuildingUnitGeometryMethod geometryMethod,
         BuildingUnitFunction function,
         bool hasDeviation,
-        DateTimeOffset versionId)
+        DateTimeOffset versionId,
+        string versionIdAsString)
     {
         PersistentUri = persistentUri;
         PersistentLocalId = persistentLocalId;
@@ -40,6 +42,7 @@ public sealed class BuildingUnit
         Function = function;
         HasDeviation = hasDeviation;
         VersionId = versionId;
+        VersionIdAsString = versionIdAsString;
         IsRemoved = false;
     }
 }
@@ -97,6 +100,10 @@ public sealed class BuildingUnitConfiguration : IEntityTypeConfiguration<Buildin
             .HasConversion(
                 v => v.ToUniversalTime(),
                 v => v.ToUniversalTime())
+            .IsRequired();
+
+        builder.Property(x => x.VersionIdAsString)
+            .HasColumnName("version_id_as_string")
             .IsRequired();
 
         builder.HasIndex(x => x.PersistentLocalId);

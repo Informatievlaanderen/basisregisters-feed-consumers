@@ -38,7 +38,8 @@ public sealed class StreetNameProjector : FeedProjectorBase
                 persistentLocalId,
                 nisCode,
                 status,
-                data.VersieId);
+                data.VersieId,
+                data.VersieIdAsString);
 
             ProcessStreetNameAttributes(data, streetName);
 
@@ -62,6 +63,8 @@ public sealed class StreetNameProjector : FeedProjectorBase
             if (streetName == null)
                 throw new InvalidOperationException($"StreetName {data.Id} not found");
 
+            streetName.VersionId = data.VersieId;
+            streetName.VersionIdAsString = data.VersieIdAsString;
             streetName.IsRemoved = true;
         });
 
@@ -75,6 +78,7 @@ public sealed class StreetNameProjector : FeedProjectorBase
     private static void ProcessStreetNameAttributes(CloudEventData data, StreetName streetName)
     {
         streetName.VersionId = data.VersieId;
+        streetName.VersionIdAsString = data.VersieIdAsString;
         foreach (var attribute in data.Attributen)
         {
             switch (attribute.Naam)

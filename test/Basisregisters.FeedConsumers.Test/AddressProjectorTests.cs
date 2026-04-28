@@ -74,6 +74,7 @@ public class AddressProjectorTests
         address.PositionSpecification.Should().Be(AddressPositionSpecification.BuildingUnit);
         address.IsRemoved.Should().BeFalse();
         address.VersionId.Should().BeCloseTo(new DateTimeOffset(2024, 11, 28, 10, 17, 18, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        address.VersionIdAsString.Should().Be(createEvents[^1].GetVersionIdAsString());
 
         address.Geometry.Should().BeOfType<Point>();
         var point = (Point)address.Geometry!;
@@ -105,6 +106,7 @@ public class AddressProjectorTests
         address!.Status.Should().Be(AddressStatus.Current);
         address.IsRemoved.Should().BeFalse();
         address.VersionId.Should().BeCloseTo(new DateTimeOffset(2024, 11, 28, 10, 17, 18, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        address.VersionIdAsString.Should().Be(relevantEvents[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -150,6 +152,7 @@ public class AddressProjectorTests
         address!.Status.Should().Be(AddressStatus.Retired);
         address.IsRemoved.Should().BeFalse();
         address.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 1, 1, 1, 18, 19, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        address.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -292,6 +295,7 @@ public class AddressProjectorTests
 
         address.Should().NotBeNull();
         address!.IsRemoved.Should().BeTrue();
+        address.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -314,7 +318,8 @@ public class AddressProjectorTests
         address!.Status.Should().Be(AddressStatus.Retired);
         address.BoxNumber.Should().Be("002");
         address.IsRemoved.Should().BeTrue();
-        address.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 4, 18, 11, 52, 34, TimeSpan.FromHours(2)), TimeSpan.FromSeconds(1));
+        address.VersionId.Should().Be(events[^1].GetVersionId());
+        address.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]

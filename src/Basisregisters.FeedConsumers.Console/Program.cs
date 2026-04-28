@@ -1,10 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Basisregisters.FeedConsumers;
 using Basisregisters.FeedConsumers.Console.Address;
+using Basisregisters.FeedConsumers.Console.Building;
+using Basisregisters.FeedConsumers.Console.BuildingUnit;
 using Basisregisters.FeedConsumers.Console.Common;
 using Basisregisters.FeedConsumers.Console.Municipality;
 using Basisregisters.FeedConsumers.Console.PostalInformation;
@@ -18,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Debugging;
 
+//TODO: add version id as string
 AppDomain.CurrentDomain.FirstChanceException += (_, eventArgs) =>
     Log.Debug(
         eventArgs.Exception,
@@ -70,50 +74,6 @@ var host = new HostBuilder()
         var apiKey = hostContext.Configuration["ApiKey"]
                      ?? throw new ArgumentNullException("ApiKey", "ApiKey is required in configuration.");
 
-        var municipalityFeedOptions = new FeedProjectorOptions
-        {
-            Name = hostContext.Configuration["MunicipalityFeed:Name"] ?? "MunicipalityFeed",
-            FeedUrl = hostContext.Configuration["MunicipalityFeed:FeedUrl"] ??
-                      throw new ArgumentNullException("MunicipalityFeed:FeedUrl"),
-            PollingIntervalInMinutes =
-                hostContext.Configuration.GetValue<int>("MunicipalityFeed:PollingIntervalInMinutes", 1440),
-            IgnoreNoEventHandlers =
-                hostContext.Configuration.GetValue<bool>("MunicipalityFeed:IgnoreNoEventHandlers", false)
-        };
-
-        var postalInformationFeedOptions = new FeedProjectorOptions
-        {
-            Name = hostContext.Configuration["PostalInformationFeed:Name"] ?? "PostalInformationFeed",
-            FeedUrl = hostContext.Configuration["PostalInformationFeed:FeedUrl"] ??
-                      throw new ArgumentNullException("PostalInformationFeed:FeedUrl"),
-            PollingIntervalInMinutes =
-                hostContext.Configuration.GetValue<int>("PostalInformationFeed:PollingIntervalInMinutes", 1440),
-            IgnoreNoEventHandlers =
-                hostContext.Configuration.GetValue<bool>("PostalInformationFeed:IgnoreNoEventHandlers", false)
-        };
-
-        var streetNameFeedOptions = new FeedProjectorOptions
-        {
-            Name = hostContext.Configuration["StreetNameFeed:Name"] ?? "StreetNameFeed",
-            FeedUrl = hostContext.Configuration["StreetNameFeed:FeedUrl"] ??
-                      throw new ArgumentNullException("StreetNameFeed:FeedUrl"),
-            PollingIntervalInMinutes =
-                hostContext.Configuration.GetValue<int>("StreetNameFeed:PollingIntervalInMinutes", 1440),
-            IgnoreNoEventHandlers =
-                hostContext.Configuration.GetValue<bool>("StreetNameFeed:IgnoreNoEventHandlers", false)
-        };
-
-        var addressFeedOptions = new FeedProjectorOptions
-        {
-            Name = hostContext.Configuration["AddressFeed:Name"] ?? "AddressFeed",
-            FeedUrl = hostContext.Configuration["AddressFeed:FeedUrl"] ??
-                      throw new ArgumentNullException("AddressFeed:FeedUrl"),
-            PollingIntervalInMinutes =
-                hostContext.Configuration.GetValue<int>("AddressFeed:PollingIntervalInMinutes", 1440),
-            IgnoreNoEventHandlers =
-                hostContext.Configuration.GetValue<bool>("AddressFeed:IgnoreNoEventHandlers", false)
-        };
-
         services.AddDbContextFactory<FeedContext>((provider, options) =>
         {
             options.UseLoggerFactory(provider.GetRequiredService<ILoggerFactory>());
@@ -124,32 +84,32 @@ var host = new HostBuilder()
             });
         });
 
-        services.AddHttpClient(municipalityFeedOptions.Name, client =>
+        var feedRegistrations = new[]
         {
-            client.BaseAddress = new Uri(baseUrl);
-            client.DefaultRequestHeaders.Add("x-api-key", apiKey);
-        });
+            new FeedRegistration("MunicipalityFeed", "MunicipalityFeed"),
+            new FeedRegistration("PostalInformationFeed", "PostalInformationFeed"),
+            new FeedRegistration("StreetNameFeed", "StreetNameFeed"),
+            new FeedRegistration("AddressFeed", "AddressFeed"),
+            new FeedRegistration("BuildingFeed", "BuildingFeed"),
+            new FeedRegistration("BuildingUnitFeed", "BuildingUnitFeed")
+        };
 
-        services.AddHttpClient(postalInformationFeedOptions.Name, client =>
-        {
-            client.BaseAddress = new Uri(baseUrl);
-            client.DefaultRequestHeaders.Add("x-api-key", apiKey);
-        });
+        var feedOptionsBySection = feedRegistrations.ToDictionary(
+            r => r.Section,
+            r => BuildFeedOptions(hostContext.Configuration, r.Section, r.DefaultName));
 
-        services.AddHttpClient(streetNameFeedOptions.Name, client =>
+        foreach (var options in feedOptionsBySection.Values)
         {
-            client.BaseAddress = new Uri(baseUrl);
-            client.DefaultRequestHeaders.Add("x-api-key", apiKey);
-        });
-
-        services.AddHttpClient(addressFeedOptions.Name, client =>
-        {
-            client.BaseAddress = new Uri(baseUrl);
-            client.DefaultRequestHeaders.Add("x-api-key", apiKey);
-        });
+            services.AddHttpClient(options.Name, client =>
+            {
+                client.BaseAddress = new Uri(baseUrl);
+                client.DefaultRequestHeaders.Add("x-api-key", apiKey);
+            });
+        }
 
         services.AddHostedService(provider =>
         {
+            var municipalityFeedOptions = feedOptionsBySection["MunicipalityFeed"];
             var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient(municipalityFeedOptions.Name);
             var feedPageFetcher = new HttpFeedPageFetcher(httpClient, municipalityFeedOptions.FeedUrl);
@@ -165,6 +125,7 @@ var host = new HostBuilder()
 
         services.AddHostedService(provider =>
         {
+            var postalInformationFeedOptions = feedOptionsBySection["PostalInformationFeed"];
             var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient(postalInformationFeedOptions.Name);
             var feedPageFetcher = new HttpFeedPageFetcher(httpClient, postalInformationFeedOptions.FeedUrl);
@@ -180,6 +141,7 @@ var host = new HostBuilder()
 
         services.AddHostedService(provider =>
         {
+            var streetNameFeedOptions = feedOptionsBySection["StreetNameFeed"];
             var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient(streetNameFeedOptions.Name);
             var feedPageFetcher = new HttpFeedPageFetcher(httpClient, streetNameFeedOptions.FeedUrl);
@@ -195,6 +157,7 @@ var host = new HostBuilder()
 
         services.AddHostedService(provider =>
         {
+            var addressFeedOptions = feedOptionsBySection["AddressFeed"];
             var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient(addressFeedOptions.Name);
             var feedPageFetcher = new HttpFeedPageFetcher(httpClient, addressFeedOptions.FeedUrl);
@@ -207,6 +170,49 @@ var host = new HostBuilder()
                 jsonSchemaValidator,
                 loggerFactory);
         });
+
+        services.AddHostedService(provider =>
+        {
+            var buildingFeedOptions = feedOptionsBySection["BuildingFeed"];
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient(buildingFeedOptions.Name);
+            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, buildingFeedOptions.FeedUrl);
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            return new BuildingProjector(
+                buildingFeedOptions,
+                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+                feedPageFetcher,
+                jsonSchemaValidator,
+                loggerFactory);
+        });
+
+        services.AddHostedService(provider =>
+        {
+            var buildingUnitFeedOptions = feedOptionsBySection["BuildingUnitFeed"];
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient(buildingUnitFeedOptions.Name);
+            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, buildingUnitFeedOptions.FeedUrl);
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            return new BuildingUnitProjector(
+                buildingUnitFeedOptions,
+                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+                feedPageFetcher,
+                jsonSchemaValidator,
+                loggerFactory);
+        });
+
+        FeedProjectorOptions BuildFeedOptions(IConfiguration config, string section, string defaultName)
+        {
+            return new FeedProjectorOptions
+            {
+                Name = config[$"{section}:Name"] ?? defaultName,
+                FeedUrl = config[$"{section}:FeedUrl"] ?? throw new ArgumentNullException($"{section}:FeedUrl"),
+                PollingIntervalInMinutes = config.GetValue<int>($"{section}:PollingIntervalInMinutes", 1440),
+                IgnoreNoEventHandlers = config.GetValue<bool>($"{section}:IgnoreNoEventHandlers", false)
+            };
+        }
     })
     .UseConsoleLifetime()
     .Build();
@@ -253,3 +259,7 @@ finally
     // Allow some time for flushing before shutdown.
     await Task.Delay(500, CancellationToken.None);
 }
+
+internal record FeedRegistration(
+    string Section,
+    string DefaultName);

@@ -33,7 +33,7 @@ public class MunicipalityProjector : FeedProjectorBase
                 data.Id.ToString(),
                 data.ObjectId,
                 data.VersieId,
-                MapStatus(data.Attributen.GetRequired(MunicipalityAttributes.Status).NieuweWaarde.ToString()!),
+                MapStatus(data.Attributen.GetRequired(MunicipalityAttributes.Status).NieuweWaarde!.ToString()!),
                 false);
 
             ProcessMunicipalityAttributes(data, municipality);
@@ -76,7 +76,7 @@ public class MunicipalityProjector : FeedProjectorBase
             switch (attribute.Naam)
             {
                 case MunicipalityAttributes.Status:
-                    municipality.Status = MapStatus(attribute.NieuweWaarde.ToString()!);
+                    municipality.Status = MapStatus(attribute.NieuweWaarde!.ToString()!);
                     break;
 
                 case MunicipalityAttributes.OfficialLanguages:

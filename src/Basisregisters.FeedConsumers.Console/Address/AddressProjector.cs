@@ -37,9 +37,9 @@ public sealed class AddressProjector : FeedProjectorBase
             var address = new Address(
                 data.Id.ToString(),
                 int.Parse(data.ObjectId),
-                ExtractPersistentLocalId(data.Attributen.GetRequired(AddressAttributes.StreetNameId).NieuweWaarde.ToString()!),
-                data.Attributen.GetRequired(AddressAttributes.HouseNumber).NieuweWaarde.ToString()!,
-                MapStatus(data.Attributen.GetRequired(AddressAttributes.Status).NieuweWaarde.ToString()!),
+                data.Attributen.GetRequired(AddressAttributes.StreetNameId).NieuweWaarde!.ToString()!.ExtractPersistentLocalIdAsInt(),
+                data.Attributen.GetRequired(AddressAttributes.HouseNumber).NieuweWaarde!.ToString()!,
+                MapStatus(data.Attributen.GetRequired(AddressAttributes.Status).NieuweWaarde!.ToString()!),
                 data.VersieId
             );
 
@@ -83,27 +83,27 @@ public sealed class AddressProjector : FeedProjectorBase
             switch (attribute.Naam)
             {
                 case AddressAttributes.Status:
-                    address.Status = MapStatus(attribute.NieuweWaarde.ToString()!);
+                    address.Status = MapStatus(attribute.NieuweWaarde!.ToString()!);
                     break;
 
                 case AddressAttributes.StreetNameId:
-                    address.StreetNamePersistentLocalId = ExtractPersistentLocalId(attribute.NieuweWaarde.ToString()!);
+                    address.StreetNamePersistentLocalId = attribute.NieuweWaarde!.ToString()!.ExtractPersistentLocalIdAsInt();
                     break;
 
                 case AddressAttributes.HouseNumber:
-                    address.HouseNumber = attribute.NieuweWaarde.ToString()!;
+                    address.HouseNumber = attribute.NieuweWaarde!.ToString()!;
                     break;
 
                 case AddressAttributes.BoxNumber:
-                    address.BoxNumber = attribute.NieuweWaarde?.ToString();
+                    address.BoxNumber = attribute.NieuweWaarde is null ? null : attribute.NieuweWaarde.ToString();
                     break;
 
                 case AddressAttributes.PostalCode:
-                    address.PostalCode = attribute.NieuweWaarde.ToString()!;
+                    address.PostalCode = attribute.NieuweWaarde?.ToString();
                     break;
 
                 case AddressAttributes.OfficiallyAssigned:
-                    address.OfficiallyAssigned = MapBoolean(attribute.NieuweWaarde);
+                    address.OfficiallyAssigned = attribute.NieuweWaarde!.ToBoolean();
                     break;
 
                 case AddressAttributes.Position:
@@ -121,11 +121,11 @@ public sealed class AddressProjector : FeedProjectorBase
                     break;
 
                 case AddressAttributes.PositionGeometryMethod:
-                    address.PositionMethod = MapGeometryMethod(attribute.NieuweWaarde.ToString()!);
+                    address.PositionMethod = MapGeometryMethod(attribute.NieuweWaarde!.ToString()!);
                     break;
 
                 case AddressAttributes.PositionSpecification:
-                    address.PositionSpecification = MapPositionSpecification(attribute.NieuweWaarde.ToString()!);
+                    address.PositionSpecification = MapPositionSpecification(attribute.NieuweWaarde!.ToString()!);
                     break;
 
                 default:
@@ -187,26 +187,6 @@ public sealed class AddressProjector : FeedProjectorBase
             "ingang" => AddressPositionSpecification.Entry,
             "wegsegment" => AddressPositionSpecification.RoadSegment,
             _ => throw new ArgumentException($"Unknown position specification: {positionSpecification}")
-        };
-    }
-
-    private static int ExtractPersistentLocalId(string persistentUri)
-    {
-        var lastSlashIndex = persistentUri.LastIndexOf('/');
-        var persistentLocalId = lastSlashIndex >= 0
-            ? persistentUri[(lastSlashIndex + 1)..]
-            : persistentUri;
-
-        return int.Parse(persistentLocalId);
-    }
-
-    private static bool MapBoolean(object value)
-    {
-        return value switch
-        {
-            bool boolean => boolean,
-            JsonElement jsonElement when jsonElement.ValueKind == JsonValueKind.True || jsonElement.ValueKind == JsonValueKind.False => jsonElement.GetBoolean(),
-            _ => bool.Parse(value.ToString()!)
         };
     }
 }

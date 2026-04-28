@@ -1,0 +1,162 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "2247697",
+    "time": "2023-11-02T18:14:41.4279996+01:00",
+    "type": "basisregisters.building.create.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouwen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouw/2026-01-21/gebouw.json",
+    "basisregisterseventtype": "BuildingWasMigrated",
+    "basisregisterscausationid": "d82264d2-30d0-5305-a2de-fdfa52bf056f",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouw/5666604",
+      "objectId": "5666604",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouw",
+      "versieId": "2023-11-02T18:14:41+01:00",
+      "nisCodes": [
+        "23052"
+      ],
+      "attributen": [
+        {
+          "naam": "gebouwStatus",
+          "oudeWaarde": null,
+          "nieuweWaarde": "gerealiseerd"
+        },
+        {
+          "naam": "geometrieMethode",
+          "oudeWaarde": null,
+          "nieuweWaarde": "ingemetenGRB"
+        },
+        {
+          "naam": "gebouwGeometrie",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            {
+              "type": "Polygon",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+              "gml": "<gml:Polygon srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:exterior><gml:LinearRing><gml:posList>139570.57926804572 183129.15654518455 139569.11494804174 183128.28601718321 139566.49440404028 183132.75142518803 139560.96992404014 183129.27200118452 139560.55200403929 183129.00883318484 139563.27827604115 183125.01536118239 139565.94874004275 183121.10368118063 139572.88800404221 183125.57971318439 139570.61190804094 183129.17600118369 139570.57926804572 183129.15654518455</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>"
+            },
+            {
+              "type": "Polygon",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+              "gml": "<gml:Polygon srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:exterior><gml:LinearRing><gml:posList>639568.81214263989 683128.33196653239 639567.34793764225 683127.46127915941 639564.72688723577 683131.92635927815 639559.20286420162 683128.44633540139 639558.78497876460 683128.18312202487 639561.51170049992 683124.18998653442 639564.18260501826 683120.27863613144 639571.12128253770 683124.75542084780 639568.84478006547 683128.35142608453 639568.81214263989 683128.33196653239</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "6364202",
+    "time": "2024-11-07T13:43:50.4681862+01:00",
+    "type": "basisregisters.building.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouwen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouw/2026-01-21/gebouw.json",
+    "basisregisterseventtype": "BuildingUnitWasPlannedV2",
+    "basisregisterscausationid": "27c35602-ddb3-55b5-a59a-7bb0343ecbea",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouw/5666604",
+      "objectId": "5666604",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouw",
+      "versieId": "2024-11-07T13:43:50+01:00",
+      "nisCodes": [
+        "23052"
+      ],
+      "attributen": []
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "6364203",
+    "time": "2024-11-07T13:43:50.4681862+01:00",
+    "type": "basisregisters.building.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouwen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouw/2026-01-21/gebouw.json",
+    "basisregisterseventtype": "CommonBuildingUnitWasAddedV2",
+    "basisregisterscausationid": "27c35602-ddb3-55b5-a59a-7bb0343ecbea",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouw/5666604",
+      "objectId": "5666604",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouw",
+      "versieId": "2024-11-07T13:43:50+01:00",
+      "nisCodes": [
+        "23052"
+      ],
+      "attributen": []
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "6503922",
+    "time": "2025-01-22T15:00:08.5980822+01:00",
+    "type": "basisregisters.building.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouwen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouw/2026-01-21/gebouw.json",
+    "basisregisterseventtype": "BuildingUnitWasMovedIntoBuilding",
+    "basisregisterscausationid": "23e44085-8f83-5400-8237-e181aab1de44",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouw/5666604",
+      "objectId": "5666604",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouw",
+      "versieId": "2025-01-22T15:00:08+01:00",
+      "nisCodes": [
+        "23052"
+      ],
+      "attributen": []
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "6514859",
+    "time": "2025-01-25T23:10:42.8295874+01:00",
+    "type": "basisregisters.building.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouwen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouw/2026-01-21/gebouw.json",
+    "basisregisterseventtype": "BuildingMeasurementWasChanged",
+    "basisregisterscausationid": "fb32ddea-ef4a-5605-99bb-79b6b16bd054",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouw/5666604",
+      "objectId": "5666604",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouw",
+      "versieId": "2025-01-25T23:10:42+01:00",
+      "nisCodes": [
+        "23052"
+      ],
+      "attributen": [
+        {
+          "naam": "gebouwGeometrie",
+          "oudeWaarde": [
+            {
+              "type": "Polygon",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+              "gml": "<gml:Polygon srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:exterior><gml:LinearRing><gml:posList>139570.57926804572 183129.15654518455 139569.11494804174 183128.28601718321 139566.49440404028 183132.75142518803 139560.96992404014 183129.27200118452 139560.55200403929 183129.00883318484 139563.27827604115 183125.01536118239 139565.94874004275 183121.10368118063 139572.88800404221 183125.57971318439 139570.61190804094 183129.17600118369 139570.57926804572 183129.15654518455</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>"
+            },
+            {
+              "type": "Polygon",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+              "gml": "<gml:Polygon srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:exterior><gml:LinearRing><gml:posList>639568.81214263989 683128.33196653239 639567.34793764225 683127.46127915941 639564.72688723577 683131.92635927815 639559.20286420162 683128.44633540139 639558.78497876460 683128.18312202487 639561.51170049992 683124.18998653442 639564.18260501826 683120.27863613144 639571.12128253770 683124.75542084780 639568.84478006547 683128.35142608453 639568.81214263989 683128.33196653239</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>"
+            }
+          ],
+          "nieuweWaarde": [
+            {
+              "type": "Polygon",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+              "gml": "<gml:Polygon srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:exterior><gml:LinearRing><gml:posList>139572.88800404221 183125.57971318439 139565.94874004275 183121.10368118063 139563.27827604115 183125.01536118239 139560.55200403929 183129.00883318484 139560.96992404014 183129.27200118452 139566.49440404028 183132.75142518803 139567.74893204123 183133.54118518904 139570.61190804094 183129.17600118369 139572.88800404221 183125.57971318439</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>"
+            },
+            {
+              "type": "Polygon",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+              "gml": "<gml:Polygon srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:exterior><gml:LinearRing><gml:posList>639571.12128253770 683124.75542084780 639564.18260501826 683120.27863613144 639561.51170049992 683124.18998653442 639558.78497876460 683128.18312202487 639559.20286420162 683128.44633540139 639564.72688723577 683131.92635927815 639565.98131151102 683132.71625550836 639568.84478006547 683128.35142608453 639571.12128253770 683124.75542084780</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

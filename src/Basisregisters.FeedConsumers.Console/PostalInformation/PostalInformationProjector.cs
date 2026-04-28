@@ -30,7 +30,7 @@ public class PostalInformationProjector : FeedProjectorBase
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
             var statusAttribute = data.Attributen.FirstOrDefault(a => a.Naam == PostalInformationAttributes.Status);
             var status = statusAttribute is not null
-                ? MapStatus(statusAttribute.NieuweWaarde.ToString()!)
+                ? MapStatus(statusAttribute.NieuweWaarde!.ToString()!)
                 : PostalInformationStatus.Realized;
 
             var postalInformation = new PostalInformation(
@@ -76,14 +76,12 @@ public class PostalInformationProjector : FeedProjectorBase
             switch (attribute.Naam)
             {
                 case PostalInformationAttributes.Status:
-                    postalInformation.Status = MapStatus(attribute.NieuweWaarde.ToString()!);
+                    postalInformation.Status = MapStatus(attribute.NieuweWaarde!.ToString()!);
                     break;
 
                 case PostalInformationAttributes.MunicipalityId:
                     var municipalityPuri = attribute.NieuweWaarde?.ToString();
-                    postalInformation.NisCode = municipalityPuri is not null
-                        ? ExtractNisCode(municipalityPuri)
-                        : null;
+                    postalInformation.NisCode = municipalityPuri?.ExtractPersistentLocalId();
                     break;
 
                 case PostalInformationAttributes.Names:
@@ -108,14 +106,6 @@ public class PostalInformationProjector : FeedProjectorBase
                     throw new InvalidOperationException($"Unknown postal information attribute: {attribute.Naam}");
             }
         }
-    }
-
-    private static string ExtractNisCode(string municipalityPuri)
-    {
-        var lastSlashIndex = municipalityPuri.LastIndexOf('/');
-        return lastSlashIndex >= 0
-            ? municipalityPuri[(lastSlashIndex + 1)..]
-            : municipalityPuri;
     }
 
     private static Language MapLanguage(string language)

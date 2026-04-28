@@ -61,14 +61,14 @@ public sealed class CloudEventData
         Uri @id,
         Uri @naamruimte,
         string @objectId,
-        string versieIdAsString,
+        string @versieId,
         ICollection<string> @nisCodes,
         ICollection<CloudEventAttributeChange> @attributen)
     {
         Id = @id;
         Naamruimte = @naamruimte;
         ObjectId = @objectId;
-        VersieIdAsString = versieIdAsString;
+        VersieIdAsString = versieId ?? throw new ArgumentNullException(nameof(versieId));
         NisCodes = @nisCodes;
         Attributen = @attributen;
     }

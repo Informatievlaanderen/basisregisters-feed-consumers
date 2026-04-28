@@ -15,7 +15,6 @@ public class FeedContext : DbContext
     public DbSet<Address> Addresses => Set<Address>();
 
     public DbSet<Building> Buildings => Set<Building>();
-
     public DbSet<BuildingUnit> BuildingUnits => Set<BuildingUnit>();
     public DbSet<BuildingUnitAddress> BuildingUnitAddresses => Set<BuildingUnitAddress>();
 

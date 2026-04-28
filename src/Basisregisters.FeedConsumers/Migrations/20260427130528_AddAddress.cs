@@ -19,7 +19,7 @@ namespace Basisregisters.FeedConsumers.Migrations
                 {
                     persistent_uri = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     persistent_local_id = table.Column<int>(type: "integer", nullable: false),
-                    postal_code = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: false),
+                    postal_code = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: true),
                     street_name_persistent_local_id = table.Column<int>(type: "integer", nullable: false),
                     status = table.Column<string>(type: "text", nullable: false),
                     house_number = table.Column<string>(type: "text", nullable: false),

@@ -86,12 +86,12 @@ var host = new HostBuilder()
 
         var feedRegistrations = new[]
         {
-            new FeedRegistration("MunicipalityFeed", "MunicipalityFeed", CreateProjector<MunicipalityProjector>),
-            new FeedRegistration("PostalInformationFeed", "PostalInformationFeed", CreateProjector<PostalInformationProjector>),
-            new FeedRegistration("StreetNameFeed", "StreetNameFeed", CreateProjector<StreetNameProjector>),
-            new FeedRegistration("AddressFeed", "AddressFeed", CreateProjector<AddressProjector>),
-            new FeedRegistration("BuildingFeed", "BuildingFeed", CreateProjector<BuildingProjector>),
-            new FeedRegistration("BuildingUnitFeed", "BuildingUnitFeed", CreateProjector<BuildingUnitProjector>)
+            new FeedRegistration("MunicipalityFeed", "MunicipalityFeed"),
+            new FeedRegistration("PostalInformationFeed", "PostalInformationFeed"),
+            new FeedRegistration("StreetNameFeed", "StreetNameFeed"),
+            new FeedRegistration("AddressFeed", "AddressFeed"),
+            new FeedRegistration("BuildingFeed", "BuildingFeed"),
+            new FeedRegistration("BuildingUnitFeed", "BuildingUnitFeed")
         };
 
         var feedOptionsBySection = feedRegistrations.ToDictionary(
@@ -107,10 +107,111 @@ var host = new HostBuilder()
             });
         }
 
-        foreach (var registration in feedRegistrations)
+        // services.AddHostedService(provider =>
+        // {
+        //     var municipalityFeedOptions = feedOptionsBySection["MunicipalityFeed"];
+        //     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+        //     var httpClient = httpClientFactory.CreateClient(municipalityFeedOptions.Name);
+        //     var feedPageFetcher = new HttpFeedPageFetcher(httpClient, municipalityFeedOptions.FeedUrl);
+        //     var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+        //     var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+        //     return new MunicipalityProjector(
+        //         municipalityFeedOptions,
+        //         provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+        //         feedPageFetcher,
+        //         jsonSchemaValidator,
+        //         loggerFactory);
+        // });
+        //
+        // services.AddHostedService(provider =>
+        // {
+        //     var postalInformationFeedOptions = feedOptionsBySection["PostalInformationFeed"];
+        //     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+        //     var httpClient = httpClientFactory.CreateClient(postalInformationFeedOptions.Name);
+        //     var feedPageFetcher = new HttpFeedPageFetcher(httpClient, postalInformationFeedOptions.FeedUrl);
+        //     var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+        //     var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+        //     return new PostalInformationProjector(
+        //         postalInformationFeedOptions,
+        //         provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+        //         feedPageFetcher,
+        //         jsonSchemaValidator,
+        //         loggerFactory);
+        // });
+        //
+        // services.AddHostedService(provider =>
+        // {
+        //     var streetNameFeedOptions = feedOptionsBySection["StreetNameFeed"];
+        //     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+        //     var httpClient = httpClientFactory.CreateClient(streetNameFeedOptions.Name);
+        //     var feedPageFetcher = new HttpFeedPageFetcher(httpClient, streetNameFeedOptions.FeedUrl);
+        //     var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+        //     var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+        //     return new StreetNameProjector(
+        //         streetNameFeedOptions,
+        //         provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+        //         feedPageFetcher,
+        //         jsonSchemaValidator,
+        //         loggerFactory);
+        // });
+        //
+        // services.AddHostedService(provider =>
+        // {
+        //     var addressFeedOptions = feedOptionsBySection["AddressFeed"];
+        //     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+        //     var httpClient = httpClientFactory.CreateClient(addressFeedOptions.Name);
+        //     var feedPageFetcher = new HttpFeedPageFetcher(httpClient, addressFeedOptions.FeedUrl);
+        //     var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+        //     var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+        //     return new AddressProjector(
+        //         addressFeedOptions,
+        //         provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+        //         feedPageFetcher,
+        //         jsonSchemaValidator,
+        //         loggerFactory);
+        // });
+
+        services.AddHostedService(provider =>
         {
-            var options = feedOptionsBySection[registration.Section];
-            services.AddHostedService(provider => registration.CreateHostedService(provider, options));
+            var buildingFeedOptions = feedOptionsBySection["BuildingFeed"];
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient(buildingFeedOptions.Name);
+            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, buildingFeedOptions.FeedUrl);
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            return new BuildingProjector(
+                buildingFeedOptions,
+                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+                feedPageFetcher,
+                jsonSchemaValidator,
+                loggerFactory);
+        });
+
+        services.AddHostedService(provider =>
+        {
+            var buildingUnitFeedOptions = feedOptionsBySection["BuildingUnitFeed"];
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient(buildingUnitFeedOptions.Name);
+            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, buildingUnitFeedOptions.FeedUrl);
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            return new BuildingUnitProjector(
+                buildingUnitFeedOptions,
+                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+                feedPageFetcher,
+                jsonSchemaValidator,
+                loggerFactory);
+        });
+
+        FeedProjectorOptions BuildFeedOptions(IConfiguration config, string section, string defaultName)
+        {
+            return new FeedProjectorOptions
+            {
+                Name = config[$"{section}:Name"] ?? defaultName,
+                FeedUrl = config[$"{section}:FeedUrl"] ?? throw new ArgumentNullException($"{section}:FeedUrl"),
+                PollingIntervalInMinutes = config.GetValue<int>($"{section}:PollingIntervalInMinutes", 1440),
+                IgnoreNoEventHandlers = config.GetValue<bool>($"{section}:IgnoreNoEventHandlers", false)
+            };
         }
     })
     .UseConsoleLifetime()
@@ -159,38 +260,6 @@ finally
     await Task.Delay(500, CancellationToken.None);
 }
 
-static FeedProjectorOptions BuildFeedOptions(IConfiguration config, string section, string defaultName)
-{
-    return new FeedProjectorOptions
-    {
-        Name = config[$"{section}:Name"] ?? defaultName,
-        FeedUrl = config[$"{section}:FeedUrl"] ?? throw new ArgumentNullException($"{section}:FeedUrl"),
-        PollingIntervalInMinutes = config.GetValue<int>($"{section}:PollingIntervalInMinutes", 1440),
-        IgnoreNoEventHandlers = config.GetValue<bool>($"{section}:IgnoreNoEventHandlers", false)
-    };
-}
-
-static TProjector CreateProjector<TProjector>(IServiceProvider provider, FeedProjectorOptions options)
-    where TProjector : class, IHostedService
-{
-    var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-    var httpClient = httpClientFactory.CreateClient(options.Name);
-    var feedPageFetcher = new HttpFeedPageFetcher(httpClient, options.FeedUrl);
-
-    var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-    var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
-
-    return ActivatorUtilities.CreateInstance<TProjector>(
-        provider,
-        options,
-        provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
-        feedPageFetcher,
-        jsonSchemaValidator,
-        loggerFactory);
-}
-
-// Add near top-level statements in Program.cs (below usings is fine)
-record FeedRegistration(
+internal record FeedRegistration(
     string Section,
-    string DefaultName,
-    Func<IServiceProvider, FeedProjectorOptions, IHostedService> CreateHostedService);
+    string DefaultName);

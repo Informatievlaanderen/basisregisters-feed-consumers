@@ -45,7 +45,7 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
                 data.Attributen.GetRequired(BuildingUnitAttributes.HasDeviation).NieuweWaarde!.ToBoolean(),
                 data.VersieId);
 
-            ProcessBuildingUnitAttributes(data, buildingUnit, context, cancellationToken);
+            await ProcessBuildingUnitAttributes(data, buildingUnit, context, cancellationToken);
 
             await context.BuildingUnits.AddAsync(buildingUnit, cancellationToken);
         });
@@ -57,7 +57,7 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
             if (buildingUnit == null)
                 throw new InvalidOperationException($"BuildingUnit {data.Id} not found");
 
-            ProcessBuildingUnitAttributes(data, buildingUnit, context, cancellationToken);
+            await ProcessBuildingUnitAttributes(data, buildingUnit, context, cancellationToken);
         });
 
         When(DeleteEvent, async (cloudEvent, data, context, cancellationToken) =>
@@ -71,7 +71,7 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
         });
     }
 
-    private void ProcessBuildingUnitAttributes(CloudEventData data, Model.BuildingUnit buildingUnit, FeedContext context, CancellationToken cancellationToken)
+    private async Task ProcessBuildingUnitAttributes(CloudEventData data, Model.BuildingUnit buildingUnit, FeedContext context, CancellationToken cancellationToken)
     {
         buildingUnit.VersionId = data.VersieId;
         foreach (var attribute in data.Attributen)
@@ -103,9 +103,7 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
                     break;
 
                 case BuildingUnitAttributes.AddressIds:
-                    SyncAddressesAsync(buildingUnit.PersistentLocalId, attribute.NieuweWaarde, context, cancellationToken)
-                        .GetAwaiter()
-                        .GetResult();
+                    await SyncAddressesAsync(buildingUnit.PersistentLocalId, attribute.NieuweWaarde, context, cancellationToken);
                     break;
 
                 default:
@@ -191,14 +189,19 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
             .Select(addressId => addressId.ExtractPersistentLocalIdAsInt())
             .ToHashSet();
 
-        var existingAddresses = context.BuildingUnitAddresses.Local
+        var existingAddresses = await context.BuildingUnitAddresses
             .Where(x => x.BuildingUnitPersistentLocalId == buildingUnitPersistentLocalId)
-            .Concat(await context.BuildingUnitAddresses
-                .Where(x => x.BuildingUnitPersistentLocalId == buildingUnitPersistentLocalId)
-                .ToListAsync(cancellationToken))
-            .GroupBy(x => new { x.BuildingUnitPersistentLocalId, x.AddressPersistentLocalId })
-            .Select(x => x.First())
-            .ToList();
+            .ToListAsync(cancellationToken);
+
+        var existingAddressKeys = existingAddresses
+            .Select(x => (x.BuildingUnitPersistentLocalId, x.AddressPersistentLocalId))
+            .ToHashSet();
+
+        foreach (var trackedAddress in context.BuildingUnitAddresses.Local.Where(x => x.BuildingUnitPersistentLocalId == buildingUnitPersistentLocalId))
+        {
+            if (existingAddressKeys.Add((trackedAddress.BuildingUnitPersistentLocalId, trackedAddress.AddressPersistentLocalId)))
+                existingAddresses.Add(trackedAddress);
+        }
 
         foreach (var existingAddress in existingAddresses.Where(x => !updatedAddressPersistentLocalIds.Contains(x.AddressPersistentLocalId)))
             context.BuildingUnitAddresses.Remove(existingAddress);

@@ -24,6 +24,7 @@ public class BuildingUnitProjectorTests
     private const string PuriBuildingUnit5812645 = "https://data.vlaanderen.be/id/gebouweenheid/5812645";
     private const string PuriBuildingUnit5674659 = "https://data.vlaanderen.be/id/gebouweenheid/5674659";
     private const string PuriBuildingUnit5682336 = "https://data.vlaanderen.be/id/gebouweenheid/5682336";
+    private const string PuriBuildingUnit31779857 = "https://data.vlaanderen.be/id/gebouweenheid/31779857";
     private const string BuildingUnitFeedName = "BuildingUnitFeed";
 
     public BuildingUnitProjectorTests()
@@ -111,6 +112,46 @@ public class BuildingUnitProjectorTests
         buildingUnit!.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 1, 1, 2, 17, 0, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
         addressLinks.Should().ContainSingle();
         addressLinks[0].AddressPersistentLocalId.Should().Be(30720540);
+    }
+
+    [Fact]
+    public async Task UpdateEvents_ShouldAccumulateMultipleAddresses()
+    {
+        var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
+            Path.Combine("TestData", "buildingunit-multiple-addresses.json"));
+
+        _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: false));
+
+        using var cts = new CancellationTokenSource();
+        cts.CancelAfter(5000);
+
+        await RunOneCycleAsync(cts.Token);
+
+        await using var context = _contextFactory.CreateDbContext();
+        var buildingUnit = await context.BuildingUnits.FindAsync([PuriBuildingUnit31779857], TestContext.Current.CancellationToken);
+        var addressLinks = await context.BuildingUnitAddresses
+            .Where(x => x.BuildingUnitPersistentLocalId == 31779857)
+            .OrderBy(x => x.AddressPersistentLocalId)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        buildingUnit.Should().NotBeNull();
+        buildingUnit!.PersistentLocalId.Should().Be(31779857);
+        buildingUnit.BuildingPersistentLocalId.Should().Be(31732080);
+        buildingUnit.Status.Should().Be(BuildingUnitStatus.Realized);
+        buildingUnit.Function.Should().Be(BuildingUnitFunction.Unknown);
+        buildingUnit.GeometryMethod.Should().Be(BuildingUnitGeometryMethod.AppointedByAdministrator);
+        buildingUnit.HasDeviation.Should().BeFalse();
+        buildingUnit.IsRemoved.Should().BeFalse();
+        buildingUnit.VersionId.Should().BeCloseTo(new DateTimeOffset(2026, 1, 27, 11, 23, 30, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+
+        buildingUnit.Position.Should().BeOfType<Point>();
+        var point = (Point)buildingUnit.Position;
+        point.SRID.Should().Be(3812);
+        point.X.Should().BeApproximately(558076.16, 0.01);
+        point.Y.Should().BeApproximately(676333.22, 0.01);
+
+        addressLinks.Should().HaveCount(4);
+        addressLinks.Select(x => x.AddressPersistentLocalId).Should().Equal(31320594, 31320595, 31320596, 31320597);
     }
 
     [Fact]

@@ -318,7 +318,7 @@ public class AddressProjectorTests
         address!.Status.Should().Be(AddressStatus.Retired);
         address.BoxNumber.Should().Be("002");
         address.IsRemoved.Should().BeTrue();
-        address.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 4, 18, 11, 52, 34, TimeSpan.FromHours(2)), TimeSpan.FromSeconds(1));
+        address.VersionId.Should().Be(events[^1].GetVersionId());
         address.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 

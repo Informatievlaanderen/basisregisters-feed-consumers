@@ -151,7 +151,7 @@ public class BuildingProjectorTests
         building.Should().NotBeNull();
         building!.Status.Should().Be(BuildingStatus.Realized);
         building.IsRemoved.Should().BeTrue();
-        building.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 2, 24, 15, 10, 26, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        building.VersionId.Should().Be(events[^1].GetVersionId());
         building.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 

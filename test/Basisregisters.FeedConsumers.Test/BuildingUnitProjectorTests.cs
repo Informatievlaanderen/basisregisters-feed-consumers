@@ -77,7 +77,7 @@ public class BuildingUnitProjectorTests
         buildingUnit.HasDeviation.Should().BeFalse();
         buildingUnit.IsRemoved.Should().BeFalse();
         buildingUnit.VersionId.Should().BeCloseTo(new DateTimeOffset(2023, 11, 2, 13, 17, 3, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
-        buildingUnit.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
+        buildingUnit.VersionIdAsString.Should().Be(createEvents[^1].GetVersionIdAsString());
 
         buildingUnit.Position.Should().BeOfType<Point>();
         var point = (Point)buildingUnit.Position;
@@ -215,7 +215,7 @@ public class BuildingUnitProjectorTests
         buildingUnit.Should().NotBeNull();
         buildingUnit!.Status.Should().Be(BuildingUnitStatus.Retired);
         buildingUnit.IsRemoved.Should().BeTrue();
-        buildingUnit.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 2, 24, 15, 10, 21, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
+        buildingUnit.VersionId.Should().Be(events[^1].GetVersionId());
         buildingUnit.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
         addressLinks.Should().BeEmpty();
     }

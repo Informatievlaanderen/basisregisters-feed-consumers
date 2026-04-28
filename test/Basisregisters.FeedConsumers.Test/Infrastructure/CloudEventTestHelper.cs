@@ -1,10 +1,13 @@
 namespace Basisregisters.FeedConsumers.Test.Infrastructure;
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using CloudNative.CloudEvents;
@@ -46,6 +49,16 @@ public static class CloudEventTestHelper
 
     public static string GetVersionIdAsString(this CloudEvent cloudEvent)
     {
-        return ((CloudEventData)cloudEvent.Data!).VersieIdAsString;
+        return cloudEvent.Data switch
+        {
+            CloudEventData data => data.VersieIdAsString,
+            JsonElement json => json.Deserialize<CloudEventData>(CloudEventReader.JsonOptions)!.VersieIdAsString,
+            _ => throw new InvalidDataException($"Unsupported cloud event data type '{cloudEvent.Data?.GetType().FullName}'.")
+        };
+    }
+
+    public static DateTimeOffset GetVersionId(this CloudEvent cloudEvent)
+    {
+        return DateTimeOffset.Parse(cloudEvent.GetVersionIdAsString(), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
     }
 }

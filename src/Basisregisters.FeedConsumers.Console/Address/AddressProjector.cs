@@ -99,7 +99,7 @@ public sealed class AddressProjector : FeedProjectorBase
                     break;
 
                 case AddressAttributes.PostalCode:
-                    address.PostalCode = attribute.NieuweWaarde?.ToString()!;
+                    address.PostalCode = attribute.NieuweWaarde?.ToString();
                     break;
 
                 case AddressAttributes.OfficiallyAssigned:

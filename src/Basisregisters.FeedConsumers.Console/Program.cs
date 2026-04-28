@@ -107,69 +107,69 @@ var host = new HostBuilder()
             });
         }
 
-        // services.AddHostedService(provider =>
-        // {
-        //     var municipalityFeedOptions = feedOptionsBySection["MunicipalityFeed"];
-        //     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-        //     var httpClient = httpClientFactory.CreateClient(municipalityFeedOptions.Name);
-        //     var feedPageFetcher = new HttpFeedPageFetcher(httpClient, municipalityFeedOptions.FeedUrl);
-        //     var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-        //     var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
-        //     return new MunicipalityProjector(
-        //         municipalityFeedOptions,
-        //         provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
-        //         feedPageFetcher,
-        //         jsonSchemaValidator,
-        //         loggerFactory);
-        // });
-        //
-        // services.AddHostedService(provider =>
-        // {
-        //     var postalInformationFeedOptions = feedOptionsBySection["PostalInformationFeed"];
-        //     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-        //     var httpClient = httpClientFactory.CreateClient(postalInformationFeedOptions.Name);
-        //     var feedPageFetcher = new HttpFeedPageFetcher(httpClient, postalInformationFeedOptions.FeedUrl);
-        //     var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-        //     var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
-        //     return new PostalInformationProjector(
-        //         postalInformationFeedOptions,
-        //         provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
-        //         feedPageFetcher,
-        //         jsonSchemaValidator,
-        //         loggerFactory);
-        // });
-        //
-        // services.AddHostedService(provider =>
-        // {
-        //     var streetNameFeedOptions = feedOptionsBySection["StreetNameFeed"];
-        //     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-        //     var httpClient = httpClientFactory.CreateClient(streetNameFeedOptions.Name);
-        //     var feedPageFetcher = new HttpFeedPageFetcher(httpClient, streetNameFeedOptions.FeedUrl);
-        //     var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-        //     var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
-        //     return new StreetNameProjector(
-        //         streetNameFeedOptions,
-        //         provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
-        //         feedPageFetcher,
-        //         jsonSchemaValidator,
-        //         loggerFactory);
-        // });
-        //
-        // services.AddHostedService(provider =>
-        // {
-        //     var addressFeedOptions = feedOptionsBySection["AddressFeed"];
-        //     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-        //     var httpClient = httpClientFactory.CreateClient(addressFeedOptions.Name);
-        //     var feedPageFetcher = new HttpFeedPageFetcher(httpClient, addressFeedOptions.FeedUrl);
-        //     var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-        //     var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
-        //     return new AddressProjector(
-        //         addressFeedOptions,
-        //         provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
-        //         feedPageFetcher,
-        //         jsonSchemaValidator,
-        //         loggerFactory);
-        // });
+        services.AddHostedService(provider =>
+        {
+            var municipalityFeedOptions = feedOptionsBySection["MunicipalityFeed"];
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient(municipalityFeedOptions.Name);
+            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, municipalityFeedOptions.FeedUrl);
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            return new MunicipalityProjector(
+                municipalityFeedOptions,
+                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+                feedPageFetcher,
+                jsonSchemaValidator,
+                loggerFactory);
+        });
+
+        services.AddHostedService(provider =>
+        {
+            var postalInformationFeedOptions = feedOptionsBySection["PostalInformationFeed"];
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient(postalInformationFeedOptions.Name);
+            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, postalInformationFeedOptions.FeedUrl);
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            return new PostalInformationProjector(
+                postalInformationFeedOptions,
+                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+                feedPageFetcher,
+                jsonSchemaValidator,
+                loggerFactory);
+        });
+
+        services.AddHostedService(provider =>
+        {
+            var streetNameFeedOptions = feedOptionsBySection["StreetNameFeed"];
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient(streetNameFeedOptions.Name);
+            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, streetNameFeedOptions.FeedUrl);
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            return new StreetNameProjector(
+                streetNameFeedOptions,
+                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+                feedPageFetcher,
+                jsonSchemaValidator,
+                loggerFactory);
+        });
+
+        services.AddHostedService(provider =>
+        {
+            var addressFeedOptions = feedOptionsBySection["AddressFeed"];
+            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient(addressFeedOptions.Name);
+            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, addressFeedOptions.FeedUrl);
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            return new AddressProjector(
+                addressFeedOptions,
+                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+                feedPageFetcher,
+                jsonSchemaValidator,
+                loggerFactory);
+        });
 
         services.AddHostedService(provider =>
         {

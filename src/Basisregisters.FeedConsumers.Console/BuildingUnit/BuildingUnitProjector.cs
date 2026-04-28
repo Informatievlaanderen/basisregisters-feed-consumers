@@ -134,7 +134,7 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
             .FirstOrDefault(x => x.IsLambert2008);
 
         if (geometryData is null)
-            throw new ArgumentException("Building geometry must contain Lambert 2008 (EPSG:3812) geometry.");
+            throw new ArgumentException("Building unit position must contain Lambert 2008 (EPSG:3812) geometry.");
 
         return MapGeometry(geometryData);
     }

@@ -42,8 +42,6 @@
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
-    <PackageReference Include="AutoFixture" />
-    <PackageReference Include="Moq" />
   </ItemGroup>
 
 </Project>

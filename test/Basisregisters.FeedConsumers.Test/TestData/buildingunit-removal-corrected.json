@@ -1,0 +1,235 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "217331",
+    "time": "2023-11-02T09:06:24.1885252+01:00",
+    "type": "basisregisters.buildingunit.create.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
+    "basisregisterseventtype": "BuildingWasMigrated",
+    "basisregisterscausationid": "adf63847-fd9f-5ec5-97d0-d71bfdcc4cb7",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouweenheid/15869061",
+      "objectId": "15869061",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
+      "versieId": "2023-11-02T09:06:24+01:00",
+      "nisCodes": [
+        "11002"
+      ],
+      "attributen": [
+        {
+          "naam": "gebouweenheidStatus",
+          "oudeWaarde": null,
+          "nieuweWaarde": "gerealiseerd"
+        },
+        {
+          "naam": "gebouweenheidFunctie",
+          "oudeWaarde": null,
+          "nieuweWaarde": "gemeenschappelijkDeel"
+        },
+        {
+          "naam": "positieGeometrieMethode",
+          "oudeWaarde": null,
+          "nieuweWaarde": "afgeleidVanObject"
+        },
+        {
+          "naam": "gebouweenheidPositie",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>151625.66 205910.95</gml:pos></gml:Point>"
+            },
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>651621.10 705911.35</gml:pos></gml:Point>"
+            }
+          ]
+        },
+        {
+          "naam": "adresIds",
+          "oudeWaarde": null,
+          "nieuweWaarde": []
+        },
+        {
+          "naam": "gebouw.id",
+          "oudeWaarde": null,
+          "nieuweWaarde": "https://data.vlaanderen.be/id/gebouw/15867498"
+        },
+        {
+          "naam": "afwijkingVastgesteld",
+          "oudeWaarde": null,
+          "nieuweWaarde": false
+        }
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "5465652",
+    "time": "2024-02-07T10:01:57.3850101+01:00",
+    "type": "basisregisters.buildingunit.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
+    "basisregisterseventtype": "BuildingMeasurementWasChanged",
+    "basisregisterscausationid": "5ef3d836-ca66-5367-8e15-61106c978702",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouweenheid/15869061",
+      "objectId": "15869061",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
+      "versieId": "2024-02-07T10:01:57+01:00",
+      "nisCodes": [
+        "11002"
+      ],
+      "attributen": [
+        {
+          "naam": "gebouweenheidPositie",
+          "oudeWaarde": [
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>151625.66 205910.95</gml:pos></gml:Point>"
+            },
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>651621.10 705911.35</gml:pos></gml:Point>"
+            }
+          ],
+          "nieuweWaarde": [
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>151626.82 205908.24</gml:pos></gml:Point>"
+            },
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>651622.27 705908.63</gml:pos></gml:Point>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "5466632",
+    "time": "2024-02-07T13:11:55.5973451+01:00",
+    "type": "basisregisters.buildingunit.update.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
+    "basisregisterseventtype": "BuildingUnitWasRetiredV2",
+    "basisregisterscausationid": "fb9e8ecf-40a8-5be5-9c42-884ad4dd8832",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouweenheid/15869061",
+      "objectId": "15869061",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
+      "versieId": "2024-02-07T13:11:55+01:00",
+      "nisCodes": [
+        "11002"
+      ],
+      "attributen": [
+        {
+          "naam": "gebouweenheidStatus",
+          "oudeWaarde": "gerealiseerd",
+          "nieuweWaarde": "gehistoreerd"
+        }
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "5466639",
+    "time": "2024-02-07T13:12:26.396424+01:00",
+    "type": "basisregisters.buildingunit.delete.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
+    "basisregisterseventtype": "BuildingUnitWasRemovedV2",
+    "basisregisterscausationid": "9cac8c86-8e83-593a-9688-6d7a8f9ba10c",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouweenheid/15869061",
+      "objectId": "15869061",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
+      "versieId": "2024-02-07T13:12:26+01:00",
+      "nisCodes": [
+        "11002"
+      ],
+      "attributen": []
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "5466755",
+    "time": "2024-02-07T13:30:54.0870699+01:00",
+    "type": "basisregisters.buildingunit.create.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
+    "basisregisterseventtype": "BuildingUnitRemovalWasCorrected",
+    "basisregisterscausationid": "b97eaf3d-9480-5023-b81a-2267277cfe57",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/gebouweenheid/15869061",
+      "objectId": "15869061",
+      "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
+      "versieId": "2024-02-07T13:30:54+01:00",
+      "nisCodes": [
+        "11002"
+      ],
+      "attributen": [
+        {
+          "naam": "gebouweenheidStatus",
+          "oudeWaarde": null,
+          "nieuweWaarde": "gerealiseerd"
+        },
+        {
+          "naam": "gebouweenheidFunctie",
+          "oudeWaarde": null,
+          "nieuweWaarde": "gemeenschappelijkDeel"
+        },
+        {
+          "naam": "positieGeometrieMethode",
+          "oudeWaarde": null,
+          "nieuweWaarde": "afgeleidVanObject"
+        },
+        {
+          "naam": "gebouweenheidPositie",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>151626.82 205908.24</gml:pos></gml:Point>"
+            },
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>651622.27 705908.63</gml:pos></gml:Point>"
+            }
+          ]
+        },
+        {
+          "naam": "adresIds",
+          "oudeWaarde": null,
+          "nieuweWaarde": []
+        },
+        {
+          "naam": "gebouw.id",
+          "oudeWaarde": null,
+          "nieuweWaarde": "https://data.vlaanderen.be/id/gebouw/15867498"
+        },
+        {
+          "naam": "afwijkingVastgesteld",
+          "oudeWaarde": null,
+          "nieuweWaarde": false
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,169 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "5916780",
+    "time": "2026-02-16T08:56:06.0940297+01:00",
+    "type": "basisregisters.address.create.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
+    "basisregisterseventtype": "AddressWasProposedV2",
+    "basisregisterscausationid": "4e5590c4-bc09-5204-9e6f-dcdcc2c75945",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/adres/31320666",
+      "objectId": "31320666",
+      "naamruimte": "https://data.vlaanderen.be/id/adres",
+      "versieId": "2026-02-16T08:56:06+01:00",
+      "nisCodes": [
+        "11002"
+      ],
+      "attributen": [
+        {
+          "naam": "straatnaam.id",
+          "oudeWaarde": null,
+          "nieuweWaarde": "https://data.vlaanderen.be/id/straatnaam/298"
+        },
+        {
+          "naam": "adresStatus",
+          "oudeWaarde": null,
+          "nieuweWaarde": "voorgesteld"
+        },
+        {
+          "naam": "huisnummer",
+          "oudeWaarde": null,
+          "nieuweWaarde": "37A"
+        },
+        {
+          "naam": "postcode",
+          "oudeWaarde": null,
+          "nieuweWaarde": "2000"
+        },
+        {
+          "naam": "officieelToegekend",
+          "oudeWaarde": null,
+          "nieuweWaarde": true
+        },
+        {
+          "naam": "positieGeometrieMethode",
+          "oudeWaarde": null,
+          "nieuweWaarde": "aangeduidDoorBeheerder"
+        },
+        {
+          "naam": "positieSpecificatie",
+          "oudeWaarde": null,
+          "nieuweWaarde": "ingang"
+        },
+        {
+          "naam": "adresPositie",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>153439.07 209816.41</gml:pos></gml:Point>"
+            },
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>653434.03 709816.98</gml:pos></gml:Point>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "5916783",
+    "time": "2026-02-16T08:56:30.8528071+01:00",
+    "type": "basisregisters.address.delete.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
+    "basisregisterseventtype": "AddressWasRemovedV2",
+    "basisregisterscausationid": "2e2c389b-66b0-5df7-9fe6-45cd486e0e29",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/adres/31320666",
+      "objectId": "31320666",
+      "naamruimte": "https://data.vlaanderen.be/id/adres",
+      "versieId": "2026-02-16T08:56:30+01:00",
+      "nisCodes": [
+        "11002"
+      ],
+      "attributen": []
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "5917102",
+    "time": "2026-05-11T13:56:31.2106039+02:00",
+    "type": "basisregisters.address.create.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
+    "basisregisterseventtype": "AddressRemovalWasCorrected",
+    "basisregisterscausationid": "17ef8bff-1682-579e-ade2-4b5455d62e8a",
+    "data": {
+      "@id": "https://data.vlaanderen.be/id/adres/31320666",
+      "objectId": "31320666",
+      "naamruimte": "https://data.vlaanderen.be/id/adres",
+      "versieId": "2026-05-11T13:56:31+02:00",
+      "nisCodes": [
+        "11002"
+      ],
+      "attributen": [
+        {
+          "naam": "straatnaam.id",
+          "oudeWaarde": null,
+          "nieuweWaarde": "https://data.vlaanderen.be/id/straatnaam/298"
+        },
+        {
+          "naam": "adresStatus",
+          "oudeWaarde": null,
+          "nieuweWaarde": "voorgesteld"
+        },
+        {
+          "naam": "huisnummer",
+          "oudeWaarde": null,
+          "nieuweWaarde": "37A"
+        },
+        {
+          "naam": "postcode",
+          "oudeWaarde": null,
+          "nieuweWaarde": "2000"
+        },
+        {
+          "naam": "officieelToegekend",
+          "oudeWaarde": null,
+          "nieuweWaarde": true
+        },
+        {
+          "naam": "positieGeometrieMethode",
+          "oudeWaarde": null,
+          "nieuweWaarde": "aangeduidDoorBeheerder"
+        },
+        {
+          "naam": "positieSpecificatie",
+          "oudeWaarde": null,
+          "nieuweWaarde": "ingang"
+        },
+        {
+          "naam": "adresPositie",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>153439.07 209816.41</gml:pos></gml:Point>"
+            },
+            {
+              "type": "Point",
+              "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+              "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>653434.03 709816.98</gml:pos></gml:Point>"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

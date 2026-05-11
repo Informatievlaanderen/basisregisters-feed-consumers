@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/informatievlaanderen/basisregisters-feed-consumers/compare/v1.0.0...v1.1.0) (2026-05-11)
+
+
+### Features
+
+* handle removal-corrected ([2fe31bb](https://github.com/informatievlaanderen/basisregisters-feed-consumers/commit/2fe31bb2f9f450485e4765bd3fd7737a098a5a32))
+
 # 1.0.0 (2026-05-04)
 
 

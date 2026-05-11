@@ -19,6 +19,11 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
     public static readonly BaseRegistriesCloudEventType UpdateEvent = new("basisregisters.buildingunit.update.v1");
     public static readonly BaseRegistriesCloudEventType DeleteEvent = new("basisregisters.buildingunit.delete.v1");
 
+    public static readonly List<string> SupportedCorrectedRemovalEvents = new List<string>()
+    {
+        "BuildingUnitRemovalWasCorrected"
+    };
+
     private readonly GMLReader _gmlReader = GmlReaderFactory.CreateLambert2008GmlReader();
 
     public BuildingUnitProjector(
@@ -34,21 +39,30 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
         When(CreateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
-            var buildingUnit = new Model.BuildingUnit(
-                data.Id.ToString(),
-                int.Parse(data.ObjectId),
-                data.Attributen.GetRequired(BuildingUnitAttributes.BuildingId).NieuweWaarde!.ToString()!.ExtractPersistentLocalIdAsInt(),
-                MapStatus(data.Attributen.GetRequired(BuildingUnitAttributes.Status).NieuweWaarde!.ToString()!),
-                ExtractLambert2008Geometry(data.Attributen.GetRequired(BuildingUnitAttributes.Position).NieuweWaarde),
-                MapGeometryMethod(data.Attributen.GetRequired(BuildingUnitAttributes.GeometryMethod).NieuweWaarde!.ToString()!),
-                MapFunction(data.Attributen.GetRequired(BuildingUnitAttributes.BuildingUnitFunction).NieuweWaarde!.ToString()!),
-                data.Attributen.GetRequired(BuildingUnitAttributes.HasDeviation).NieuweWaarde!.ToBoolean(),
-                data.VersieId,
-                data.VersieIdAsString);
+
+            var buildingUnit = await context.BuildingUnits.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            if (buildingUnit is { IsRemoved: true })
+            {
+                buildingUnit.IsRemoved = false;
+            }
+            else
+            {
+                buildingUnit = new Model.BuildingUnit(
+                    data.Id.ToString(),
+                    int.Parse(data.ObjectId),
+                    data.Attributen.GetRequired(BuildingUnitAttributes.BuildingId).NieuweWaarde!.ToString()!.ExtractPersistentLocalIdAsInt(),
+                    MapStatus(data.Attributen.GetRequired(BuildingUnitAttributes.Status).NieuweWaarde!.ToString()!),
+                    ExtractLambert2008Geometry(data.Attributen.GetRequired(BuildingUnitAttributes.Position).NieuweWaarde),
+                    MapGeometryMethod(data.Attributen.GetRequired(BuildingUnitAttributes.GeometryMethod).NieuweWaarde!.ToString()!),
+                    MapFunction(data.Attributen.GetRequired(BuildingUnitAttributes.BuildingUnitFunction).NieuweWaarde!.ToString()!),
+                    data.Attributen.GetRequired(BuildingUnitAttributes.HasDeviation).NieuweWaarde!.ToBoolean(),
+                    data.VersieId,
+                    data.VersieIdAsString);
+
+                await context.BuildingUnits.AddAsync(buildingUnit, cancellationToken);
+            }
 
             await ProcessBuildingUnitAttributes(data, buildingUnit, context, cancellationToken);
-
-            await context.BuildingUnits.AddAsync(buildingUnit, cancellationToken);
         });
 
         When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>

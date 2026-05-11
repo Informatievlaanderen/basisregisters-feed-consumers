@@ -34,19 +34,27 @@ public sealed class AddressProjector : FeedProjectorBase
         When(CreateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
-            var address = new Address(
-                data.Id.ToString(),
-                int.Parse(data.ObjectId),
-                data.Attributen.GetRequired(AddressAttributes.StreetNameId).NieuweWaarde!.ToString()!.ExtractPersistentLocalIdAsInt(),
-                data.Attributen.GetRequired(AddressAttributes.HouseNumber).NieuweWaarde!.ToString()!,
-                MapStatus(data.Attributen.GetRequired(AddressAttributes.Status).NieuweWaarde!.ToString()!),
-                data.VersieId,
-                data.VersieIdAsString
-            );
+            var address = await context.Addresses.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            if (address is { IsRemoved: true })
+            {
+                address.IsRemoved = false;
+            }
+            else
+            {
+                address = new Address(
+                    data.Id.ToString(),
+                    int.Parse(data.ObjectId),
+                    data.Attributen.GetRequired(AddressAttributes.StreetNameId).NieuweWaarde!.ToString()!.ExtractPersistentLocalIdAsInt(),
+                    data.Attributen.GetRequired(AddressAttributes.HouseNumber).NieuweWaarde!.ToString()!,
+                    MapStatus(data.Attributen.GetRequired(AddressAttributes.Status).NieuweWaarde!.ToString()!),
+                    data.VersieId,
+                    data.VersieIdAsString
+                );
+
+                await context.Addresses.AddAsync(address, cancellationToken);
+            }
 
             ProcessAddressAttributes(data, address);
-
-            await context.Addresses.AddAsync(address, cancellationToken);
         });
 
         When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>
@@ -111,17 +119,7 @@ public sealed class AddressProjector : FeedProjectorBase
                     break;
 
                 case AddressAttributes.Position:
-                    var geometries = attribute.NieuweWaarde is JsonElement positionElement
-                        ? positionElement.Deserialize<List<GeometryData>>(CloudEventReader.JsonOptions)
-                        : [];
-
-                    var geometryData = geometries?
-                        .FirstOrDefault(x => x.IsLambert2008);
-
-                    if (geometryData is null)
-                        throw new ArgumentException("Address position must contain Lambert 2008 (EPSG:3812) geometry.");
-
-                    address.Geometry = MapGeometry(geometryData);
+                    address.Geometry = ExtractLambert2008Geometry(attribute.NieuweWaarde);
                     break;
 
                 case AddressAttributes.PositionGeometryMethod:
@@ -148,6 +146,21 @@ public sealed class AddressProjector : FeedProjectorBase
             "gehistoreerd" => AddressStatus.Retired,
             _ => throw new ArgumentException($"Unknown address status: {status}")
         };
+    }
+
+    private Geometry ExtractLambert2008Geometry(object? geometry)
+    {
+        var geometries = geometry is JsonElement positionElement
+            ? positionElement.Deserialize<List<GeometryData>>(CloudEventReader.JsonOptions)
+            : [];
+
+        var geometryData = geometries?
+            .FirstOrDefault(x => x.IsLambert2008);
+
+        if (geometryData is null)
+            throw new ArgumentException("Address position must contain Lambert 2008 (EPSG:3812) geometry.");
+
+        return MapGeometry(geometryData);
     }
 
     private Geometry MapGeometry(GeometryData geometryData)

@@ -34,19 +34,23 @@ public sealed class AddressProjector : FeedProjectorBase
         When(CreateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
-            var address = new Address(
-                data.Id.ToString(),
-                int.Parse(data.ObjectId),
-                data.Attributen.GetRequired(AddressAttributes.StreetNameId).NieuweWaarde!.ToString()!.ExtractPersistentLocalIdAsInt(),
-                data.Attributen.GetRequired(AddressAttributes.HouseNumber).NieuweWaarde!.ToString()!,
-                MapStatus(data.Attributen.GetRequired(AddressAttributes.Status).NieuweWaarde!.ToString()!),
-                data.VersieId,
-                data.VersieIdAsString
-            );
+            var address = await context.Addresses.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            if (address == null)
+            {
+                address = new Address(
+                    data.Id.ToString(),
+                    int.Parse(data.ObjectId),
+                    data.Attributen.GetRequired(AddressAttributes.StreetNameId).NieuweWaarde!.ToString()!.ExtractPersistentLocalIdAsInt(),
+                    data.Attributen.GetRequired(AddressAttributes.HouseNumber).NieuweWaarde!.ToString()!,
+                    MapStatus(data.Attributen.GetRequired(AddressAttributes.Status).NieuweWaarde!.ToString()!),
+                    data.VersieId,
+                    data.VersieIdAsString
+                );
 
-            ProcessAddressAttributes(data, address);
+                await context.Addresses.AddAsync(address, cancellationToken);
+            }
 
-            await context.Addresses.AddAsync(address, cancellationToken);
+            ApplyCreateEvent(data, address);
         });
 
         When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>
@@ -76,6 +80,17 @@ public sealed class AddressProjector : FeedProjectorBase
             Logger.LogInformation("Ignoring transform event");
             return Task.CompletedTask;
         });
+    }
+
+    private void ApplyCreateEvent(CloudEventData data, Address address)
+    {
+        address.PersistentUri = data.Id.ToString();
+        address.PersistentLocalId = int.Parse(data.ObjectId);
+        address.BoxNumber = null;
+        address.PostalCode = null;
+        address.IsRemoved = false;
+
+        ProcessAddressAttributes(data, address);
     }
 
     private void ProcessAddressAttributes(CloudEventData data, Address address)

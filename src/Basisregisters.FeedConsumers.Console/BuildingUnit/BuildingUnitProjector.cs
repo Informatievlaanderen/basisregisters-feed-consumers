@@ -34,21 +34,25 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
         When(CreateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
-            var buildingUnit = new Model.BuildingUnit(
-                data.Id.ToString(),
-                int.Parse(data.ObjectId),
-                data.Attributen.GetRequired(BuildingUnitAttributes.BuildingId).NieuweWaarde!.ToString()!.ExtractPersistentLocalIdAsInt(),
-                MapStatus(data.Attributen.GetRequired(BuildingUnitAttributes.Status).NieuweWaarde!.ToString()!),
-                ExtractLambert2008Geometry(data.Attributen.GetRequired(BuildingUnitAttributes.Position).NieuweWaarde),
-                MapGeometryMethod(data.Attributen.GetRequired(BuildingUnitAttributes.GeometryMethod).NieuweWaarde!.ToString()!),
-                MapFunction(data.Attributen.GetRequired(BuildingUnitAttributes.BuildingUnitFunction).NieuweWaarde!.ToString()!),
-                data.Attributen.GetRequired(BuildingUnitAttributes.HasDeviation).NieuweWaarde!.ToBoolean(),
-                data.VersieId,
-                data.VersieIdAsString);
+            var buildingUnit = await context.BuildingUnits.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            if (buildingUnit == null)
+            {
+                buildingUnit = new Model.BuildingUnit(
+                    data.Id.ToString(),
+                    int.Parse(data.ObjectId),
+                    data.Attributen.GetRequired(BuildingUnitAttributes.BuildingId).NieuweWaarde!.ToString()!.ExtractPersistentLocalIdAsInt(),
+                    MapStatus(data.Attributen.GetRequired(BuildingUnitAttributes.Status).NieuweWaarde!.ToString()!),
+                    ExtractLambert2008Geometry(data.Attributen.GetRequired(BuildingUnitAttributes.Position).NieuweWaarde),
+                    MapGeometryMethod(data.Attributen.GetRequired(BuildingUnitAttributes.GeometryMethod).NieuweWaarde!.ToString()!),
+                    MapFunction(data.Attributen.GetRequired(BuildingUnitAttributes.BuildingUnitFunction).NieuweWaarde!.ToString()!),
+                    data.Attributen.GetRequired(BuildingUnitAttributes.HasDeviation).NieuweWaarde!.ToBoolean(),
+                    data.VersieId,
+                    data.VersieIdAsString);
 
-            await ProcessBuildingUnitAttributes(data, buildingUnit, context, cancellationToken);
+                await context.BuildingUnits.AddAsync(buildingUnit, cancellationToken);
+            }
 
-            await context.BuildingUnits.AddAsync(buildingUnit, cancellationToken);
+            await ApplyCreateEventAsync(data, buildingUnit, context, cancellationToken);
         });
 
         When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>
@@ -72,6 +76,23 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
             buildingUnit.VersionIdAsString = data.VersieIdAsString;
             buildingUnit.IsRemoved = true;
         });
+    }
+
+    private async Task ApplyCreateEventAsync(CloudEventData data, Model.BuildingUnit buildingUnit, FeedContext context, CancellationToken cancellationToken)
+    {
+        buildingUnit.PersistentUri = data.Id.ToString();
+        buildingUnit.PersistentLocalId = int.Parse(data.ObjectId);
+        buildingUnit.BuildingPersistentLocalId = data.Attributen.GetRequired(BuildingUnitAttributes.BuildingId).NieuweWaarde!.ToString()!.ExtractPersistentLocalIdAsInt();
+        buildingUnit.Status = MapStatus(data.Attributen.GetRequired(BuildingUnitAttributes.Status).NieuweWaarde!.ToString()!);
+        buildingUnit.Position = ExtractLambert2008Geometry(data.Attributen.GetRequired(BuildingUnitAttributes.Position).NieuweWaarde);
+        buildingUnit.GeometryMethod = MapGeometryMethod(data.Attributen.GetRequired(BuildingUnitAttributes.GeometryMethod).NieuweWaarde!.ToString()!);
+        buildingUnit.Function = MapFunction(data.Attributen.GetRequired(BuildingUnitAttributes.BuildingUnitFunction).NieuweWaarde!.ToString()!);
+        buildingUnit.HasDeviation = data.Attributen.GetRequired(BuildingUnitAttributes.HasDeviation).NieuweWaarde!.ToBoolean();
+        buildingUnit.VersionId = data.VersieId;
+        buildingUnit.VersionIdAsString = data.VersieIdAsString;
+        buildingUnit.IsRemoved = false;
+
+        await SyncAddressesAsync(buildingUnit.PersistentLocalId, data.Attributen.Get(BuildingUnitAttributes.AddressIds)?.NieuweWaarde, context, cancellationToken);
     }
 
     private async Task ProcessBuildingUnitAttributes(CloudEventData data, Model.BuildingUnit buildingUnit, FeedContext context, CancellationToken cancellationToken)

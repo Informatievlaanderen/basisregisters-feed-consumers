@@ -24,6 +24,7 @@ public class BuildingUnitProjectorTests
     private const string PuriBuildingUnit5812645 = "https://data.vlaanderen.be/id/gebouweenheid/5812645";
     private const string PuriBuildingUnit5674659 = "https://data.vlaanderen.be/id/gebouweenheid/5674659";
     private const string PuriBuildingUnit5682336 = "https://data.vlaanderen.be/id/gebouweenheid/5682336";
+    private const string PuriBuildingUnit15869061 = "https://data.vlaanderen.be/id/gebouweenheid/15869061";
     private const string PuriBuildingUnit31779857 = "https://data.vlaanderen.be/id/gebouweenheid/31779857";
     private const string BuildingUnitFeedName = "BuildingUnitFeed";
 
@@ -296,6 +297,36 @@ public class BuildingUnitProjectorTests
 
         await act.Should().ThrowAsync<ArgumentException>()
             .WithMessage("*Lambert 2008 (EPSG:3812)*");
+    }
+
+    [Fact]
+    public async Task RemovalCorrectedCreateEvent_ShouldReuseExistingBuildingUnitAndRestoreIt()
+    {
+        var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
+            Path.Combine("TestData", "buildingunit-removal-corrected.json"));
+
+        _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: false));
+
+        using var cts = new CancellationTokenSource();
+        cts.CancelAfter(5000);
+
+        await RunOneCycleAsync(cts.Token);
+
+        await using var context = _contextFactory.CreateDbContext();
+        var buildingUnit = await context.BuildingUnits.FindAsync([PuriBuildingUnit15869061], TestContext.Current.CancellationToken);
+        var addressLinks = await context.BuildingUnitAddresses
+            .Where(x => x.BuildingUnitPersistentLocalId == 15869061)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        buildingUnit.Should().NotBeNull();
+        buildingUnit!.PersistentLocalId.Should().Be(15869061);
+        buildingUnit.Status.Should().Be(BuildingUnitStatus.Realized);
+        buildingUnit.Function.Should().Be(BuildingUnitFunction.Common);
+        buildingUnit.GeometryMethod.Should().Be(BuildingUnitGeometryMethod.DerivedFromObject);
+        buildingUnit.IsRemoved.Should().BeFalse();
+        buildingUnit.VersionId.Should().Be(events[^1].GetVersionId());
+        buildingUnit.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
+        addressLinks.Should().BeEmpty();
     }
 
     [Fact]

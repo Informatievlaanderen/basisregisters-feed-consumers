@@ -22,6 +22,7 @@ public class AddressProjectorTests
 
     private const string PuriAddress30411696 = "https://data.vlaanderen.be/id/adres/30411696";
     private const string PuriAddress31319625 = "https://data.vlaanderen.be/id/adres/31319625";
+    private const string PuriAddress31320666 = "https://data.vlaanderen.be/id/adres/31320666";
     private const string AddressFeedName = "AddressFeed";
 
     public AddressProjectorTests()
@@ -318,6 +319,32 @@ public class AddressProjectorTests
         address!.Status.Should().Be(AddressStatus.Retired);
         address.BoxNumber.Should().Be("002");
         address.IsRemoved.Should().BeTrue();
+        address.VersionId.Should().Be(events[^1].GetVersionId());
+        address.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
+    }
+
+    [Fact]
+    public async Task RemovalCorrectedCreateEvent_ShouldReuseExistingAddressAndRestoreIt()
+    {
+        var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
+            Path.Combine("TestData", "address-removal-corrected.json"));
+
+        _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: false));
+
+        using var cts = new CancellationTokenSource();
+        cts.CancelAfter(5000);
+
+        await RunOneCycleAsync(cts.Token);
+
+        await using var context = _contextFactory.CreateDbContext();
+        var address = await context.Addresses.FindAsync([PuriAddress31320666], TestContext.Current.CancellationToken);
+
+        address.Should().NotBeNull();
+        address!.PersistentLocalId.Should().Be(31320666);
+        address.Status.Should().Be(AddressStatus.Proposed);
+        address.HouseNumber.Should().Be("37A");
+        address.PostalCode.Should().Be("2000");
+        address.IsRemoved.Should().BeFalse();
         address.VersionId.Should().Be(events[^1].GetVersionId());
         address.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }

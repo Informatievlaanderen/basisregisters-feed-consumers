@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -41,7 +43,7 @@ public class PostalInformationProjector : FeedProjectorBase
                 data.VersieId,
                 data.VersieIdAsString);
 
-            ProcessPostalInformationAttributes(data, postalInformation);
+            await ProcessPostalInformationAttributes(data, postalInformation, context, cancellationToken);
 
             await context.PostalInformations.AddAsync(postalInformation, cancellationToken);
         });
@@ -49,13 +51,13 @@ public class PostalInformationProjector : FeedProjectorBase
         When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing update event: {EventId}", cloudEvent.Id);
-            var postalInformation = await context.PostalInformations.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            var postalInformation = await context.PostalInformations
+                .FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+
             if (postalInformation == null)
                 throw new InvalidOperationException($"PostalInformation {data.Id} not found");
 
-            await context.Entry(postalInformation).Collection(p => p.PostalNames).LoadAsync(cancellationToken);
-
-            ProcessPostalInformationAttributes(data, postalInformation);
+            await ProcessPostalInformationAttributes(data, postalInformation, context, cancellationToken);
         });
 
         When(DeleteEvent, async (cloudEvent, data, context, cancellationToken) =>
@@ -71,7 +73,11 @@ public class PostalInformationProjector : FeedProjectorBase
         });
     }
 
-    private static void ProcessPostalInformationAttributes(CloudEventData data, PostalInformation postalInformation)
+    private static async Task ProcessPostalInformationAttributes(
+        CloudEventData data,
+        PostalInformation postalInformation,
+        FeedContext context,
+        CancellationToken cancellationToken)
     {
         postalInformation.VersionId = data.VersieId;
         postalInformation.VersionIdAsString = data.VersieIdAsString;
@@ -95,14 +101,11 @@ public class PostalInformationProjector : FeedProjectorBase
 
                     if (names is not null)
                     {
-                        postalInformation.PostalNames.Clear();
-                        foreach (var name in names)
-                        {
-                            postalInformation.PostalNames.Add(new PostalInformationName(
-                                name.Spelling,
-                                MapLanguage(name.Taal),
-                                postalInformation.PostalCode));
-                        }
+                        await SyncPostalNamesAsync(
+                            postalInformation.PostalCode,
+                            names,
+                            context,
+                            cancellationToken);
                     }
                     break;
 
@@ -132,5 +135,41 @@ public class PostalInformationProjector : FeedProjectorBase
             "gehistoreerd" => PostalInformationStatus.Retired,
             _ => throw new ArgumentException($"Unknown status: {status}")
         };
+    }
+
+    private static async Task SyncPostalNamesAsync(
+        string postalCode,
+        IReadOnlyCollection<GeographicalName> names,
+        FeedContext context,
+        CancellationToken cancellationToken)
+    {
+        var updatedNames = names
+            .Select(name => new { Name = name.Spelling, Lang = MapLanguage(name.Taal)})
+            .ToHashSet();
+
+        var existingPostalNames = (await context.Set<PostalInformationName>()
+                .Where(x => x.PostalCode == postalCode)
+                .ToListAsync(cancellationToken))
+            .UnionBy(
+                context.Set<PostalInformationName>().Local.Where(x => x.PostalCode == postalCode),
+                x => new{x.Name, Lang = x.Language})
+            .ToList();
+
+        foreach (var existingPostalName in existingPostalNames
+                     .Where(x => !updatedNames.Contains(new {x.Name, Lang = x.Language})))
+        {
+            context.Remove(existingPostalName);
+        }
+
+        var existingNames = existingPostalNames
+            .Select(x => new {x.Name, Lang = x.Language })
+            .ToHashSet();
+
+        foreach (var updatedName in updatedNames.Where(x => !existingNames.Contains(x)))
+        {
+            await context.AddAsync(
+                new PostalInformationName(updatedName.Name, updatedName.Lang, postalCode),
+                cancellationToken);
+        }
     }
 }

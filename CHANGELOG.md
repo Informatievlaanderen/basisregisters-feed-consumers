@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/informatievlaanderen/basisregisters-feed-consumers/compare/v1.1.0...v1.1.1) (2026-05-12)
+
+
+### Bug Fixes
+
+* consuming postalnames ([569151d](https://github.com/informatievlaanderen/basisregisters-feed-consumers/commit/569151d1ff5937429afdb6456764f1b109afde29))
+
 # [1.1.0](https://github.com/informatievlaanderen/basisregisters-feed-consumers/compare/v1.0.0...v1.1.0) (2026-05-11)
 
 

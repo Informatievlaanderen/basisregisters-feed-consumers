@@ -1,3 +1,11 @@
+## [1.1.2](https://github.com/informatievlaanderen/basisregisters-feed-consumers/compare/v1.1.1...v1.1.2) (2026-05-15)
+
+
+### Bug Fixes
+
+* **parcel:** rename status current to realized ([235963e](https://github.com/informatievlaanderen/basisregisters-feed-consumers/commit/235963e7226244d34535da7ae2b4d39c9172fe32))
+* track deleted / reinserted entities in same batch ([f576ec4](https://github.com/informatievlaanderen/basisregisters-feed-consumers/commit/f576ec4ef8972e14d349494daec466159af1a513))
+
 ## [1.1.1](https://github.com/informatievlaanderen/basisregisters-feed-consumers/compare/v1.1.0...v1.1.1) (2026-05-12)
 
 

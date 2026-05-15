@@ -130,6 +130,134 @@ public class ParcelProjectorTests
     }
 
     [Fact]
+    public async Task UpdateEvents_ShouldRestorePersistedAddressesAfterDetachAndReattachInSameBatch()
+    {
+        var initialEvents = await CloudEventTestHelper.ReadEventsFromJsonAsync(
+            """
+            [
+              {
+                "specversion": "1.0",
+                "id": "9100001",
+                "time": "2025-09-18T08:03:00+02:00",
+                "type": "basisregisters.parcel.create.v1",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/percelen",
+                "datacontenttype": "application/json",
+                "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/perceel/2026-01-21/perceel.json",
+                "basisregisterseventtype": "ParcelWasMigrated",
+                "basisregisterscausationid": "55555555-5555-5555-5555-555555555555",
+                "data": {
+                  "@id": "https://data.vlaanderen.be/id/perceel/72015B0517-00B002",
+                  "objectId": "72015B0517-00B002",
+                  "naamruimte": "https://data.vlaanderen.be/id/perceel",
+                  "versieId": "2025-09-18T08:03:00+02:00",
+                  "nisCodes": [ "72015" ],
+                  "attributen": [
+                    { "naam": "perceelStatus", "oudeWaarde": null, "nieuweWaarde": "gerealiseerd" },
+                    {
+                      "naam": "adresIds",
+                      "oudeWaarde": null,
+                      "nieuweWaarde": [
+                        "https://data.vlaanderen.be/id/adres/1097598",
+                        "https://data.vlaanderen.be/id/adres/4354739"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+            """);
+
+        _feedPageFetcher.SetupPage(1, initialEvents.ToFeedPage(isPageComplete: true));
+
+        using (var initialCts = new CancellationTokenSource())
+        {
+            initialCts.CancelAfter(5000);
+            await RunOneCycleAsync(initialCts.Token);
+        }
+
+        var events = await CloudEventTestHelper.ReadEventsFromJsonAsync(
+            """
+            [
+              {
+                "specversion": "1.0",
+                "id": "9100002",
+                "time": "2025-09-18T08:03:01+02:00",
+                "type": "basisregisters.parcel.update.v1",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/percelen",
+                "datacontenttype": "application/json",
+                "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/perceel/2026-01-21/perceel.json",
+                "basisregisterseventtype": "ParcelAddressWasDetachedV2",
+                "basisregisterscausationid": "66666666-6666-6666-6666-666666666666",
+                "data": {
+                  "@id": "https://data.vlaanderen.be/id/perceel/72015B0517-00B002",
+                  "objectId": "72015B0517-00B002",
+                  "naamruimte": "https://data.vlaanderen.be/id/perceel",
+                  "versieId": "2025-09-18T08:03:01+02:00",
+                  "nisCodes": [ "72015" ],
+                  "attributen": [
+                    {
+                      "naam": "adresIds",
+                      "oudeWaarde": [
+                        "https://data.vlaanderen.be/id/adres/1097598",
+                        "https://data.vlaanderen.be/id/adres/4354739"
+                      ],
+                      "nieuweWaarde": [ "https://data.vlaanderen.be/id/adres/4354739" ]
+                    }
+                  ]
+                }
+              },
+              {
+                "specversion": "1.0",
+                "id": "9100003",
+                "time": "2025-09-18T08:03:02+02:00",
+                "type": "basisregisters.parcel.update.v1",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/percelen",
+                "datacontenttype": "application/json",
+                "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/perceel/2026-01-21/perceel.json",
+                "basisregisterseventtype": "ParcelAddressWasAttachedV2",
+                "basisregisterscausationid": "77777777-7777-7777-7777-777777777777",
+                "data": {
+                  "@id": "https://data.vlaanderen.be/id/perceel/72015B0517-00B002",
+                  "objectId": "72015B0517-00B002",
+                  "naamruimte": "https://data.vlaanderen.be/id/perceel",
+                  "versieId": "2025-09-18T08:03:02+02:00",
+                  "nisCodes": [ "72015" ],
+                  "attributen": [
+                    {
+                      "naam": "adresIds",
+                      "oudeWaarde": [ "https://data.vlaanderen.be/id/adres/4354739" ],
+                      "nieuweWaarde": [
+                        "https://data.vlaanderen.be/id/adres/1097598",
+                        "https://data.vlaanderen.be/id/adres/4354739"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+            """);
+
+        _feedPageFetcher.SetupPage(2, events.ToFeedPage(isPageComplete: false));
+
+        using var cts = new CancellationTokenSource();
+        cts.CancelAfter(5000);
+
+        await RunOneCycleAsync(cts.Token);
+
+        await using var context = _contextFactory.CreateDbContext();
+        var parcel = await context.Parcels.FindAsync([PuriParcel72015B051700B002], TestContext.Current.CancellationToken);
+        var addressLinks = await context.ParcelAddresses
+            .Where(x => x.VbrCaPaKey == "72015B0517-00B002")
+            .OrderBy(x => x.AddressPersistentLocalId)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        parcel.Should().NotBeNull();
+        parcel!.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
+        addressLinks.Should().HaveCount(2);
+        addressLinks.Select(x => x.AddressPersistentLocalId).Should().Equal(1097598, 4354739);
+    }
+
+    [Fact]
     public async Task FeedState_ShouldTrackPositionAfterProcessingEvents()
     {
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(

@@ -215,6 +215,137 @@ public class PostalInformationProjectorTests
     }
 
     [Fact]
+    public async Task UpdateEvents_ShouldRestorePersistedPostalNamesAfterRemovalAndReAddInSameBatch()
+    {
+        var initialEvents = await CloudEventTestHelper.ReadEventsFromJsonAsync(
+            """
+            [
+              {
+                "specversion": "1.0",
+                "id": "9200001",
+                "time": "2020-02-10T12:42:50+01:00",
+                "type": "basisregisters.postalinformation.create.v1",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+                "datacontenttype": "application/json",
+                "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+                "basisregisterseventtype": "PostalInformationWasRegistered",
+                "basisregisterscausationid": "88888888-8888-8888-8888-888888888888",
+                "data": {
+                  "@id": "https://data.vlaanderen.be/id/postinfo/9050",
+                  "objectId": "9050",
+                  "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+                  "versieId": "2020-02-10T12:42:50+01:00",
+                  "nisCodes": [],
+                  "attributen": [
+                    { "naam": "postInfoStatus", "oudeWaarde": null, "nieuweWaarde": "gerealiseerd" },
+                    {
+                      "naam": "postnamen",
+                      "oudeWaarde": [],
+                      "nieuweWaarde": [
+                        { "spelling": "Gentbrugge", "taal": "nl" },
+                        { "spelling": "Ledeberg", "taal": "nl" }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+            """);
+
+        _feedPageFetcher.SetupPage(1, initialEvents.ToFeedPage(isPageComplete: true));
+
+        using (var initialCts = new CancellationTokenSource())
+        {
+            initialCts.CancelAfter(5000);
+            await RunOneCycleAsync(initialCts.Token);
+        }
+
+        var events = await CloudEventTestHelper.ReadEventsFromJsonAsync(
+            """
+            [
+              {
+                "specversion": "1.0",
+                "id": "9200002",
+                "time": "2020-02-10T12:43:00+01:00",
+                "type": "basisregisters.postalinformation.update.v1",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+                "datacontenttype": "application/json",
+                "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+                "basisregisterseventtype": "PostalInformationPostalNameWasRemoved",
+                "basisregisterscausationid": "99999999-9999-9999-9999-999999999999",
+                "data": {
+                  "@id": "https://data.vlaanderen.be/id/postinfo/9050",
+                  "objectId": "9050",
+                  "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+                  "versieId": "2020-02-10T12:43:00+01:00",
+                  "nisCodes": [],
+                  "attributen": [
+                    {
+                      "naam": "postnamen",
+                      "oudeWaarde": [
+                        { "spelling": "Gentbrugge", "taal": "nl" },
+                        { "spelling": "Ledeberg", "taal": "nl" }
+                      ],
+                      "nieuweWaarde": [
+                        { "spelling": "Ledeberg", "taal": "nl" }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "specversion": "1.0",
+                "id": "9200003",
+                "time": "2020-02-10T12:43:01+01:00",
+                "type": "basisregisters.postalinformation.update.v1",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+                "datacontenttype": "application/json",
+                "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
+                "basisregisterseventtype": "PostalInformationPostalNameWasAdded",
+                "basisregisterscausationid": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                "data": {
+                  "@id": "https://data.vlaanderen.be/id/postinfo/9050",
+                  "objectId": "9050",
+                  "naamruimte": "https://data.vlaanderen.be/id/postinfo",
+                  "versieId": "2020-02-10T12:43:01+01:00",
+                  "nisCodes": [],
+                  "attributen": [
+                    {
+                      "naam": "postnamen",
+                      "oudeWaarde": [
+                        { "spelling": "Ledeberg", "taal": "nl" }
+                      ],
+                      "nieuweWaarde": [
+                        { "spelling": "Gentbrugge", "taal": "nl" },
+                        { "spelling": "Ledeberg", "taal": "nl" }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+            """);
+
+        _feedPageFetcher.SetupPage(2, events.ToFeedPage(isPageComplete: false));
+
+        using var cts = new CancellationTokenSource();
+        cts.CancelAfter(5000);
+
+        await RunOneCycleAsync(cts.Token);
+
+        await using var context = _contextFactory.CreateDbContext();
+        var postalInformation = await context.PostalInformations
+            .Include(p => p.PostalNames)
+            .FirstOrDefaultAsync(p => p.PersistentUri == PuriPostalInfo9050, TestContext.Current.CancellationToken);
+
+        postalInformation.Should().NotBeNull();
+        postalInformation!.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
+        postalInformation.PostalNames.Should().HaveCount(2);
+        postalInformation.PostalNames.Should().ContainSingle(x => x.Name == "Gentbrugge" && x.Language == Language.Nl);
+        postalInformation.PostalNames.Should().ContainSingle(x => x.Name == "Ledeberg" && x.Language == Language.Nl);
+    }
+
+    [Fact]
     public async Task NisCode_ShouldBeExtractedFromMunicipalityPuri()
     {
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(

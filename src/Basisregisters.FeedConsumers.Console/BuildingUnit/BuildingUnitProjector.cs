@@ -207,19 +207,31 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
             .Select(addressId => addressId.ExtractPersistentLocalIdAsInt())
             .ToHashSet();
 
-        var existingAddresses = (await context.BuildingUnitAddresses
-                .Where(x => x.BuildingUnitPersistentLocalId == buildingUnitPersistentLocalId)
-                .ToListAsync(cancellationToken))
-            .UnionBy(
-                context.BuildingUnitAddresses.Local.Where(x => x.BuildingUnitPersistentLocalId == buildingUnitPersistentLocalId),
-                x => (x.BuildingUnitPersistentLocalId, x.AddressPersistentLocalId))
+        await context.BuildingUnitAddresses
+            .Where(x => x.BuildingUnitPersistentLocalId == buildingUnitPersistentLocalId)
+            .LoadAsync(cancellationToken);
+
+        var trackedAddressEntries = context.ChangeTracker
+            .Entries<BuildingUnitAddress>()
+            .Where(x => x.Entity.BuildingUnitPersistentLocalId == buildingUnitPersistentLocalId)
             .ToList();
 
-        foreach (var existingAddress in existingAddresses.Where(x => !updatedAddressPersistentLocalIds.Contains(x.AddressPersistentLocalId)))
-            context.BuildingUnitAddresses.Remove(existingAddress);
+        foreach (var trackedAddressEntry in trackedAddressEntries
+                     .Where(x => x.State == EntityState.Deleted && updatedAddressPersistentLocalIds.Contains(x.Entity.AddressPersistentLocalId)))
+        {
+            trackedAddressEntry.State = EntityState.Unchanged;
+        }
 
-        var existingAddressPersistentLocalIds = existingAddresses
-            .Select(x => x.AddressPersistentLocalId)
+        foreach (var trackedAddressEntry in trackedAddressEntries
+                     .Where(x => x.State != EntityState.Deleted && !updatedAddressPersistentLocalIds.Contains(x.Entity.AddressPersistentLocalId)))
+        {
+            context.BuildingUnitAddresses.Remove(trackedAddressEntry.Entity);
+        }
+
+        var existingAddressPersistentLocalIds = context.ChangeTracker
+            .Entries<BuildingUnitAddress>()
+            .Where(x => x.Entity.BuildingUnitPersistentLocalId == buildingUnitPersistentLocalId && x.State != EntityState.Deleted)
+            .Select(x => x.Entity.AddressPersistentLocalId)
             .ToHashSet();
 
         foreach (var addressPersistentLocalId in updatedAddressPersistentLocalIds.Where(x => !existingAddressPersistentLocalIds.Contains(x)))

@@ -93,19 +93,31 @@ public sealed class ParcelProjector : FeedProjectorBase
             .Select(addressId => addressId.ExtractPersistentLocalIdAsInt())
             .ToHashSet();
 
-        var existingAddresses = (await context.ParcelAddresses
-                .Where(x => x.VbrCaPaKey == vbrCaPaKey)
-                .ToListAsync(cancellationToken))
-            .UnionBy(
-                context.ParcelAddresses.Local.Where(x => x.VbrCaPaKey == vbrCaPaKey),
-                x => (x.VbrCaPaKey, x.AddressPersistentLocalId))
+        await context.ParcelAddresses
+            .Where(x => x.VbrCaPaKey == vbrCaPaKey)
+            .LoadAsync(cancellationToken);
+
+        var trackedAddressEntries = context.ChangeTracker
+            .Entries<ParcelAddress>()
+            .Where(x => x.Entity.VbrCaPaKey == vbrCaPaKey)
             .ToList();
 
-        foreach (var existingAddress in existingAddresses.Where(x => !updatedAddressPersistentLocalIds.Contains(x.AddressPersistentLocalId)))
-            context.ParcelAddresses.Remove(existingAddress);
+        foreach (var trackedAddressEntry in trackedAddressEntries
+                     .Where(x => x.State == EntityState.Deleted && updatedAddressPersistentLocalIds.Contains(x.Entity.AddressPersistentLocalId)))
+        {
+            trackedAddressEntry.State = EntityState.Unchanged;
+        }
 
-        var existingAddressPersistentLocalIds = existingAddresses
-            .Select(x => x.AddressPersistentLocalId)
+        foreach (var trackedAddressEntry in trackedAddressEntries
+                     .Where(x => x.State != EntityState.Deleted && !updatedAddressPersistentLocalIds.Contains(x.Entity.AddressPersistentLocalId)))
+        {
+            context.ParcelAddresses.Remove(trackedAddressEntry.Entity);
+        }
+
+        var existingAddressPersistentLocalIds = context.ChangeTracker
+            .Entries<ParcelAddress>()
+            .Where(x => x.Entity.VbrCaPaKey == vbrCaPaKey && x.State != EntityState.Deleted)
+            .Select(x => x.Entity.AddressPersistentLocalId)
             .ToHashSet();
 
         foreach (var addressPersistentLocalId in updatedAddressPersistentLocalIds.Where(x => !existingAddressPersistentLocalIds.Contains(x)))

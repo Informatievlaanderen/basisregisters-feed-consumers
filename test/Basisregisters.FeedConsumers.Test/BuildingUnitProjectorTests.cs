@@ -26,6 +26,7 @@ public class BuildingUnitProjectorTests
     private const string PuriBuildingUnit5682336 = "https://data.vlaanderen.be/id/gebouweenheid/5682336";
     private const string PuriBuildingUnit15869061 = "https://data.vlaanderen.be/id/gebouweenheid/15869061";
     private const string PuriBuildingUnit31779857 = "https://data.vlaanderen.be/id/gebouweenheid/31779857";
+    private const string PuriBuildingUnit5677483 = "https://data.vlaanderen.be/id/gebouweenheid/5677483";
     private const string BuildingUnitFeedName = "BuildingUnitFeed";
 
     public BuildingUnitProjectorTests()
@@ -327,6 +328,185 @@ public class BuildingUnitProjectorTests
         buildingUnit.VersionId.Should().Be(events[^1].GetVersionId());
         buildingUnit.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
         addressLinks.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task UpdateEvents_ShouldRestoreAddressesAfterPingPongChanges()
+    {
+        var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
+            Path.Combine("TestData", "buildingunit-ping-pong-addresses.json"));
+
+        _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: false));
+
+        using var cts = new CancellationTokenSource();
+        cts.CancelAfter(5000);
+
+        await RunOneCycleAsync(cts.Token);
+
+        await using var context = _contextFactory.CreateDbContext();
+        var buildingUnit = await context.BuildingUnits.FindAsync([PuriBuildingUnit5677483], TestContext.Current.CancellationToken);
+        var addressLinks = await context.BuildingUnitAddresses
+            .Where(x => x.BuildingUnitPersistentLocalId == 5677483)
+            .OrderBy(x => x.AddressPersistentLocalId)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        buildingUnit.Should().NotBeNull();
+        buildingUnit!.VersionId.Should().Be(events[^1].GetVersionId());
+        buildingUnit.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
+        addressLinks.Should().HaveCount(2);
+        addressLinks.Select(x => x.AddressPersistentLocalId).Should().Equal(304486, 2314327);
+    }
+
+    [Fact]
+    public async Task UpdateEvents_ShouldRestorePersistedAddressesAfterDetachAndReattachInSameBatch()
+    {
+        var initialEvents = await CloudEventTestHelper.ReadEventsFromJsonAsync(
+            """
+            [
+              {
+                "specversion": "1.0",
+                "id": "9000001",
+                "time": "2025-01-15T04:37:00+01:00",
+                "type": "basisregisters.buildingunit.create.v1",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+                "datacontenttype": "application/json",
+                "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
+                "basisregisterseventtype": "BuildingWasMigrated",
+                "basisregisterscausationid": "11111111-1111-1111-1111-111111111111",
+                "data": {
+                  "@id": "https://data.vlaanderen.be/id/gebouweenheid/39999991",
+                  "objectId": "39999991",
+                  "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
+                  "versieId": "2025-01-15T04:37:00+01:00",
+                  "nisCodes": [ "11008" ],
+                  "attributen": [
+                    { "naam": "gebouweenheidStatus", "oudeWaarde": null, "nieuweWaarde": "gerealiseerd" },
+                    { "naam": "gebouweenheidFunctie", "oudeWaarde": null, "nieuweWaarde": "gemeenschappelijkDeel" },
+                    { "naam": "positieGeometrieMethode", "oudeWaarde": null, "nieuweWaarde": "afgeleidVanObject" },
+                    {
+                      "naam": "gebouweenheidPositie",
+                      "oudeWaarde": null,
+                      "nieuweWaarde": [
+                        {
+                          "type": "Point",
+                          "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+                          "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>159244.89 220780.04</gml:pos></gml:Point>"
+                        },
+                        {
+                          "type": "Point",
+                          "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+                          "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>659238.49 720781.20</gml:pos></gml:Point>"
+                        }
+                      ]
+                    },
+                    {
+                      "naam": "adresIds",
+                      "oudeWaarde": null,
+                      "nieuweWaarde": [
+                        "https://data.vlaanderen.be/id/adres/304486",
+                        "https://data.vlaanderen.be/id/adres/2314327"
+                      ]
+                    },
+                    { "naam": "gebouw.id", "oudeWaarde": null, "nieuweWaarde": "https://data.vlaanderen.be/id/gebouw/5676172" },
+                    { "naam": "afwijkingVastgesteld", "oudeWaarde": null, "nieuweWaarde": false }
+                  ]
+                }
+              }
+            ]
+            """);
+
+        _feedPageFetcher.SetupPage(1, initialEvents.ToFeedPage(isPageComplete: true));
+
+        using (var initialCts = new CancellationTokenSource())
+        {
+            initialCts.CancelAfter(5000);
+            await RunOneCycleAsync(initialCts.Token);
+        }
+
+        var events = await CloudEventTestHelper.ReadEventsFromJsonAsync(
+            """
+            [
+              {
+                "specversion": "1.0",
+                "id": "9000002",
+                "time": "2025-01-15T04:37:01+01:00",
+                "type": "basisregisters.buildingunit.update.v1",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+                "datacontenttype": "application/json",
+                "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
+                "basisregisterseventtype": "BuildingUnitAddressWasAttachedV2",
+                "basisregisterscausationid": "22222222-2222-2222-2222-222222222222",
+                "data": {
+                  "@id": "https://data.vlaanderen.be/id/gebouweenheid/39999991",
+                  "objectId": "39999991",
+                  "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
+                  "versieId": "2025-01-15T04:37:01+01:00",
+                  "nisCodes": [ "11008" ],
+                  "attributen": [
+                    {
+                      "naam": "adresIds",
+                      "oudeWaarde": [
+                        "https://data.vlaanderen.be/id/adres/304486",
+                        "https://data.vlaanderen.be/id/adres/2314327"
+                      ],
+                      "nieuweWaarde": [
+                        "https://data.vlaanderen.be/id/adres/2314327"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "specversion": "1.0",
+                "id": "9000004",
+                "time": "2025-01-15T04:37:03+01:00",
+                "type": "basisregisters.buildingunit.update.v1",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+                "datacontenttype": "application/json",
+                "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
+                "basisregisterseventtype": "BuildingUnitAddressesWereAttachedV2",
+                "basisregisterscausationid": "44444444-4444-4444-4444-444444444444",
+                "data": {
+                  "@id": "https://data.vlaanderen.be/id/gebouweenheid/39999991",
+                  "objectId": "39999991",
+                  "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
+                  "versieId": "2025-01-15T04:37:02+01:00",
+                  "nisCodes": [ "11008" ],
+                  "attributen": [
+                    {
+                      "naam": "adresIds",
+                      "oudeWaarde": [
+                        "https://data.vlaanderen.be/id/adres/2314327"
+                      ],
+                      "nieuweWaarde": [
+                        "https://data.vlaanderen.be/id/adres/304486",
+                        "https://data.vlaanderen.be/id/adres/2314327"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+            """);
+
+        _feedPageFetcher.SetupPage(2, events.ToFeedPage(isPageComplete: false));
+
+        using var cts = new CancellationTokenSource();
+        cts.CancelAfter(5000);
+
+        await RunOneCycleAsync(cts.Token);
+
+        await using var context = _contextFactory.CreateDbContext();
+        var buildingUnit = await context.BuildingUnits.FindAsync(["https://data.vlaanderen.be/id/gebouweenheid/39999991"], TestContext.Current.CancellationToken);
+        var addressLinks = await context.BuildingUnitAddresses
+            .Where(x => x.BuildingUnitPersistentLocalId == 39999991)
+            .OrderBy(x => x.AddressPersistentLocalId)
+            .ToListAsync(TestContext.Current.CancellationToken);
+
+        buildingUnit.Should().NotBeNull();
+        buildingUnit!.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
+        addressLinks.Should().HaveCount(2);
+        addressLinks.Select(x => x.AddressPersistentLocalId).Should().Equal(304486, 2314327);
     }
 
     [Fact]

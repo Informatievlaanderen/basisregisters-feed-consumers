@@ -16,6 +16,7 @@ public class PostalInformationProjector : FeedProjectorBase
     public readonly static BaseRegistriesCloudEventType CreateEvent = new BaseRegistriesCloudEventType("basisregisters.postalinformation.create.v1");
     public readonly static BaseRegistriesCloudEventType UpdateEvent = new BaseRegistriesCloudEventType("basisregisters.postalinformation.update.v1");
     public readonly static BaseRegistriesCloudEventType DeleteEvent = new BaseRegistriesCloudEventType("basisregisters.postalinformation.delete.v1");
+    private readonly record struct PostalNameKey(string Name, Language Language);
 
     public PostalInformationProjector(
         FeedProjectorOptions options,
@@ -43,9 +44,8 @@ public class PostalInformationProjector : FeedProjectorBase
                 data.VersieId,
                 data.VersieIdAsString);
 
-            await ProcessPostalInformationAttributes(data, postalInformation, context, cancellationToken);
-
             await context.PostalInformations.AddAsync(postalInformation, cancellationToken);
+            await ProcessPostalInformationAttributes(data, postalInformation, context, cancellationToken);
         });
 
         When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>
@@ -144,31 +144,40 @@ public class PostalInformationProjector : FeedProjectorBase
         CancellationToken cancellationToken)
     {
         var updatedNames = names
-            .Select(name => new { Name = name.Spelling, Lang = MapLanguage(name.Taal)})
+            .Select(name => new PostalNameKey(name.Spelling, MapLanguage(name.Taal)))
             .ToHashSet();
 
-        var existingPostalNames = (await context.Set<PostalInformationName>()
-                .Where(x => x.PostalCode == postalCode)
-                .ToListAsync(cancellationToken))
-            .UnionBy(
-                context.Set<PostalInformationName>().Local.Where(x => x.PostalCode == postalCode),
-                x => new{x.Name, Lang = x.Language})
+        await context.Set<PostalInformationName>()
+            .Where(x => x.PostalCode == postalCode)
+            .LoadAsync(cancellationToken);
+
+        var trackedPostalNameEntries = context.ChangeTracker
+            .Entries<PostalInformationName>()
+            .Where(x => x.Entity.PostalCode == postalCode)
             .ToList();
 
-        foreach (var existingPostalName in existingPostalNames
-                     .Where(x => !updatedNames.Contains(new {x.Name, Lang = x.Language})))
+        foreach (var trackedPostalNameEntry in trackedPostalNameEntries
+                     .Where(x => x.State == EntityState.Deleted && updatedNames.Contains(new PostalNameKey(x.Entity.Name, x.Entity.Language))))
         {
-            context.Remove(existingPostalName);
+            trackedPostalNameEntry.State = EntityState.Unchanged;
         }
 
-        var existingNames = existingPostalNames
-            .Select(x => new {x.Name, Lang = x.Language })
+        foreach (var trackedPostalNameEntry in trackedPostalNameEntries
+                     .Where(x => x.State != EntityState.Deleted && !updatedNames.Contains(new PostalNameKey(x.Entity.Name, x.Entity.Language))))
+        {
+            context.Remove(trackedPostalNameEntry.Entity);
+        }
+
+        var existingNames = context.ChangeTracker
+            .Entries<PostalInformationName>()
+            .Where(x => x.Entity.PostalCode == postalCode && x.State != EntityState.Deleted)
+            .Select(x => new PostalNameKey(x.Entity.Name, x.Entity.Language))
             .ToHashSet();
 
         foreach (var updatedName in updatedNames.Where(x => !existingNames.Contains(x)))
         {
             await context.AddAsync(
-                new PostalInformationName(updatedName.Name, updatedName.Lang, postalCode),
+                new PostalInformationName(updatedName.Name, updatedName.Language, postalCode),
                 cancellationToken);
         }
     }

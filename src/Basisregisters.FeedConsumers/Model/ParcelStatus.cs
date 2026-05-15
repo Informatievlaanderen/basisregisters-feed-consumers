@@ -2,6 +2,6 @@
 
 public enum ParcelStatus
 {
-    Current,
+    Realized,
     Retired
 }

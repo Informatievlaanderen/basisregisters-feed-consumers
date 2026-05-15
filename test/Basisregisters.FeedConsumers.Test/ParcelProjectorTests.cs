@@ -69,7 +69,7 @@ public class ParcelProjectorTests
         parcel.Should().NotBeNull();
         parcel!.VbrCaPaKey.Should().Be("72015B0517-00B002");
         parcel.CaPaKey.Should().Be("72015B0517/00B002");
-        parcel.Status.Should().Be(ParcelStatus.Current);
+        parcel.Status.Should().Be(ParcelStatus.Realized);
         parcel.VersionId.Should().BeCloseTo(new DateTimeOffset(2023, 11, 2, 11, 2, 22, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
         parcel.VersionIdAsString.Should().Be(createEvents[^1].GetVersionIdAsString());
 
@@ -97,7 +97,7 @@ public class ParcelProjectorTests
             .ToListAsync(TestContext.Current.CancellationToken);
 
         parcel.Should().NotBeNull();
-        parcel!.Status.Should().Be(ParcelStatus.Current);
+        parcel!.Status.Should().Be(ParcelStatus.Realized);
         parcel.VersionId.Should().BeCloseTo(new DateTimeOffset(2025, 9, 3, 8, 3, 25, TimeSpan.FromHours(2)), TimeSpan.FromSeconds(1));
         parcel.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
         addressLinks.Select(x => x.AddressPersistentLocalId).Should().Equal(1097598, 4354739, 5266486);

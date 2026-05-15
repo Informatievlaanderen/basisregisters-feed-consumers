@@ -120,7 +120,7 @@ public sealed class ParcelProjector : FeedProjectorBase
     {
         return status switch
         {
-            "gerealiseerd" => ParcelStatus.Current,
+            "gerealiseerd" => ParcelStatus.Realized,
             "gehistoreerd" => ParcelStatus.Retired,
             _ => throw new ArgumentException($"Unknown parcel status: {status}")
         };

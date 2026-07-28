@@ -18,6 +18,9 @@ public class PostalInformationProjector : FeedProjectorBase
     public readonly static BaseRegistriesCloudEventType DeleteEvent = new BaseRegistriesCloudEventType("basisregisters.postalinformation.delete.v1");
     private readonly record struct PostalNameKey(string Name, Language Language);
 
+    private const string StatusPuriRealized = "https://data.vlaanderen.be/id/concept/postinfostatus/gerealiseerd";
+    private const string StatusPuriRetired = "https://data.vlaanderen.be/id/concept/postinfostatus/gehistoreerd";
+
     public PostalInformationProjector(
         FeedProjectorOptions options,
         IDbContextFactory<FeedContext> feedContextFactory,
@@ -37,7 +40,7 @@ public class PostalInformationProjector : FeedProjectorBase
                 : PostalInformationStatus.Realized;
 
             var postalInformation = new PostalInformation(
-                data.Id.ToString(),
+                cloudEvent.GetRequiredSubject(),
                 data.ObjectId,
                 null,
                 status,
@@ -51,11 +54,12 @@ public class PostalInformationProjector : FeedProjectorBase
         When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing update event: {EventId}", cloudEvent.Id);
+            var subject = cloudEvent.GetRequiredSubject();
             var postalInformation = await context.PostalInformations
-                .FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+                .FindAsync([subject], cancellationToken: cancellationToken);
 
             if (postalInformation == null)
-                throw new InvalidOperationException($"PostalInformation {data.Id} not found");
+                throw new InvalidOperationException($"PostalInformation {subject} not found");
 
             await ProcessPostalInformationAttributes(data, postalInformation, context, cancellationToken);
         });
@@ -63,9 +67,10 @@ public class PostalInformationProjector : FeedProjectorBase
         When(DeleteEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing delete event: {EventId}", cloudEvent.Id);
-            var postalInformation = await context.PostalInformations.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            var subject = cloudEvent.GetRequiredSubject();
+            var postalInformation = await context.PostalInformations.FindAsync([subject], cancellationToken: cancellationToken);
             if (postalInformation == null)
-                throw new InvalidOperationException($"PostalInformation {data.Id} not found");
+                throw new InvalidOperationException($"PostalInformation {subject} not found");
 
             postalInformation.VersionId = data.VersieId;
             postalInformation.VersionIdAsString = data.VersieIdAsString;
@@ -89,14 +94,14 @@ public class PostalInformationProjector : FeedProjectorBase
                     postalInformation.Status = MapStatus(attribute.NieuweWaarde!.ToString()!);
                     break;
 
-                case PostalInformationAttributes.MunicipalityId:
+                case PostalInformationAttributes.AssignedTo:
                     var municipalityPuri = attribute.NieuweWaarde?.ToString();
                     postalInformation.NisCode = municipalityPuri?.ExtractPersistentLocalId();
                     break;
 
                 case PostalInformationAttributes.Names:
                     var names = attribute.NieuweWaarde is JsonElement namesElement
-                        ? namesElement.Deserialize<List<GeographicalName>>(CloudEventReader.JsonOptions)
+                        ? namesElement.Deserialize<List<LanguageTaggedValue>>(CloudEventReader.JsonOptions)
                         : [];
 
                     if (names is not null)
@@ -131,20 +136,20 @@ public class PostalInformationProjector : FeedProjectorBase
     {
         return status switch
         {
-            "gerealiseerd" => PostalInformationStatus.Realized,
-            "gehistoreerd" => PostalInformationStatus.Retired,
+            StatusPuriRealized => PostalInformationStatus.Realized,
+            StatusPuriRetired => PostalInformationStatus.Retired,
             _ => throw new ArgumentException($"Unknown status: {status}")
         };
     }
 
     private static async Task SyncPostalNamesAsync(
         string postalCode,
-        IReadOnlyCollection<GeographicalName> names,
+        IReadOnlyCollection<LanguageTaggedValue> names,
         FeedContext context,
         CancellationToken cancellationToken)
     {
         var updatedNames = names
-            .Select(name => new PostalNameKey(name.Spelling, MapLanguage(name.Taal)))
+            .Select(name => new PostalNameKey(name.Value, MapLanguage(name.Language)))
             .ToHashSet();
 
         await context.Set<PostalInformationName>()

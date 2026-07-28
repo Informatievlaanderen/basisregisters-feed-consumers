@@ -5,12 +5,12 @@
     "time": "2024-11-28T10:17:18.502694+01:00",
     "type": "basisregisters.address.create.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+    "subject": "https://data.vlaanderen.be/id/adres/30411696",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
     "basisregisterseventtype": "AddressWasProposedBecauseOfReaddress",
     "basisregisterscausationid": "11fb97aa-c146-590d-8738-549e2326fb79",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/adres/30411696",
       "objectId": "30411696",
       "naamruimte": "https://data.vlaanderen.be/id/adres",
       "versieId": "2024-11-28T10:17:18+01:00",
@@ -19,14 +19,14 @@
       ],
       "attributen": [
         {
-          "naam": "straatnaam.id",
+          "naam": "heeftStraatnaam",
           "oudeWaarde": null,
           "nieuweWaarde": "https://data.vlaanderen.be/id/straatnaam/76256"
         },
         {
-          "naam": "adresStatus",
+          "naam": "status",
           "oudeWaarde": null,
-          "nieuweWaarde": "voorgesteld"
+          "nieuweWaarde": "https://data.vlaanderen.be/id/concept/adresstatus/voorgesteld"
         },
         {
           "naam": "huisnummer",
@@ -34,9 +34,9 @@
           "nieuweWaarde": "30"
         },
         {
-          "naam": "postcode",
+          "naam": "heeftPostinfo",
           "oudeWaarde": null,
-          "nieuweWaarde": "9120"
+          "nieuweWaarde": "https://data.vlaanderen.be/id/postinfo/9120"
         },
         {
           "naam": "officieelToegekend",
@@ -44,27 +44,25 @@
           "nieuweWaarde": true
         },
         {
-          "naam": "positieGeometrieMethode",
+          "naam": "positie.methode",
           "oudeWaarde": null,
-          "nieuweWaarde": "aangeduidDoorBeheerder"
+          "nieuweWaarde": "https://data.vlaanderen.be/id/concept/geometriemethode/aangeduidDoorBeheerder"
         },
         {
-          "naam": "positieSpecificatie",
+          "naam": "positie.specificatie",
           "oudeWaarde": null,
-          "nieuweWaarde": "gebouweenheid"
+          "nieuweWaarde": "https://data.vlaanderen.be/id/concept/geometriespecificatie/gebouweenheid"
         },
         {
-          "naam": "adresPositie",
+          "naam": "positie.geometrie",
           "oudeWaarde": null,
           "nieuweWaarde": [
             {
-              "type": "Point",
-              "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+              "type": "Punt",
               "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>143791.29 211105.94</gml:pos></gml:Point>"
             },
             {
-              "type": "Point",
-              "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+              "type": "Punt",
               "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>643786.19 711105.37</gml:pos></gml:Point>"
             }
           ]
@@ -112,12 +110,12 @@
     "time": "2024-11-28T10:17:18.502694+01:00",
     "type": "basisregisters.address.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+    "subject": "https://data.vlaanderen.be/id/adres/30411696",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
     "basisregisterseventtype": "StreetNameWasReaddressed",
     "basisregisterscausationid": "11fb97aa-c146-590d-8738-549e2326fb79",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/adres/30411696",
       "objectId": "30411696",
       "naamruimte": "https://data.vlaanderen.be/id/adres",
       "versieId": "2024-11-28T10:17:18+01:00",
@@ -126,9 +124,9 @@
       ],
       "attributen": [
         {
-          "naam": "adresStatus",
-          "oudeWaarde": "voorgesteld",
-          "nieuweWaarde": "inGebruik"
+          "naam": "status",
+          "oudeWaarde": "https://data.vlaanderen.be/id/concept/adresstatus/voorgesteld",
+          "nieuweWaarde": "https://data.vlaanderen.be/id/concept/adresstatus/inGebruik"
         }
       ]
     }
@@ -162,12 +160,12 @@
     "time": "2025-01-01T01:18:19.0988512+01:00",
     "type": "basisregisters.address.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+    "subject": "https://data.vlaanderen.be/id/adres/30411696",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
     "basisregisterseventtype": "AddressWasRetiredBecauseOfMunicipalityMerger",
     "basisregisterscausationid": "654ec33c-e82e-5772-af1c-14a9a9f6712a",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/adres/30411696",
       "objectId": "30411696",
       "naamruimte": "https://data.vlaanderen.be/id/adres",
       "versieId": "2025-01-01T01:18:19+01:00",
@@ -176,9 +174,9 @@
       ],
       "attributen": [
         {
-          "naam": "adresStatus",
-          "oudeWaarde": "inGebruik",
-          "nieuweWaarde": "gehistoreerd"
+          "naam": "status",
+          "oudeWaarde": "https://data.vlaanderen.be/id/concept/adresstatus/inGebruik",
+          "nieuweWaarde": "https://data.vlaanderen.be/id/concept/adresstatus/gehistoreerd"
         }
       ]
     }

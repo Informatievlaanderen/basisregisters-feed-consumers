@@ -202,26 +202,26 @@ public class AddressProjectorTests
                 "time": "2025-04-18T11:52:12.5955391+02:00",
                 "type": "basisregisters.address.create.v1",
                 "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+                "subject": "https://data.vlaanderen.be/id/adres/31319625",
                 "datacontenttype": "application/json",
                 "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
                 "basisregisterseventtype": "AddressWasProposedV2",
                 "basisregisterscausationid": "bd0f564c-ad0e-514f-94b5-d1c889302e48",
                 "data": {
-                  "@id": "https://data.vlaanderen.be/id/adres/31319625",
                   "objectId": "31319625",
                   "naamruimte": "https://data.vlaanderen.be/id/adres",
                   "versieId": "2025-04-18T11:52:12+02:00",
                   "nisCodes": [ "41081" ],
                   "attributen": [
                     {
-                      "naam": "straatnaam.id",
+                      "naam": "heeftStraatnaam",
                       "oudeWaarde": null,
                       "nieuweWaarde": "https://data.vlaanderen.be/id/straatnaam/64260"
                     },
                     {
-                      "naam": "adresStatus",
+                      "naam": "status",
                       "oudeWaarde": null,
-                      "nieuweWaarde": "voorgesteld"
+                      "nieuweWaarde": "https://data.vlaanderen.be/id/concept/adresstatus/voorgesteld"
                     },
                     {
                       "naam": "huisnummer",
@@ -229,9 +229,9 @@ public class AddressProjectorTests
                       "nieuweWaarde": "30"
                     },
                     {
-                      "naam": "postcode",
+                      "naam": "heeftPostinfo",
                       "oudeWaarde": null,
-                      "nieuweWaarde": "9620"
+                      "nieuweWaarde": "https://data.vlaanderen.be/id/postinfo/9620"
                     },
                     {
                       "naam": "officieelToegekend",
@@ -239,22 +239,21 @@ public class AddressProjectorTests
                       "nieuweWaarde": true
                     },
                     {
-                      "naam": "positieGeometrieMethode",
+                      "naam": "positie.methode",
                       "oudeWaarde": null,
-                      "nieuweWaarde": "afgeleidVanObject"
+                      "nieuweWaarde": "https://data.vlaanderen.be/id/concept/geometriemethode/afgeleidVanObject"
                     },
                     {
-                      "naam": "positieSpecificatie",
+                      "naam": "positie.specificatie",
                       "oudeWaarde": null,
-                      "nieuweWaarde": "perceel"
+                      "nieuweWaarde": "https://data.vlaanderen.be/id/concept/geometriespecificatie/perceel"
                     },
                     {
-                      "naam": "adresPositie",
+                      "naam": "positie.geometrie",
                       "oudeWaarde": null,
                       "nieuweWaarde": [
                         {
-                          "type": "Point",
-                          "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+                          "type": "Punt",
                           "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>109560.95 168981.82</gml:pos></gml:Point>"
                         }
                       ]

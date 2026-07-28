@@ -172,53 +172,54 @@ var host = new HostBuilder()
                 loggerFactory);
         });
 
-        services.AddHostedService(provider =>
-        {
-            var buildingFeedOptions = feedOptionsBySection["BuildingFeed"];
-            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-            var httpClient = httpClientFactory.CreateClient(buildingFeedOptions.Name);
-            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, buildingFeedOptions.FeedUrl);
-            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
-            return new BuildingProjector(
-                buildingFeedOptions,
-                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
-                feedPageFetcher,
-                jsonSchemaValidator,
-                loggerFactory);
-        });
-
-        services.AddHostedService(provider =>
-        {
-            var buildingUnitFeedOptions = feedOptionsBySection["BuildingUnitFeed"];
-            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-            var httpClient = httpClientFactory.CreateClient(buildingUnitFeedOptions.Name);
-            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, buildingUnitFeedOptions.FeedUrl);
-            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
-            return new BuildingUnitProjector(
-                buildingUnitFeedOptions,
-                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
-                feedPageFetcher,
-                jsonSchemaValidator,
-                loggerFactory);
-        });
-
-        services.AddHostedService(provider =>
-        {
-            var parcelFeedOptions = feedOptionsBySection["ParcelFeed"];
-            var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
-            var httpClient = httpClientFactory.CreateClient(parcelFeedOptions.Name);
-            var feedPageFetcher = new HttpFeedPageFetcher(httpClient, parcelFeedOptions.FeedUrl);
-            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
-            return new ParcelProjector(
-                parcelFeedOptions,
-                provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
-                feedPageFetcher,
-                jsonSchemaValidator,
-                loggerFactory);
-        });
+        // TODO: Re-enable when the OSLO changes are implemented, target mid-august.
+        // services.AddHostedService(provider =>
+        // {
+        //     var buildingFeedOptions = feedOptionsBySection["BuildingFeed"];
+        //     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+        //     var httpClient = httpClientFactory.CreateClient(buildingFeedOptions.Name);
+        //     var feedPageFetcher = new HttpFeedPageFetcher(httpClient, buildingFeedOptions.FeedUrl);
+        //     var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+        //     var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+        //     return new BuildingProjector(
+        //         buildingFeedOptions,
+        //         provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+        //         feedPageFetcher,
+        //         jsonSchemaValidator,
+        //         loggerFactory);
+        // });
+        //
+        // services.AddHostedService(provider =>
+        // {
+        //     var buildingUnitFeedOptions = feedOptionsBySection["BuildingUnitFeed"];
+        //     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+        //     var httpClient = httpClientFactory.CreateClient(buildingUnitFeedOptions.Name);
+        //     var feedPageFetcher = new HttpFeedPageFetcher(httpClient, buildingUnitFeedOptions.FeedUrl);
+        //     var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+        //     var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+        //     return new BuildingUnitProjector(
+        //         buildingUnitFeedOptions,
+        //         provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+        //         feedPageFetcher,
+        //         jsonSchemaValidator,
+        //         loggerFactory);
+        // });
+        //
+        // services.AddHostedService(provider =>
+        // {
+        //     var parcelFeedOptions = feedOptionsBySection["ParcelFeed"];
+        //     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+        //     var httpClient = httpClientFactory.CreateClient(parcelFeedOptions.Name);
+        //     var feedPageFetcher = new HttpFeedPageFetcher(httpClient, parcelFeedOptions.FeedUrl);
+        //     var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+        //     var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+        //     return new ParcelProjector(
+        //         parcelFeedOptions,
+        //         provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
+        //         feedPageFetcher,
+        //         jsonSchemaValidator,
+        //         loggerFactory);
+        // });
 
         FeedProjectorOptions BuildFeedOptions(IConfiguration config, string section, string defaultName)
         {

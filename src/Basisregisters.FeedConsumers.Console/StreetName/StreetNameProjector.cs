@@ -100,7 +100,7 @@ public sealed class StreetNameProjector : FeedProjectorBase
 
                 case StreetNameAttributes.Names:
                     var names = attribute.NieuweWaarde is JsonElement namesElement
-                        ? namesElement.Deserialize<List<LanguageTaggedValue>>(CloudEventReader.JsonOptions)
+                        ? namesElement.Deserialize<List<GeographicalName>>(CloudEventReader.JsonOptions)
                         : [];
 
                     if (names is not null)
@@ -134,7 +134,7 @@ public sealed class StreetNameProjector : FeedProjectorBase
 
                 case StreetNameAttributes.HomonymAdditions:
                     var homonyms = attribute.NieuweWaarde is JsonElement homonymsElement
-                        ? homonymsElement.Deserialize<List<LanguageTaggedValue>>(CloudEventReader.JsonOptions)
+                        ? homonymsElement.Deserialize<List<GeographicalName>>(CloudEventReader.JsonOptions)
                         : [];
 
                     if (homonyms is not null)

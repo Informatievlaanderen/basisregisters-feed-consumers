@@ -101,7 +101,7 @@ public class PostalInformationProjector : FeedProjectorBase
 
                 case PostalInformationAttributes.Names:
                     var names = attribute.NieuweWaarde is JsonElement namesElement
-                        ? namesElement.Deserialize<List<LanguageTaggedValue>>(CloudEventReader.JsonOptions)
+                        ? namesElement.Deserialize<List<GeographicalName>>(CloudEventReader.JsonOptions)
                         : [];
 
                     if (names is not null)
@@ -144,7 +144,7 @@ public class PostalInformationProjector : FeedProjectorBase
 
     private static async Task SyncPostalNamesAsync(
         string postalCode,
-        IReadOnlyCollection<LanguageTaggedValue> names,
+        IReadOnlyCollection<GeographicalName> names,
         FeedContext context,
         CancellationToken cancellationToken)
     {

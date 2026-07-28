@@ -121,7 +121,7 @@ public class MunicipalityProjector : FeedProjectorBase
 
                 case MunicipalityAttributes.Names:
                     var names = attribute.NieuweWaarde is JsonElement namesElement
-                        ? namesElement.Deserialize<List<LanguageTaggedValue>>(CloudEventReader.JsonOptions)
+                        ? namesElement.Deserialize<List<GeographicalName>>(CloudEventReader.JsonOptions)
                         : [];
 
                     if (names is not null)

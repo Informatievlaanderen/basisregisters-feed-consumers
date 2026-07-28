@@ -3,23 +3,26 @@ namespace Basisregisters.FeedConsumers.Console.Common;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
+/// <summary>
+/// JSON-LD language tagged name, e.g. { "@value": "Hasselt", "@language": "nl" }
+/// </summary>
 public sealed class GeographicalName
 {
-    public const string AttributeNameLanguage = "taal";
-    public const string AttributeNameSpelling = "spelling";
+    public const string AttributeNameValue = "@value";
+    public const string AttributeNameLanguage = "@language";
+
+    [JsonPropertyName(AttributeNameValue)]
+    [Required]
+    public string Value { get; set; }
 
     [JsonPropertyName(AttributeNameLanguage)]
     [Required]
-    public string Taal { get; set; }
-
-    [JsonPropertyName(AttributeNameSpelling)]
-    [Required]
-    public string Spelling { get; set; }
+    public string Language { get; set; }
 
     [JsonConstructor]
-    public GeographicalName(string taal, string spelling)
+    public GeographicalName(string value, string language)
     {
-        Taal = taal;
-        Spelling = spelling;
+        Value = value;
+        Language = language;
     }
 }

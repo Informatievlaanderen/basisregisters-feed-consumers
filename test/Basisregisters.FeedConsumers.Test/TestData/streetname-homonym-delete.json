@@ -5,12 +5,12 @@
     "time": "2023-11-01T09:17:44.3001846+01:00",
     "type": "basisregisters.streetname.create.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/straatnamen",
+    "subject": "https://data.vlaanderen.be/id/straatnaam/227570",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/straatnaam/2026-01-21/straatnaam.json",
     "basisregisterseventtype": "StreetNameWasMigratedToMunicipality",
     "basisregisterscausationid": "b93bc5b7-43fe-570a-9d2a-17bd2e5a2189",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/straatnaam/227570",
       "objectId": "227570",
       "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
       "versieId": "2023-11-01T09:17:44+01:00",
@@ -19,32 +19,32 @@
       ],
       "attributen": [
         {
-          "naam": "gemeente.id",
+          "naam": "isToegekendDoor",
           "oudeWaarde": null,
           "nieuweWaarde": "https://data.vlaanderen.be/id/gemeente/44083"
         },
         {
-          "naam": "straatnaamStatus",
+          "naam": "status",
           "oudeWaarde": null,
-          "nieuweWaarde": "voorgesteld"
+          "nieuweWaarde": "https://data.vlaanderen.be/id/concept/straatnaamstatus/voorgesteld"
         },
         {
-          "naam": "straatnamen",
+          "naam": "straatnaam",
           "oudeWaarde": null,
           "nieuweWaarde": [
             {
-              "spelling": "Kouterslag",
-              "taal": "nl"
+              "@value": "Kouterslag",
+              "@language": "nl"
             }
           ]
         },
         {
-          "naam": "homoniemToevoegingen",
+          "naam": "homoniemToevoeging",
           "oudeWaarde": null,
           "nieuweWaarde": [
             {
-              "spelling": "zij",
-              "taal": "nl"
+              "@value": "zij",
+              "@language": "nl"
             }
           ]
         }
@@ -57,12 +57,12 @@
     "time": "2024-02-15T15:45:33.5552549+01:00",
     "type": "basisregisters.streetname.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/straatnamen",
+    "subject": "https://data.vlaanderen.be/id/straatnaam/227570",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/straatnaam/2026-01-21/straatnaam.json",
     "basisregisterseventtype": "StreetNameNamesWereCorrected",
     "basisregisterscausationid": "0eb58af2-a311-58b0-a61b-d1ef3112b465",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/straatnaam/227570",
       "objectId": "227570",
       "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
       "versieId": "2024-02-15T15:45:33+01:00",
@@ -71,17 +71,17 @@
       ],
       "attributen": [
         {
-          "naam": "straatnamen",
+          "naam": "straatnaam",
           "oudeWaarde": [
             {
-              "spelling": "Kouterslag",
-              "taal": "nl"
+              "@value": "Kouterslag",
+              "@language": "nl"
             }
           ],
           "nieuweWaarde": [
             {
-              "spelling": "Kouterslag_zij",
-              "taal": "nl"
+              "@value": "Kouterslag_zij",
+              "@language": "nl"
             }
           ]
         }
@@ -94,12 +94,12 @@
     "time": "2024-06-12T10:58:52.4579049+02:00",
     "type": "basisregisters.streetname.delete.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/straatnamen",
+    "subject": "https://data.vlaanderen.be/id/straatnaam/227570",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/straatnaam/2026-01-21/straatnaam.json",
     "basisregisterseventtype": "StreetNameWasRemovedV2",
     "basisregisterscausationid": "254f6cb5-751e-5e1f-b630-28e1ed24fc9e",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/straatnaam/227570",
       "objectId": "227570",
       "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
       "versieId": "2024-06-12T10:58:52+02:00",

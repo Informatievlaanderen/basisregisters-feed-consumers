@@ -16,6 +16,11 @@ public sealed class StreetNameProjector : FeedProjectorBase
     public static readonly BaseRegistriesCloudEventType DeleteEvent = new("basisregisters.streetname.delete.v1");
     public static readonly BaseRegistriesCloudEventType TransformEvent = new("basisregisters.streetname.transform.v1");
 
+    private const string StatusPuriProposed = "https://data.vlaanderen.be/id/concept/straatnaamstatus/voorgesteld";
+    private const string StatusPuriCurrent = "https://data.vlaanderen.be/id/concept/straatnaamstatus/inGebruik";
+    private const string StatusPuriRejected = "https://data.vlaanderen.be/id/concept/straatnaamstatus/afgekeurd";
+    private const string StatusPuriRetired = "https://data.vlaanderen.be/id/concept/straatnaamstatus/gehistoreerd";
+
     public StreetNameProjector(
         FeedProjectorOptions options,
         IDbContextFactory<FeedContext> feedContextFactory,
@@ -30,11 +35,11 @@ public sealed class StreetNameProjector : FeedProjectorBase
         {
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
             var status = MapStatus(data.Attributen.GetRequired(StreetNameAttributes.Status).NieuweWaarde!.ToString()!);
-            var nisCode = data.Attributen.GetRequired(StreetNameAttributes.MunicipalityId).NieuweWaarde!.ToString()!.ExtractPersistentLocalId();
+            var nisCode = data.Attributen.GetRequired(StreetNameAttributes.AssignedBy).NieuweWaarde!.ToString()!.ExtractPersistentLocalId();
             var persistentLocalId = int.Parse(data.ObjectId);
 
             var streetName = new StreetName(
-                data.Id.ToString(),
+                cloudEvent.GetRequiredSubject(),
                 persistentLocalId,
                 nisCode,
                 status,
@@ -49,9 +54,10 @@ public sealed class StreetNameProjector : FeedProjectorBase
         When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing update event: {EventId}", cloudEvent.Id);
-            var streetName = await context.StreetNames.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            var subject = cloudEvent.GetRequiredSubject();
+            var streetName = await context.StreetNames.FindAsync([subject], cancellationToken: cancellationToken);
             if (streetName == null)
-                throw new InvalidOperationException($"StreetName {data.Id} not found");
+                throw new InvalidOperationException($"StreetName {subject} not found");
 
             ProcessStreetNameAttributes(data, streetName);
         });
@@ -59,9 +65,10 @@ public sealed class StreetNameProjector : FeedProjectorBase
         When(DeleteEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing delete event: {EventId}", cloudEvent.Id);
-            var streetName = await context.StreetNames.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            var subject = cloudEvent.GetRequiredSubject();
+            var streetName = await context.StreetNames.FindAsync([subject], cancellationToken: cancellationToken);
             if (streetName == null)
-                throw new InvalidOperationException($"StreetName {data.Id} not found");
+                throw new InvalidOperationException($"StreetName {subject} not found");
 
             streetName.VersionId = data.VersieId;
             streetName.VersionIdAsString = data.VersieIdAsString;
@@ -87,13 +94,13 @@ public sealed class StreetNameProjector : FeedProjectorBase
                     streetName.Status = MapStatus(attribute.NieuweWaarde!.ToString()!);
                     break;
 
-                case StreetNameAttributes.MunicipalityId:
+                case StreetNameAttributes.AssignedBy:
                     streetName.NisCode = attribute.NieuweWaarde!.ToString()!.ExtractPersistentLocalId();
                     break;
 
                 case StreetNameAttributes.Names:
                     var names = attribute.NieuweWaarde is JsonElement namesElement
-                        ? namesElement.Deserialize<List<GeographicalName>>(CloudEventReader.JsonOptions)
+                        ? namesElement.Deserialize<List<LanguageTaggedValue>>(CloudEventReader.JsonOptions)
                         : [];
 
                     if (names is not null)
@@ -104,22 +111,22 @@ public sealed class StreetNameProjector : FeedProjectorBase
                         streetName.NameEnglish = null;
                         foreach (var name in names)
                         {
-                            switch (name.Taal)
+                            switch (name.Language)
                             {
                                 case "nl":
-                                    streetName.NameDutch = name.Spelling;
+                                    streetName.NameDutch = name.Value;
                                     break;
                                 case "fr":
-                                    streetName.NameFrench = name.Spelling;
+                                    streetName.NameFrench = name.Value;
                                     break;
                                 case "de":
-                                    streetName.NameGerman = name.Spelling;
+                                    streetName.NameGerman = name.Value;
                                     break;
                                 case "en":
-                                    streetName.NameEnglish = name.Spelling;
+                                    streetName.NameEnglish = name.Value;
                                     break;
                                 default:
-                                    throw new InvalidOperationException($"Unknown streetname name language: {name.Taal}");
+                                    throw new InvalidOperationException($"Unknown streetname name language: {name.Language}");
                             }
                         }
                     }
@@ -127,7 +134,7 @@ public sealed class StreetNameProjector : FeedProjectorBase
 
                 case StreetNameAttributes.HomonymAdditions:
                     var homonyms = attribute.NieuweWaarde is JsonElement homonymsElement
-                        ? homonymsElement.Deserialize<List<GeographicalName>>(CloudEventReader.JsonOptions)
+                        ? homonymsElement.Deserialize<List<LanguageTaggedValue>>(CloudEventReader.JsonOptions)
                         : [];
 
                     if (homonyms is not null)
@@ -138,22 +145,22 @@ public sealed class StreetNameProjector : FeedProjectorBase
                         streetName.HomonymAdditionEnglish = null;
                         foreach (var homonym in homonyms)
                         {
-                            switch (homonym.Taal)
+                            switch (homonym.Language)
                             {
                                 case "nl":
-                                    streetName.HomonymAdditionDutch = homonym.Spelling;
+                                    streetName.HomonymAdditionDutch = homonym.Value;
                                     break;
                                 case "fr":
-                                    streetName.HomonymAdditionFrench = homonym.Spelling;
+                                    streetName.HomonymAdditionFrench = homonym.Value;
                                     break;
                                 case "de":
-                                    streetName.HomonymAdditionGerman = homonym.Spelling;
+                                    streetName.HomonymAdditionGerman = homonym.Value;
                                     break;
                                 case "en":
-                                    streetName.HomonymAdditionEnglish = homonym.Spelling;
+                                    streetName.HomonymAdditionEnglish = homonym.Value;
                                     break;
                                 default:
-                                    throw new InvalidOperationException($"Unknown streetname homonym addition language: {homonym.Taal}");
+                                    throw new InvalidOperationException($"Unknown streetname homonym addition language: {homonym.Language}");
                             }
                         }
                     }
@@ -169,10 +176,10 @@ public sealed class StreetNameProjector : FeedProjectorBase
     {
         return status switch
         {
-            "voorgesteld" => StreetNameStatus.Proposed,
-            "inGebruik" => StreetNameStatus.Current,
-            "afgekeurd" => StreetNameStatus.Rejected,
-            "gehistoreerd" => StreetNameStatus.Retired,
+            StatusPuriProposed => StreetNameStatus.Proposed,
+            StatusPuriCurrent => StreetNameStatus.Current,
+            StatusPuriRejected => StreetNameStatus.Rejected,
+            StatusPuriRetired => StreetNameStatus.Retired,
             _ => throw new ArgumentException($"Unknown streetname status: {status}")
         };
     }

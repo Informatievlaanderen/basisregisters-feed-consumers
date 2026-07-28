@@ -16,6 +16,10 @@ public class MunicipalityProjector : FeedProjectorBase
     public readonly static BaseRegistriesCloudEventType DeleteEvent = new BaseRegistriesCloudEventType("basisregisters.municipality.delete.v1");
     public readonly static BaseRegistriesCloudEventType TransformEvent = new BaseRegistriesCloudEventType("basisregisters.municipality.transform.v1");
 
+    private const string StatusPuriProposed = "https://data.vlaanderen.be/id/concept/gemeentestatus/voorgesteld";
+    private const string StatusPuriCurrent = "https://data.vlaanderen.be/id/concept/gemeentestatus/inGebruik";
+    private const string StatusPuriRetired = "https://data.vlaanderen.be/id/concept/gemeentestatus/gehistoreerd";
+
     public MunicipalityProjector(
         FeedProjectorOptions options,
         IDbContextFactory<FeedContext> feedContextFactory,
@@ -30,7 +34,7 @@ public class MunicipalityProjector : FeedProjectorBase
         {
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
             var municipality = new Municipality(
-                data.Id.ToString(),
+                cloudEvent.GetRequiredSubject(),
                 data.ObjectId,
                 data.VersieId,
                 data.VersieIdAsString,
@@ -45,9 +49,10 @@ public class MunicipalityProjector : FeedProjectorBase
         When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing update event: {EventId}", cloudEvent.Id);
-            var municipality = await context.Municipalities.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            var subject = cloudEvent.GetRequiredSubject();
+            var municipality = await context.Municipalities.FindAsync([subject], cancellationToken: cancellationToken);
             if (municipality == null)
-                throw new InvalidOperationException($"Municipality {data.Id} not found");
+                throw new InvalidOperationException($"Municipality {subject} not found");
 
             ProcessMunicipalityAttributes(data, municipality);
         });
@@ -55,9 +60,10 @@ public class MunicipalityProjector : FeedProjectorBase
         When(DeleteEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing delete event: {EventId}", cloudEvent.Id);
-            var municipality = await context.Municipalities.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            var subject = cloudEvent.GetRequiredSubject();
+            var municipality = await context.Municipalities.FindAsync([subject], cancellationToken: cancellationToken);
             if (municipality == null)
-                throw new InvalidOperationException($"Municipality {data.Id} not found");
+                throw new InvalidOperationException($"Municipality {subject} not found");
 
             municipality.VersionId = data.VersieId;
             municipality.VersionIdAsString = data.VersieIdAsString;
@@ -115,29 +121,29 @@ public class MunicipalityProjector : FeedProjectorBase
 
                 case MunicipalityAttributes.Names:
                     var names = attribute.NieuweWaarde is JsonElement namesElement
-                        ? namesElement.Deserialize<List<GeographicalName>>(CloudEventReader.JsonOptions)
+                        ? namesElement.Deserialize<List<LanguageTaggedValue>>(CloudEventReader.JsonOptions)
                         : [];
 
                     if (names is not null)
                     {
-                        foreach (var geographicalName in names)
+                        foreach (var name in names)
                         {
-                            switch (geographicalName.Taal)
+                            switch (name.Language)
                             {
                                 case "nl":
-                                    municipality.NameDutch = geographicalName.Spelling;
+                                    municipality.NameDutch = name.Value;
                                     break;
                                 case "fr":
-                                    municipality.NameFrench = geographicalName.Spelling;
+                                    municipality.NameFrench = name.Value;
                                     break;
                                 case "de":
-                                    municipality.NameGerman = geographicalName.Spelling;
+                                    municipality.NameGerman = name.Value;
                                     break;
                                 case "en":
-                                    municipality.NameEnglish = geographicalName.Spelling;
+                                    municipality.NameEnglish = name.Value;
                                     break;
                                 default:
-                                    throw new InvalidOperationException($"Unknown municipality name language: {geographicalName.Taal}");
+                                    throw new InvalidOperationException($"Unknown municipality name language: {name.Language}");
                             }
                         }
                     }
@@ -153,9 +159,9 @@ public class MunicipalityProjector : FeedProjectorBase
     {
         return status switch
         {
-            "voorgesteld" => MunicipalityStatus.Proposed,
-            "inGebruik" => MunicipalityStatus.Current,
-            "gehistoreerd" => MunicipalityStatus.Retired,
+            StatusPuriProposed => MunicipalityStatus.Proposed,
+            StatusPuriCurrent => MunicipalityStatus.Current,
+            StatusPuriRetired => MunicipalityStatus.Retired,
             _ => throw new ArgumentException($"Unknown status: {status}")
         };
     }

@@ -5,12 +5,12 @@
     "time": "2023-11-21T10:01:44.8454019+01:00",
     "type": "basisregisters.streetname.create.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/straatnamen",
+    "subject": "https://data.vlaanderen.be/id/straatnaam/228493",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/straatnaam/2026-01-21/straatnaam.json",
     "basisregisterseventtype": "StreetNameWasProposedV2",
     "basisregisterscausationid": "49d31790-4557-5b5d-af68-95d01c80b27f",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/straatnaam/228493",
       "objectId": "228493",
       "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
       "versieId": "2023-11-21T10:01:44+01:00",
@@ -19,22 +19,22 @@
       ],
       "attributen": [
         {
-          "naam": "gemeente.id",
+          "naam": "isToegekendDoor",
           "oudeWaarde": null,
           "nieuweWaarde": "https://data.vlaanderen.be/id/gemeente/73083"
         },
         {
-          "naam": "straatnaamStatus",
+          "naam": "status",
           "oudeWaarde": null,
-          "nieuweWaarde": "voorgesteld"
+          "nieuweWaarde": "https://data.vlaanderen.be/id/concept/straatnaamstatus/voorgesteld"
         },
         {
-          "naam": "straatnamen",
+          "naam": "straatnaam",
           "oudeWaarde": null,
           "nieuweWaarde": [
             {
-              "spelling": "Betenbroek",
-              "taal": "nl"
+              "@value": "Betenbroek",
+              "@language": "nl"
             }
           ]
         }
@@ -47,12 +47,12 @@
     "time": "2023-11-21T10:25:00.5362624+01:00",
     "type": "basisregisters.streetname.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/straatnamen",
+    "subject": "https://data.vlaanderen.be/id/straatnaam/228493",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/straatnaam/2026-01-21/straatnaam.json",
     "basisregisterseventtype": "StreetNameNamesWereCorrected",
     "basisregisterscausationid": "14910edf-d25a-5f08-91ac-9604de4d2551",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/straatnaam/228493",
       "objectId": "228493",
       "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
       "versieId": "2023-11-21T10:25:00+01:00",
@@ -61,17 +61,17 @@
       ],
       "attributen": [
         {
-          "naam": "straatnamen",
+          "naam": "straatnaam",
           "oudeWaarde": [
             {
-              "spelling": "Betenbroek",
-              "taal": "nl"
+              "@value": "Betenbroek",
+              "@language": "nl"
             }
           ],
           "nieuweWaarde": [
             {
-              "spelling": "Betenbroeck",
-              "taal": "nl"
+              "@value": "Betenbroeck",
+              "@language": "nl"
             }
           ]
         }
@@ -84,12 +84,12 @@
     "time": "2023-11-21T10:28:42.1061042+01:00",
     "type": "basisregisters.streetname.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/straatnamen",
+    "subject": "https://data.vlaanderen.be/id/straatnaam/228493",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/straatnaam/2026-01-21/straatnaam.json",
     "basisregisterseventtype": "StreetNameNamesWereCorrected",
     "basisregisterscausationid": "df4e18ef-ef91-51bc-ad81-71809e851a68",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/straatnaam/228493",
       "objectId": "228493",
       "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
       "versieId": "2023-11-21T10:28:42+01:00",
@@ -98,17 +98,17 @@
       ],
       "attributen": [
         {
-          "naam": "straatnamen",
+          "naam": "straatnaam",
           "oudeWaarde": [
             {
-              "spelling": "Betenbroeck",
-              "taal": "nl"
+              "@value": "Betenbroeck",
+              "@language": "nl"
             }
           ],
           "nieuweWaarde": [
             {
-              "spelling": "Betenbroek",
-              "taal": "nl"
+              "@value": "Betenbroek",
+              "@language": "nl"
             }
           ]
         }
@@ -142,12 +142,12 @@
     "time": "2025-01-01T01:05:17.9714016+01:00",
     "type": "basisregisters.streetname.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/straatnamen",
+    "subject": "https://data.vlaanderen.be/id/straatnaam/228493",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/straatnaam/2026-01-21/straatnaam.json",
     "basisregisterseventtype": "StreetNameWasRejectedBecauseOfMunicipalityMerger",
     "basisregisterscausationid": "f3e715b0-8f7c-53a6-9b09-2691cf6ca27f",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/straatnaam/228493",
       "objectId": "228493",
       "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
       "versieId": "2025-01-01T01:05:17+01:00",
@@ -156,9 +156,9 @@
       ],
       "attributen": [
         {
-          "naam": "straatnaamStatus",
-          "oudeWaarde": "voorgesteld",
-          "nieuweWaarde": "afgekeurd"
+          "naam": "status",
+          "oudeWaarde": "https://data.vlaanderen.be/id/concept/straatnaamstatus/voorgesteld",
+          "nieuweWaarde": "https://data.vlaanderen.be/id/concept/straatnaamstatus/afgekeurd"
         }
       ]
     }

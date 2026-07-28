@@ -1,8 +1,8 @@
-﻿namespace Basisregisters.FeedConsumers.Console.PostalInformation;
+namespace Basisregisters.FeedConsumers.Console.PostalInformation;
 
 public static class PostalInformationAttributes
 {
-    public const string Status = "postInfoStatus";
-    public const string MunicipalityId = "gemeente.id";
-    public const string Names = "postnamen";
+    public const string Status = "status";
+    public const string AssignedTo = "isToegekendAan";
+    public const string Names = "postnaam";
 }

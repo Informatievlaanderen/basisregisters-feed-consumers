@@ -226,24 +226,24 @@ public class PostalInformationProjectorTests
                 "time": "2020-02-10T12:42:50+01:00",
                 "type": "basisregisters.postalinformation.create.v1",
                 "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+                "subject": "https://data.vlaanderen.be/id/postinfo/9050",
                 "datacontenttype": "application/json",
                 "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
                 "basisregisterseventtype": "PostalInformationWasRegistered",
                 "basisregisterscausationid": "88888888-8888-8888-8888-888888888888",
                 "data": {
-                  "@id": "https://data.vlaanderen.be/id/postinfo/9050",
                   "objectId": "9050",
                   "naamruimte": "https://data.vlaanderen.be/id/postinfo",
                   "versieId": "2020-02-10T12:42:50+01:00",
                   "nisCodes": [],
                   "attributen": [
-                    { "naam": "postInfoStatus", "oudeWaarde": null, "nieuweWaarde": "gerealiseerd" },
+                    { "naam": "status", "oudeWaarde": null, "nieuweWaarde": "https://data.vlaanderen.be/id/concept/postinfostatus/gerealiseerd" },
                     {
-                      "naam": "postnamen",
+                      "naam": "postnaam",
                       "oudeWaarde": [],
                       "nieuweWaarde": [
-                        { "spelling": "Gentbrugge", "taal": "nl" },
-                        { "spelling": "Ledeberg", "taal": "nl" }
+                        { "@value": "Gentbrugge", "@language": "nl" },
+                        { "@value": "Ledeberg", "@language": "nl" }
                       ]
                     }
                   ]
@@ -269,25 +269,25 @@ public class PostalInformationProjectorTests
                 "time": "2020-02-10T12:43:00+01:00",
                 "type": "basisregisters.postalinformation.update.v1",
                 "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+                "subject": "https://data.vlaanderen.be/id/postinfo/9050",
                 "datacontenttype": "application/json",
                 "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
                 "basisregisterseventtype": "PostalInformationPostalNameWasRemoved",
                 "basisregisterscausationid": "99999999-9999-9999-9999-999999999999",
                 "data": {
-                  "@id": "https://data.vlaanderen.be/id/postinfo/9050",
                   "objectId": "9050",
                   "naamruimte": "https://data.vlaanderen.be/id/postinfo",
                   "versieId": "2020-02-10T12:43:00+01:00",
                   "nisCodes": [],
                   "attributen": [
                     {
-                      "naam": "postnamen",
+                      "naam": "postnaam",
                       "oudeWaarde": [
-                        { "spelling": "Gentbrugge", "taal": "nl" },
-                        { "spelling": "Ledeberg", "taal": "nl" }
+                        { "@value": "Gentbrugge", "@language": "nl" },
+                        { "@value": "Ledeberg", "@language": "nl" }
                       ],
                       "nieuweWaarde": [
-                        { "spelling": "Ledeberg", "taal": "nl" }
+                        { "@value": "Ledeberg", "@language": "nl" }
                       ]
                     }
                   ]
@@ -299,25 +299,25 @@ public class PostalInformationProjectorTests
                 "time": "2020-02-10T12:43:01+01:00",
                 "type": "basisregisters.postalinformation.update.v1",
                 "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/postinfo",
+                "subject": "https://data.vlaanderen.be/id/postinfo/9050",
                 "datacontenttype": "application/json",
                 "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/postinfo/2026-01-21/postinfo.json",
                 "basisregisterseventtype": "PostalInformationPostalNameWasAdded",
                 "basisregisterscausationid": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
                 "data": {
-                  "@id": "https://data.vlaanderen.be/id/postinfo/9050",
                   "objectId": "9050",
                   "naamruimte": "https://data.vlaanderen.be/id/postinfo",
                   "versieId": "2020-02-10T12:43:01+01:00",
                   "nisCodes": [],
                   "attributen": [
                     {
-                      "naam": "postnamen",
+                      "naam": "postnaam",
                       "oudeWaarde": [
-                        { "spelling": "Ledeberg", "taal": "nl" }
+                        { "@value": "Ledeberg", "@language": "nl" }
                       ],
                       "nieuweWaarde": [
-                        { "spelling": "Gentbrugge", "taal": "nl" },
-                        { "spelling": "Ledeberg", "taal": "nl" }
+                        { "@value": "Gentbrugge", "@language": "nl" },
+                        { "@value": "Ledeberg", "@language": "nl" }
                       ]
                     }
                   ]

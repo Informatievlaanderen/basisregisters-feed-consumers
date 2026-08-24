@@ -285,12 +285,6 @@ public class MunicipalityProjectorTests
         feedState.Page.Should().Be(2);
     }
 
-    private async Task RunOneCycleAsync(CancellationToken cancellationToken)
-    {
-        // ExecuteAsync is protected, so we use StartAsync + short delay + StopAsync
-        await _projector.StartAsync(cancellationToken);
-        // Give it time to process the first cycle
-        await Task.Delay(500, CancellationToken.None);
-        await _projector.StopAsync(CancellationToken.None);
-    }
+    private Task RunOneCycleAsync(CancellationToken cancellationToken)
+        => _projector.RunCycleAsync(cancellationToken);
 }

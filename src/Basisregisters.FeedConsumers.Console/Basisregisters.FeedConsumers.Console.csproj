@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <Nullable>enable</Nullable>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
@@ -9,7 +9,7 @@
 
     <RuntimeIdentifier>$(MyRuntimeIdentifier)</RuntimeIdentifier>
     <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
-    <RuntimeFrameworkVersion>9.0.4</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>10.0.8</RuntimeFrameworkVersion>
     <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
 
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
@@ -72,5 +72,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Basisregisters.FeedConsumers\Basisregisters.FeedConsumers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Basisregisters.FeedConsumers.Test" />
   </ItemGroup>
 </Project>

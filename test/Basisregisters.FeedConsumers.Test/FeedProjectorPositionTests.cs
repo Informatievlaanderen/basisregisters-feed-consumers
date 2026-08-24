@@ -2,6 +2,7 @@ namespace Basisregisters.FeedConsumers.Test;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -208,16 +209,38 @@ public class FeedProjectorPositionTests
             new NoOpJsonSchemaValidator(),
             NullLogger.Instance);
 
-        // StartAsync fires ExecuteAsync which fails fast; exception surfaces via StartAsync or StopAsync
-        var act = async () =>
-        {
-            await projector.StartAsync(CancellationToken.None);
-            await Task.Delay(500);
-            await projector.StopAsync(CancellationToken.None);
-        };
+        var act = async () => await RunOneCycleAsync(projector);
 
         await act.Should().ThrowAsync<InvalidOperationException>()
             .WithMessage("*No handlers found for event type*");
+    }
+
+    [Fact]
+    public async Task HostedService_ShouldKeepProjectingUntilStopped()
+    {
+        // The other tests drive RunCycleAsync directly, so this one covers the BackgroundService wiring.
+        var events = CreateTestCloudEvents(1, 2, 3);
+        _feedPageFetcher.SetupPage(1, new FeedProjectorBase.CloudEventsResult(events, false));
+
+        var projector = CreateProjector();
+
+        await projector.StartAsync(CancellationToken.None);
+        try
+        {
+            var elapsed = Stopwatch.StartNew();
+            while (_feedPageFetcher.FetchCount == 0 && elapsed.Elapsed < TimeSpan.FromSeconds(30))
+                await Task.Delay(TimeSpan.FromMilliseconds(10), TestContext.Current.CancellationToken);
+        }
+        finally
+        {
+            await projector.StopAsync(CancellationToken.None);
+        }
+
+        await using var context = _contextFactory.CreateDbContext();
+        var feedState = await context.FeedStates.FindAsync([FeedName], TestContext.Current.CancellationToken);
+
+        feedState.Should().NotBeNull();
+        feedState!.EventPosition.Should().Be(3);
     }
 
     private TestFeedProjector CreateProjector()
@@ -230,12 +253,8 @@ public class FeedProjectorPositionTests
             NullLogger.Instance);
     }
 
-    private async Task RunOneCycleAsync(TestFeedProjector projector)
-    {
-        await projector.StartAsync(CancellationToken.None);
-        await Task.Delay(500);
-        await projector.StopAsync(CancellationToken.None);
-    }
+    private static Task RunOneCycleAsync(TestFeedProjector projector)
+        => projector.RunCycleAsync(CancellationToken.None);
 
     private static List<CloudEvent> CreateTestCloudEvents(params long[] ids)
     {

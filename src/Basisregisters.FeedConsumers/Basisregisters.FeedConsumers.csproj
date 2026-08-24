@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <Nullable>enable</Nullable>
 
     <RuntimeIdentifier>$(MyRuntimeIdentifier)</RuntimeIdentifier>
     <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
-    <RuntimeFrameworkVersion>9.0.4</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>10.0.8</RuntimeFrameworkVersion>
     <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
 
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>

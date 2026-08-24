@@ -299,10 +299,6 @@ public class ParcelProjectorTests
         feedState.Page.Should().Be(2);
     }
 
-    private async Task RunOneCycleAsync(CancellationToken cancellationToken)
-    {
-        await _projector.StartAsync(cancellationToken);
-        await Task.Delay(500, CancellationToken.None);
-        await _projector.StopAsync(CancellationToken.None);
-    }
+    private Task RunOneCycleAsync(CancellationToken cancellationToken)
+        => _projector.RunCycleAsync(cancellationToken);
 }

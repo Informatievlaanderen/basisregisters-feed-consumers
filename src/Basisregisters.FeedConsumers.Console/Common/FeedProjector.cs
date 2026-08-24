@@ -48,84 +48,94 @@ public abstract class FeedProjectorBase : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var page = 1;
-        var position = 0L;
-
         while (!stoppingToken.IsCancellationRequested)
         {
-            var processedEvents = false;
-
-            await using (var context = await _feedContextFactory.CreateDbContextAsync(stoppingToken))
-            {
-                var feedState = await context.FeedStates.FindAsync([_options.Name], cancellationToken: stoppingToken);
-                if (feedState is null)
-                {
-                    feedState = new FeedState(_options.Name, position, page);
-                    context.FeedStates.Add(feedState);
-                }
-                else
-                {
-                    page = feedState.Page;
-                    position = feedState.EventPosition;
-                }
-
-                var feedPage = await _feedPageFetcher.FetchAsync(page, stoppingToken);
-
-                foreach (var cloudEvent in feedPage.Events.Where(x => Convert.ToInt64(x.Id!) > position))
-                {
-                    if (!_options.IgnoreNoEventHandlers && _handlers.All(x => x.Type.Value != cloudEvent.Type))
-                        throw new InvalidOperationException(
-                            $"No handlers found for event type {cloudEvent.Type} in {_options.Name} projector.");
-
-                    if (_handlers.Count(x => x.Type.Value.ToString() == cloudEvent.Type) > 1)
-                        Logger.LogWarning(
-                            "Multiple handlers found for event type {EventType}. All handlers will be executed.", cloudEvent.Type);
-
-                    processedEvents = true;
-                    foreach (var handler in _handlers)
-                    {
-                        try
-                        {
-                            if (handler.Type.Value != cloudEvent.Type)
-                                continue;
-
-                            if (cloudEvent.Data is not JsonElement jsonElement)
-                                throw new InvalidOperationException($"CloudEvent {cloudEvent.Id} data is not a JsonElement. Actual type: {cloudEvent.Data?.GetType().Name ?? "null"}.");
-
-                            await _jsonSchemaValidator.ValidateAsync(cloudEvent, stoppingToken);
-
-                            //deserialize the cloudevent data
-                            var eventData = jsonElement.Deserialize<CloudEventData>(CloudEventReader.JsonOptions)
-                                            ?? throw new InvalidOperationException($"Failed to deserialize CloudEvent data for event {cloudEvent.Id}.");
-                            await handler.Handle(cloudEvent, eventData, context, stoppingToken);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.LogError(ex, "Error processing event {EventId}", cloudEvent.Id);
-                            throw;
-                        }
-                    }
-                }
-
-                if (feedPage.Events.Any())
-                {
-                    var highestEventIdOnPage = feedPage.Events.Max(x => Convert.ToInt64(x.Id!));
-                    position = Math.Max(position, highestEventIdOnPage);
-                }
-
-                if (feedPage.IsPageComplete)
-                    page++;
-
-                feedState.EventPosition = position;
-                feedState.Page = page;
-
-                await context.SaveChangesAsync(stoppingToken);
-            }
+            var processedEvents = await RunCycleAsync(stoppingToken);
 
             //wait before next poll only when there are no more events to be polled
             if(!processedEvents)
                 await Task.Delay(TimeSpan.FromMinutes(_options.PollingIntervalInMinutes), stoppingToken);
         }
+    }
+
+    /// <summary>
+    /// Runs a single poll cycle: fetch the current page, project its events and save the new feed
+    /// position. Returns whether the page held events that still had to be processed.
+    /// </summary>
+    internal async Task<bool> RunCycleAsync(CancellationToken cancellationToken)
+    {
+        var page = 1;
+        var position = 0L;
+        var processedEvents = false;
+
+        await using (var context = await _feedContextFactory.CreateDbContextAsync(cancellationToken))
+        {
+            var feedState = await context.FeedStates.FindAsync([_options.Name], cancellationToken: cancellationToken);
+            if (feedState is null)
+            {
+                feedState = new FeedState(_options.Name, position, page);
+                context.FeedStates.Add(feedState);
+            }
+            else
+            {
+                page = feedState.Page;
+                position = feedState.EventPosition;
+            }
+
+            var feedPage = await _feedPageFetcher.FetchAsync(page, cancellationToken);
+
+            foreach (var cloudEvent in feedPage.Events.Where(x => Convert.ToInt64(x.Id!) > position))
+            {
+                if (!_options.IgnoreNoEventHandlers && _handlers.All(x => x.Type.Value != cloudEvent.Type))
+                    throw new InvalidOperationException(
+                        $"No handlers found for event type {cloudEvent.Type} in {_options.Name} projector.");
+
+                if (_handlers.Count(x => x.Type.Value.ToString() == cloudEvent.Type) > 1)
+                    Logger.LogWarning(
+                        "Multiple handlers found for event type {EventType}. All handlers will be executed.", cloudEvent.Type);
+
+                processedEvents = true;
+                foreach (var handler in _handlers)
+                {
+                    try
+                    {
+                        if (handler.Type.Value != cloudEvent.Type)
+                            continue;
+
+                        if (cloudEvent.Data is not JsonElement jsonElement)
+                            throw new InvalidOperationException($"CloudEvent {cloudEvent.Id} data is not a JsonElement. Actual type: {cloudEvent.Data?.GetType().Name ?? "null"}.");
+
+                        await _jsonSchemaValidator.ValidateAsync(cloudEvent, cancellationToken);
+
+                        //deserialize the cloudevent data
+                        var eventData = jsonElement.Deserialize<CloudEventData>(CloudEventReader.JsonOptions)
+                                        ?? throw new InvalidOperationException($"Failed to deserialize CloudEvent data for event {cloudEvent.Id}.");
+                        await handler.Handle(cloudEvent, eventData, context, cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogError(ex, "Error processing event {EventId}", cloudEvent.Id);
+                        throw;
+                    }
+                }
+            }
+
+            if (feedPage.Events.Any())
+            {
+                var highestEventIdOnPage = feedPage.Events.Max(x => Convert.ToInt64(x.Id!));
+                position = Math.Max(position, highestEventIdOnPage);
+            }
+
+            if (feedPage.IsPageComplete)
+                page++;
+
+            feedState.EventPosition = position;
+            feedState.Page = page;
+
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        return processedEvents;
     }
 
     protected void When(BaseRegistriesCloudEventType eventType, Func<CloudEvent, CloudEventData, FeedContext, CancellationToken, Task> handler)

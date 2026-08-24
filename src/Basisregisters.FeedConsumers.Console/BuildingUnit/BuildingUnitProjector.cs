@@ -19,6 +19,18 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
     public static readonly BaseRegistriesCloudEventType UpdateEvent = new("basisregisters.buildingunit.update.v1");
     public static readonly BaseRegistriesCloudEventType DeleteEvent = new("basisregisters.buildingunit.delete.v1");
 
+    private const string StatusPuriPlanned = "https://data.vlaanderen.be/id/concept/gebouweenheidstatus/gepland";
+    private const string StatusPuriNotRealized = "https://data.vlaanderen.be/id/concept/gebouweenheidstatus/nietGerealiseerd";
+    private const string StatusPuriRealized = "https://data.vlaanderen.be/id/concept/gebouweenheidstatus/gerealiseerd";
+    private const string StatusPuriRetired = "https://data.vlaanderen.be/id/concept/gebouweenheidstatus/gehistoreerd";
+
+    private const string GeometryMethodPuriAppointedByAdministrator = "https://data.vlaanderen.be/id/concept/geometriemethode/aangeduidDoorBeheerder";
+    private const string GeometryMethodPuriDerivedFromObject = "https://data.vlaanderen.be/id/concept/geometriemethode/afgeleidVanObject";
+    private const string GeometryMethodPuriInterpolated = "https://data.vlaanderen.be/id/concept/geometriemethode/geinterpoleerd";
+
+    private const string FunctionPuriUnknown = "https://data.vlaanderen.be/id/concept/gebouweenheidfunctie/nietGekend";
+    private const string FunctionPuriCommon = "https://data.vlaanderen.be/id/concept/gebouweenheidfunctie/gemeenschappelijkDeel";
+
     public static readonly List<string> SupportedCorrectedRemovalEvents = new List<string>()
     {
         "BuildingUnitRemovalWasCorrected"
@@ -40,7 +52,8 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
         {
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
 
-            var buildingUnit = await context.BuildingUnits.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            var subject = cloudEvent.GetRequiredSubject();
+            var buildingUnit = await context.BuildingUnits.FindAsync([subject], cancellationToken: cancellationToken);
             if (buildingUnit is { IsRemoved: true })
             {
                 buildingUnit.IsRemoved = false;
@@ -48,7 +61,7 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
             else
             {
                 buildingUnit = new Model.BuildingUnit(
-                    data.Id.ToString(),
+                    subject,
                     int.Parse(data.ObjectId),
                     data.Attributen.GetRequired(BuildingUnitAttributes.BuildingId).NieuweWaarde!.ToString()!.ExtractPersistentLocalIdAsInt(),
                     MapStatus(data.Attributen.GetRequired(BuildingUnitAttributes.Status).NieuweWaarde!.ToString()!),
@@ -68,9 +81,10 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
         When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing update event: {EventId}", cloudEvent.Id);
-            var buildingUnit = await context.BuildingUnits.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            var subject = cloudEvent.GetRequiredSubject();
+            var buildingUnit = await context.BuildingUnits.FindAsync([subject], cancellationToken: cancellationToken);
             if (buildingUnit == null)
-                throw new InvalidOperationException($"BuildingUnit {data.Id} not found");
+                throw new InvalidOperationException($"BuildingUnit {subject} not found");
 
             await ProcessBuildingUnitAttributes(data, buildingUnit, context, cancellationToken);
         });
@@ -78,9 +92,10 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
         When(DeleteEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing delete event: {EventId}", cloudEvent.Id);
-            var buildingUnit = await context.BuildingUnits.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            var subject = cloudEvent.GetRequiredSubject();
+            var buildingUnit = await context.BuildingUnits.FindAsync([subject], cancellationToken: cancellationToken);
             if (buildingUnit == null)
-                throw new InvalidOperationException($"BuildingUnit {data.Id} not found");
+                throw new InvalidOperationException($"BuildingUnit {subject} not found");
 
             buildingUnit.VersionId = data.VersieId;
             buildingUnit.VersionIdAsString = data.VersieIdAsString;
@@ -134,10 +149,10 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
     {
         return status switch
         {
-            "gepland" => BuildingUnitStatus.Planned,
-            "nietGerealiseerd" => BuildingUnitStatus.NotRealized,
-            "gerealiseerd" => BuildingUnitStatus.Realized,
-            "gehistoreerd" => BuildingUnitStatus.Retired,
+            StatusPuriPlanned => BuildingUnitStatus.Planned,
+            StatusPuriNotRealized => BuildingUnitStatus.NotRealized,
+            StatusPuriRealized => BuildingUnitStatus.Realized,
+            StatusPuriRetired => BuildingUnitStatus.Retired,
             _ => throw new ArgumentException($"Unknown buildingunit status: {status}")
         };
     }
@@ -176,9 +191,9 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
     {
         return geometryMethod switch
         {
-            "aangeduidDoorBeheerder" => BuildingUnitGeometryMethod.AppointedByAdministrator,
-            "afgeleidVanObject" => BuildingUnitGeometryMethod.DerivedFromObject,
-            "geïnterpoleerd" => BuildingUnitGeometryMethod.Interpolated,
+            GeometryMethodPuriAppointedByAdministrator => BuildingUnitGeometryMethod.AppointedByAdministrator,
+            GeometryMethodPuriDerivedFromObject => BuildingUnitGeometryMethod.DerivedFromObject,
+            GeometryMethodPuriInterpolated => BuildingUnitGeometryMethod.Interpolated,
             _ => throw new ArgumentException($"Unknown building unit geometry method: {geometryMethod}")
         };
     }
@@ -187,8 +202,8 @@ public sealed class BuildingUnitProjector : FeedProjectorBase
     {
         return function switch
         {
-            "nietGekend" => BuildingUnitFunction.Unknown,
-            "gemeenschappelijkDeel" => BuildingUnitFunction.Common,
+            FunctionPuriUnknown => BuildingUnitFunction.Unknown,
+            FunctionPuriCommon => BuildingUnitFunction.Common,
             _ => throw new ArgumentException($"Unknown building unit function: {function}")
         };
     }

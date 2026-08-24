@@ -17,6 +17,15 @@ public sealed class BuildingProjector : FeedProjectorBase
     public static readonly BaseRegistriesCloudEventType UpdateEvent = new("basisregisters.building.update.v1");
     public static readonly BaseRegistriesCloudEventType DeleteEvent = new("basisregisters.building.delete.v1");
 
+    private const string StatusPuriPlanned = "https://data.vlaanderen.be/id/concept/gebouwstatus/gepland";
+    private const string StatusPuriUnderConstruction = "https://data.vlaanderen.be/id/concept/gebouwstatus/inAanbouw";
+    private const string StatusPuriNotRealized = "https://data.vlaanderen.be/id/concept/gebouwstatus/nietGerealiseerd";
+    private const string StatusPuriRealized = "https://data.vlaanderen.be/id/concept/gebouwstatus/gerealiseerd";
+    private const string StatusPuriRetired = "https://data.vlaanderen.be/id/concept/gebouwstatus/gehistoreerd";
+
+    private const string GeometryMethodPuriOutlined = "https://data.vlaanderen.be/id/concept/2Dgeometriemethode/ingeschetst";
+    private const string GeometryMethodPuriMeasuredByGrb = "https://data.vlaanderen.be/id/concept/2Dgeometriemethode/ingemetenGRB";
+
     private readonly GMLReader _gmlReader = GmlReaderFactory.CreateLambert2008GmlReader();
 
     public BuildingProjector(
@@ -33,7 +42,7 @@ public sealed class BuildingProjector : FeedProjectorBase
         {
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
             var building = new Building(
-                data.Id.ToString(),
+                cloudEvent.GetRequiredSubject(),
                 int.Parse(data.ObjectId),
                 MapStatus(data.Attributen.GetRequired(BuildingAttributes.Status).NieuweWaarde!.ToString()!),
                 MapGeometryMethod(data.Attributen.GetRequired(BuildingAttributes.GeometryMethod).NieuweWaarde!.ToString()!),
@@ -49,9 +58,10 @@ public sealed class BuildingProjector : FeedProjectorBase
         When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing update event: {EventId}", cloudEvent.Id);
-            var building = await context.Buildings.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            var subject = cloudEvent.GetRequiredSubject();
+            var building = await context.Buildings.FindAsync([subject], cancellationToken: cancellationToken);
             if (building == null)
-                throw new InvalidOperationException($"Building {data.Id} not found");
+                throw new InvalidOperationException($"Building {subject} not found");
 
             ProcessBuildingAttributes(data, building);
         });
@@ -59,9 +69,10 @@ public sealed class BuildingProjector : FeedProjectorBase
         When(DeleteEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing delete event: {EventId}", cloudEvent.Id);
-            var building = await context.Buildings.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            var subject = cloudEvent.GetRequiredSubject();
+            var building = await context.Buildings.FindAsync([subject], cancellationToken: cancellationToken);
             if (building == null)
-                throw new InvalidOperationException($"Building {data.Id} not found");
+                throw new InvalidOperationException($"Building {subject} not found");
 
             building.VersionId = data.VersieId;
             building.VersionIdAsString = data.VersieIdAsString;
@@ -99,11 +110,11 @@ public sealed class BuildingProjector : FeedProjectorBase
     {
         return status switch
         {
-            "gepland" => BuildingStatus.Planned,
-            "inAanbouw" => BuildingStatus.UnderConstruction,
-            "nietGerealiseerd" => BuildingStatus.NotRealized,
-            "gerealiseerd" => BuildingStatus.Realized,
-            "gehistoreerd" => BuildingStatus.Retired,
+            StatusPuriPlanned => BuildingStatus.Planned,
+            StatusPuriUnderConstruction => BuildingStatus.UnderConstruction,
+            StatusPuriNotRealized => BuildingStatus.NotRealized,
+            StatusPuriRealized => BuildingStatus.Realized,
+            StatusPuriRetired => BuildingStatus.Retired,
             _ => throw new ArgumentException($"Unknown building status: {status}")
         };
     }
@@ -142,8 +153,8 @@ public sealed class BuildingProjector : FeedProjectorBase
     {
         return geometryMethod switch
         {
-            "ingeschetst" => BuildingGeometryMethod.Outlined,
-            "ingemetenGRB" => BuildingGeometryMethod.MeasuredByGrb,
+            GeometryMethodPuriOutlined => BuildingGeometryMethod.Outlined,
+            GeometryMethodPuriMeasuredByGrb => BuildingGeometryMethod.MeasuredByGrb,
             _ => throw new ArgumentException($"Unknown building geometry method: {geometryMethod}")
         };
     }

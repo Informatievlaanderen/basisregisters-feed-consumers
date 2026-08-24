@@ -177,7 +177,7 @@ public sealed class AddressProjector : FeedProjectorBase
     private Geometry ExtractLambert2008Geometry(object? geometry)
     {
         var geometries = geometry is JsonElement positionElement
-            ? positionElement.Deserialize<List<GmlGeometry>>(CloudEventReader.JsonOptions)
+            ? positionElement.Deserialize<List<GeometryData>>(CloudEventReader.JsonOptions)
             : [];
 
         var geometryData = geometries?
@@ -189,7 +189,7 @@ public sealed class AddressProjector : FeedProjectorBase
         return MapGeometry(geometryData);
     }
 
-    private Geometry MapGeometry(GmlGeometry geometryData)
+    private Geometry MapGeometry(GeometryData geometryData)
     {
         if (string.IsNullOrEmpty(geometryData.Gml))
             throw new ArgumentException($"Failed to parse GML geometry: GML string is null or empty");

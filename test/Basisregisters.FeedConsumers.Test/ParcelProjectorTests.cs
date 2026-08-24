@@ -140,21 +140,21 @@ public class ParcelProjectorTests
                 "id": "9100001",
                 "time": "2025-09-18T08:03:00+02:00",
                 "type": "basisregisters.parcel.create.v1",
-                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/percelen",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/percelen",
                 "datacontenttype": "application/json",
                 "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/perceel/2026-01-21/perceel.json",
                 "basisregisterseventtype": "ParcelWasMigrated",
                 "basisregisterscausationid": "55555555-5555-5555-5555-555555555555",
+                "subject": "https://data.vlaanderen.be/id/perceel/72015B0517-00B002",
                 "data": {
-                  "@id": "https://data.vlaanderen.be/id/perceel/72015B0517-00B002",
                   "objectId": "72015B0517-00B002",
                   "naamruimte": "https://data.vlaanderen.be/id/perceel",
                   "versieId": "2025-09-18T08:03:00+02:00",
                   "nisCodes": [ "72015" ],
                   "attributen": [
-                    { "naam": "perceelStatus", "oudeWaarde": null, "nieuweWaarde": "gerealiseerd" },
+                    { "naam": "status", "oudeWaarde": null, "nieuweWaarde": "https://data.vlaanderen.be/id/concept/perceelstatus/gerealiseerd" },
                     {
-                      "naam": "adresIds",
+                      "naam": "toegekendAdres",
                       "oudeWaarde": null,
                       "nieuweWaarde": [
                         "https://data.vlaanderen.be/id/adres/1097598",
@@ -183,20 +183,20 @@ public class ParcelProjectorTests
                 "id": "9100002",
                 "time": "2025-09-18T08:03:01+02:00",
                 "type": "basisregisters.parcel.update.v1",
-                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/percelen",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/percelen",
                 "datacontenttype": "application/json",
                 "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/perceel/2026-01-21/perceel.json",
                 "basisregisterseventtype": "ParcelAddressWasDetachedV2",
                 "basisregisterscausationid": "66666666-6666-6666-6666-666666666666",
+                "subject": "https://data.vlaanderen.be/id/perceel/72015B0517-00B002",
                 "data": {
-                  "@id": "https://data.vlaanderen.be/id/perceel/72015B0517-00B002",
                   "objectId": "72015B0517-00B002",
                   "naamruimte": "https://data.vlaanderen.be/id/perceel",
                   "versieId": "2025-09-18T08:03:01+02:00",
                   "nisCodes": [ "72015" ],
                   "attributen": [
                     {
-                      "naam": "adresIds",
+                      "naam": "toegekendAdres",
                       "oudeWaarde": [
                         "https://data.vlaanderen.be/id/adres/1097598",
                         "https://data.vlaanderen.be/id/adres/4354739"
@@ -211,20 +211,20 @@ public class ParcelProjectorTests
                 "id": "9100003",
                 "time": "2025-09-18T08:03:02+02:00",
                 "type": "basisregisters.parcel.update.v1",
-                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/percelen",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/percelen",
                 "datacontenttype": "application/json",
                 "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/perceel/2026-01-21/perceel.json",
                 "basisregisterseventtype": "ParcelAddressWasAttachedV2",
                 "basisregisterscausationid": "77777777-7777-7777-7777-777777777777",
+                "subject": "https://data.vlaanderen.be/id/perceel/72015B0517-00B002",
                 "data": {
-                  "@id": "https://data.vlaanderen.be/id/perceel/72015B0517-00B002",
                   "objectId": "72015B0517-00B002",
                   "naamruimte": "https://data.vlaanderen.be/id/perceel",
                   "versieId": "2025-09-18T08:03:02+02:00",
                   "nisCodes": [ "72015" ],
                   "attributen": [
                     {
-                      "naam": "adresIds",
+                      "naam": "toegekendAdres",
                       "oudeWaarde": [ "https://data.vlaanderen.be/id/adres/4354739" ],
                       "nieuweWaarde": [
                         "https://data.vlaanderen.be/id/adres/1097598",
@@ -274,7 +274,7 @@ public class ParcelProjectorTests
         var feedState = await context.FeedStates.FindAsync([ParcelFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(7893337);
+        feedState!.EventPosition.Should().Be(7893340);
         feedState.Page.Should().Be(1);
     }
 
@@ -295,7 +295,7 @@ public class ParcelProjectorTests
         var feedState = await context.FeedStates.FindAsync([ParcelFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(7893337);
+        feedState!.EventPosition.Should().Be(7893340);
         feedState.Page.Should().Be(2);
     }
 

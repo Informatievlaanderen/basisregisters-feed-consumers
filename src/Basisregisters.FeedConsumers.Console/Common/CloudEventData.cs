@@ -11,13 +11,6 @@ public sealed class CloudEventData
     private DateTimeOffset? _parsedVersieId;
 
     /// <summary>
-    /// Canonical identifier URI of the object
-    /// </summary>
-    [JsonPropertyName("@id")]
-    [Required]
-    public Uri Id { get; init; } = null!;
-
-    /// <summary>
     /// Object identifier
     /// </summary>
     [JsonPropertyName("objectId")]

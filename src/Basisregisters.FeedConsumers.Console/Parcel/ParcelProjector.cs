@@ -16,6 +16,9 @@ public sealed class ParcelProjector : FeedProjectorBase
     public static readonly BaseRegistriesCloudEventType CreateEvent = new("basisregisters.parcel.create.v1");
     public static readonly BaseRegistriesCloudEventType UpdateEvent = new("basisregisters.parcel.update.v1");
 
+    private const string StatusPuriRealized = "https://data.vlaanderen.be/id/concept/perceelstatus/gerealiseerd";
+    private const string StatusPuriRetired = "https://data.vlaanderen.be/id/concept/perceelstatus/gehistoreerd";
+
     public ParcelProjector(
         FeedProjectorOptions options,
         IDbContextFactory<FeedContext> feedContextFactory,
@@ -30,7 +33,7 @@ public sealed class ParcelProjector : FeedProjectorBase
         {
             Logger.LogInformation("Processing create event: {EventId}", cloudEvent.Id);
             var parcel = new Model.Parcel(
-                data.Id.ToString(),
+                cloudEvent.GetRequiredSubject(),
                 data.ObjectId,
                 data.ObjectId.Replace('-', '/'),
                 MapStatus(data.Attributen.GetRequired(ParcelAttributes.Status).NieuweWaarde!.ToString()!),
@@ -45,9 +48,10 @@ public sealed class ParcelProjector : FeedProjectorBase
         When(UpdateEvent, async (cloudEvent, data, context, cancellationToken) =>
         {
             Logger.LogInformation("Processing update event: {EventId}", cloudEvent.Id);
-            var parcel = await context.Parcels.FindAsync([data.Id.ToString()], cancellationToken: cancellationToken);
+            var subject = cloudEvent.GetRequiredSubject();
+            var parcel = await context.Parcels.FindAsync([subject], cancellationToken: cancellationToken);
             if (parcel == null)
-                throw new InvalidOperationException($"Parcel {data.Id} not found");
+                throw new InvalidOperationException($"Parcel {subject} not found");
 
             await ProcessParcelAttributes(data, parcel, context, cancellationToken);
         });
@@ -132,8 +136,8 @@ public sealed class ParcelProjector : FeedProjectorBase
     {
         return status switch
         {
-            "gerealiseerd" => ParcelStatus.Realized,
-            "gehistoreerd" => ParcelStatus.Retired,
+            StatusPuriRealized => ParcelStatus.Realized,
+            StatusPuriRetired => ParcelStatus.Retired,
             _ => throw new ArgumentException($"Unknown parcel status: {status}")
         };
     }

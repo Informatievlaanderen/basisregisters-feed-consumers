@@ -166,7 +166,7 @@ public class BuildingUnitProjectorTests
             Path.Combine("TestData", "buildingunit-create-change-building.json"));
 
         var relevantEvents = events
-            .Where(e => long.Parse(e.Id!) <= 6277570)
+            .Where(e => long.Parse(e.Id!) <= 6485261)
             .ToList();
         _feedPageFetcher.SetupPage(1, relevantEvents.ToFeedPage(isPageComplete: false));
 
@@ -233,51 +233,50 @@ public class BuildingUnitProjectorTests
                 "id": "9992001",
                 "time": "2025-04-18T11:52:12.5955391+02:00",
                 "type": "basisregisters.buildingunit.create.v1",
-                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
                 "datacontenttype": "application/json",
                 "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
                 "basisregisterseventtype": "BuildingWasMigrated",
                 "basisregisterscausationid": "bd0f564c-ad0e-514f-94b5-d1c889302e48",
+                "subject": "https://data.vlaanderen.be/id/gebouweenheid/31319625",
                 "data": {
-                  "@id": "https://data.vlaanderen.be/id/gebouweenheid/31319625",
                   "objectId": "31319625",
                   "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
                   "versieId": "2025-04-18T11:52:12+02:00",
                   "nisCodes": [ "41081" ],
                   "attributen": [
                     {
-                      "naam": "gebouweenheidStatus",
+                      "naam": "status",
                       "oudeWaarde": null,
-                      "nieuweWaarde": "gerealiseerd"
+                      "nieuweWaarde": "https://data.vlaanderen.be/id/concept/gebouweenheidstatus/gerealiseerd"
                     },
                     {
-                      "naam": "gebouweenheidFunctie",
+                      "naam": "functie",
                       "oudeWaarde": null,
-                      "nieuweWaarde": "nietGekend"
+                      "nieuweWaarde": "https://data.vlaanderen.be/id/concept/gebouweenheidfunctie/nietGekend"
                     },
                     {
-                      "naam": "positieGeometrieMethode",
+                      "naam": "positie.methode",
                       "oudeWaarde": null,
-                      "nieuweWaarde": "afgeleidVanObject"
+                      "nieuweWaarde": "https://data.vlaanderen.be/id/concept/geometriemethode/afgeleidVanObject"
                     },
                     {
-                      "naam": "gebouweenheidPositie",
+                      "naam": "positie.geometrie",
                       "oudeWaarde": null,
                       "nieuweWaarde": [
                         {
-                          "type": "Point",
-                          "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+                          "@type": "Punt",
                           "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>109560.95 168981.82</gml:pos></gml:Point>"
                         }
                       ]
                     },
                     {
-                      "naam": "adresIds",
+                      "naam": "toegekendAdres",
                       "oudeWaarde": null,
                       "nieuweWaarde": []
                     },
                     {
-                      "naam": "gebouw.id",
+                      "naam": "isDeelVan",
                       "oudeWaarde": null,
                       "nieuweWaarde": "https://data.vlaanderen.be/id/gebouw/31319625"
                     },
@@ -328,6 +327,12 @@ public class BuildingUnitProjectorTests
         buildingUnit.VersionId.Should().Be(events[^1].GetVersionId());
         buildingUnit.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
         addressLinks.Should().BeEmpty();
+
+        buildingUnit.Position.Should().BeOfType<Point>();
+        var point = (Point)buildingUnit.Position;
+        point.SRID.Should().Be(3812);
+        point.X.Should().BeApproximately(651622.65, 0.01);
+        point.Y.Should().BeApproximately(705908.68, 0.01);
     }
 
     [Fact]
@@ -368,46 +373,44 @@ public class BuildingUnitProjectorTests
                 "id": "9000001",
                 "time": "2025-01-15T04:37:00+01:00",
                 "type": "basisregisters.buildingunit.create.v1",
-                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
                 "datacontenttype": "application/json",
                 "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
                 "basisregisterseventtype": "BuildingWasMigrated",
                 "basisregisterscausationid": "11111111-1111-1111-1111-111111111111",
+                "subject": "https://data.vlaanderen.be/id/gebouweenheid/39999991",
                 "data": {
-                  "@id": "https://data.vlaanderen.be/id/gebouweenheid/39999991",
                   "objectId": "39999991",
                   "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
                   "versieId": "2025-01-15T04:37:00+01:00",
                   "nisCodes": [ "11008" ],
                   "attributen": [
-                    { "naam": "gebouweenheidStatus", "oudeWaarde": null, "nieuweWaarde": "gerealiseerd" },
-                    { "naam": "gebouweenheidFunctie", "oudeWaarde": null, "nieuweWaarde": "gemeenschappelijkDeel" },
-                    { "naam": "positieGeometrieMethode", "oudeWaarde": null, "nieuweWaarde": "afgeleidVanObject" },
+                    { "naam": "status", "oudeWaarde": null, "nieuweWaarde": "https://data.vlaanderen.be/id/concept/gebouweenheidstatus/gerealiseerd" },
+                    { "naam": "functie", "oudeWaarde": null, "nieuweWaarde": "https://data.vlaanderen.be/id/concept/gebouweenheidfunctie/gemeenschappelijkDeel" },
+                    { "naam": "positie.methode", "oudeWaarde": null, "nieuweWaarde": "https://data.vlaanderen.be/id/concept/geometriemethode/afgeleidVanObject" },
                     {
-                      "naam": "gebouweenheidPositie",
+                      "naam": "positie.geometrie",
                       "oudeWaarde": null,
                       "nieuweWaarde": [
                         {
-                          "type": "Point",
-                          "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+                          "@type": "Punt",
                           "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>159244.89 220780.04</gml:pos></gml:Point>"
                         },
                         {
-                          "type": "Point",
-                          "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+                          "@type": "Punt",
                           "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>659238.49 720781.20</gml:pos></gml:Point>"
                         }
                       ]
                     },
                     {
-                      "naam": "adresIds",
+                      "naam": "toegekendAdres",
                       "oudeWaarde": null,
                       "nieuweWaarde": [
                         "https://data.vlaanderen.be/id/adres/304486",
                         "https://data.vlaanderen.be/id/adres/2314327"
                       ]
                     },
-                    { "naam": "gebouw.id", "oudeWaarde": null, "nieuweWaarde": "https://data.vlaanderen.be/id/gebouw/5676172" },
+                    { "naam": "isDeelVan", "oudeWaarde": null, "nieuweWaarde": "https://data.vlaanderen.be/id/gebouw/5676172" },
                     { "naam": "afwijkingVastgesteld", "oudeWaarde": null, "nieuweWaarde": false }
                   ]
                 }
@@ -431,20 +434,20 @@ public class BuildingUnitProjectorTests
                 "id": "9000002",
                 "time": "2025-01-15T04:37:01+01:00",
                 "type": "basisregisters.buildingunit.update.v1",
-                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
                 "datacontenttype": "application/json",
                 "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
                 "basisregisterseventtype": "BuildingUnitAddressWasAttachedV2",
                 "basisregisterscausationid": "22222222-2222-2222-2222-222222222222",
+                "subject": "https://data.vlaanderen.be/id/gebouweenheid/39999991",
                 "data": {
-                  "@id": "https://data.vlaanderen.be/id/gebouweenheid/39999991",
                   "objectId": "39999991",
                   "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
                   "versieId": "2025-01-15T04:37:01+01:00",
                   "nisCodes": [ "11008" ],
                   "attributen": [
                     {
-                      "naam": "adresIds",
+                      "naam": "toegekendAdres",
                       "oudeWaarde": [
                         "https://data.vlaanderen.be/id/adres/304486",
                         "https://data.vlaanderen.be/id/adres/2314327"
@@ -461,20 +464,20 @@ public class BuildingUnitProjectorTests
                 "id": "9000004",
                 "time": "2025-01-15T04:37:03+01:00",
                 "type": "basisregisters.buildingunit.update.v1",
-                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
                 "datacontenttype": "application/json",
                 "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
                 "basisregisterseventtype": "BuildingUnitAddressesWereAttachedV2",
                 "basisregisterscausationid": "44444444-4444-4444-4444-444444444444",
+                "subject": "https://data.vlaanderen.be/id/gebouweenheid/39999991",
                 "data": {
-                  "@id": "https://data.vlaanderen.be/id/gebouweenheid/39999991",
                   "objectId": "39999991",
                   "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
                   "versieId": "2025-01-15T04:37:02+01:00",
                   "nisCodes": [ "11008" ],
                   "attributen": [
                     {
-                      "naam": "adresIds",
+                      "naam": "toegekendAdres",
                       "oudeWaarde": [
                         "https://data.vlaanderen.be/id/adres/2314327"
                       ],
@@ -526,7 +529,7 @@ public class BuildingUnitProjectorTests
         var feedState = await context.FeedStates.FindAsync([BuildingUnitFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(6343588);
+        feedState!.EventPosition.Should().Be(6585141);
         feedState.Page.Should().Be(1);
     }
 
@@ -547,7 +550,7 @@ public class BuildingUnitProjectorTests
         var feedState = await context.FeedStates.FindAsync([BuildingUnitFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(6343588);
+        feedState!.EventPosition.Should().Be(6585141);
         feedState.Page.Should().Be(2);
     }
 

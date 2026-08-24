@@ -1,16 +1,16 @@
 [
   {
     "specversion": "1.0",
-    "id": "8191481",
+    "id": "8433141",
     "time": "2026-01-27T11:14:31.7658894+01:00",
     "type": "basisregisters.buildingunit.create.v1",
-    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
     "basisregisterseventtype": "BuildingUnitWasPlannedV2",
     "basisregisterscausationid": "f1214fa4-b4a2-5c7d-a4fe-f2e3e2130586",
+    "subject": "https://data.vlaanderen.be/id/gebouweenheid/31779857",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/gebouweenheid/31779857",
       "objectId": "31779857",
       "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
       "versieId": "2026-01-27T11:14:31+01:00",
@@ -19,43 +19,41 @@
       ],
       "attributen": [
         {
-          "naam": "gebouweenheidStatus",
+          "naam": "status",
           "oudeWaarde": null,
-          "nieuweWaarde": "gepland"
+          "nieuweWaarde": "https://data.vlaanderen.be/id/concept/gebouweenheidstatus/gepland"
         },
         {
-          "naam": "gebouweenheidFunctie",
+          "naam": "functie",
           "oudeWaarde": null,
-          "nieuweWaarde": "nietGekend"
+          "nieuweWaarde": "https://data.vlaanderen.be/id/concept/gebouweenheidfunctie/nietGekend"
         },
         {
-          "naam": "positieGeometrieMethode",
+          "naam": "positie.methode",
           "oudeWaarde": null,
-          "nieuweWaarde": "aangeduidDoorBeheerder"
+          "nieuweWaarde": "https://data.vlaanderen.be/id/concept/geometriemethode/aangeduidDoorBeheerder"
         },
         {
-          "naam": "gebouweenheidPositie",
+          "naam": "positie.geometrie",
           "oudeWaarde": null,
           "nieuweWaarde": [
             {
-              "type": "Point",
-              "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+              "@type": "Punt",
               "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>58076.43 176343.98</gml:pos></gml:Point>"
             },
             {
-              "type": "Point",
-              "projectie": "http://www.opengis.net/def/crs/EPSG/0/3812",
+              "@type": "Punt",
               "gml": "<gml:Point srsName=\"http://www.opengis.net/def/crs/EPSG/0/3812\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:pos>558076.16 676333.22</gml:pos></gml:Point>"
             }
           ]
         },
         {
-          "naam": "adresIds",
+          "naam": "toegekendAdres",
           "oudeWaarde": null,
           "nieuweWaarde": []
         },
         {
-          "naam": "gebouw.id",
+          "naam": "isDeelVan",
           "oudeWaarde": null,
           "nieuweWaarde": "https://data.vlaanderen.be/id/gebouw/31732080"
         },
@@ -69,16 +67,16 @@
   },
   {
     "specversion": "1.0",
-    "id": "8191482",
+    "id": "8433142",
     "time": "2026-01-27T11:14:36.0323727+01:00",
     "type": "basisregisters.buildingunit.update.v1",
-    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
     "basisregisterseventtype": "BuildingUnitWasRealizedV2",
     "basisregisterscausationid": "59c5aacb-7da3-5b3f-bcb8-8dce0f882229",
+    "subject": "https://data.vlaanderen.be/id/gebouweenheid/31779857",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/gebouweenheid/31779857",
       "objectId": "31779857",
       "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
       "versieId": "2026-01-27T11:14:36+01:00",
@@ -87,25 +85,25 @@
       ],
       "attributen": [
         {
-          "naam": "gebouweenheidStatus",
-          "oudeWaarde": "gepland",
-          "nieuweWaarde": "gerealiseerd"
+          "naam": "status",
+          "oudeWaarde": "https://data.vlaanderen.be/id/concept/gebouweenheidstatus/gepland",
+          "nieuweWaarde": "https://data.vlaanderen.be/id/concept/gebouweenheidstatus/gerealiseerd"
         }
       ]
     }
   },
   {
     "specversion": "1.0",
-    "id": "8191489",
+    "id": "8433149",
     "time": "2026-01-27T11:22:36.9194789+01:00",
     "type": "basisregisters.buildingunit.update.v1",
-    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
     "basisregisterseventtype": "BuildingUnitAddressWasAttachedV2",
     "basisregisterscausationid": "62ea7e20-6e3c-5bc0-a7f3-5f5612ed34fc",
+    "subject": "https://data.vlaanderen.be/id/gebouweenheid/31779857",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/gebouweenheid/31779857",
       "objectId": "31779857",
       "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
       "versieId": "2026-01-27T11:22:36+01:00",
@@ -114,7 +112,7 @@
       ],
       "attributen": [
         {
-          "naam": "adresIds",
+          "naam": "toegekendAdres",
           "oudeWaarde": [],
           "nieuweWaarde": [
             "https://data.vlaanderen.be/id/adres/31320594"
@@ -125,16 +123,16 @@
   },
   {
     "specversion": "1.0",
-    "id": "8191490",
+    "id": "8433150",
     "time": "2026-01-27T11:23:05.1229071+01:00",
     "type": "basisregisters.buildingunit.update.v1",
-    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
     "basisregisterseventtype": "BuildingUnitAddressWasAttachedV2",
     "basisregisterscausationid": "82616e24-863b-5d44-8ad7-94e17167915d",
+    "subject": "https://data.vlaanderen.be/id/gebouweenheid/31779857",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/gebouweenheid/31779857",
       "objectId": "31779857",
       "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
       "versieId": "2026-01-27T11:23:05+01:00",
@@ -143,7 +141,7 @@
       ],
       "attributen": [
         {
-          "naam": "adresIds",
+          "naam": "toegekendAdres",
           "oudeWaarde": [
             "https://data.vlaanderen.be/id/adres/31320594"
           ],
@@ -157,16 +155,16 @@
   },
   {
     "specversion": "1.0",
-    "id": "8191491",
+    "id": "8433151",
     "time": "2026-01-27T11:23:17.1845856+01:00",
     "type": "basisregisters.buildingunit.update.v1",
-    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
     "basisregisterseventtype": "BuildingUnitAddressWasAttachedV2",
     "basisregisterscausationid": "15c5cea4-7a0b-5fe2-a5f3-673b73ab00cd",
+    "subject": "https://data.vlaanderen.be/id/gebouweenheid/31779857",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/gebouweenheid/31779857",
       "objectId": "31779857",
       "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
       "versieId": "2026-01-27T11:23:17+01:00",
@@ -175,7 +173,7 @@
       ],
       "attributen": [
         {
-          "naam": "adresIds",
+          "naam": "toegekendAdres",
           "oudeWaarde": [
             "https://data.vlaanderen.be/id/adres/31320594",
             "https://data.vlaanderen.be/id/adres/31320595"
@@ -191,16 +189,16 @@
   },
   {
     "specversion": "1.0",
-    "id": "8191492",
+    "id": "8433152",
     "time": "2026-01-27T11:23:30.4218022+01:00",
     "type": "basisregisters.buildingunit.update.v1",
-    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouweenheden",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouweenheid/2026-01-21/gebouweenheid.json",
     "basisregisterseventtype": "BuildingUnitAddressWasAttachedV2",
     "basisregisterscausationid": "78f2a54c-ee7c-5827-a0a1-edb5beb78575",
+    "subject": "https://data.vlaanderen.be/id/gebouweenheid/31779857",
     "data": {
-      "@id": "https://data.vlaanderen.be/id/gebouweenheid/31779857",
       "objectId": "31779857",
       "naamruimte": "https://data.vlaanderen.be/id/gebouweenheid",
       "versieId": "2026-01-27T11:23:30+01:00",
@@ -209,7 +207,7 @@
       ],
       "attributen": [
         {
-          "naam": "adresIds",
+          "naam": "toegekendAdres",
           "oudeWaarde": [
             "https://data.vlaanderen.be/id/adres/31320594",
             "https://data.vlaanderen.be/id/adres/31320595",

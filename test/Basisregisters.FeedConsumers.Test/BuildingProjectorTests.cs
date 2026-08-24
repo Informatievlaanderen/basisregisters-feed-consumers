@@ -52,7 +52,7 @@ public class BuildingProjectorTests
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "building-create-update-delete.json"));
 
-        var createEvents = events.Where(e => e.Id == "544263").ToList();
+        var createEvents = events.Where(e => e.Id == "544262").ToList();
         _feedPageFetcher.SetupPage(1, createEvents.ToFeedPage(isPageComplete: false));
 
         using var cts = new CancellationTokenSource();
@@ -166,35 +166,34 @@ public class BuildingProjectorTests
                 "id": "9991001",
                 "time": "2025-04-18T11:52:12.5955391+02:00",
                 "type": "basisregisters.building.create.v1",
-                "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/gebouwen",
+                "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouwen",
                 "datacontenttype": "application/json",
                 "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/gebouw/2026-01-21/gebouw.json",
                 "basisregisterseventtype": "BuildingWasMigrated",
                 "basisregisterscausationid": "bd0f564c-ad0e-514f-94b5-d1c889302e48",
+                "subject": "https://data.vlaanderen.be/id/gebouw/31319625",
                 "data": {
-                  "@id": "https://data.vlaanderen.be/id/gebouw/31319625",
                   "objectId": "31319625",
                   "naamruimte": "https://data.vlaanderen.be/id/gebouw",
                   "versieId": "2025-04-18T11:52:12+02:00",
                   "nisCodes": [ "41081" ],
                   "attributen": [
                     {
-                      "naam": "gebouwStatus",
+                      "naam": "status",
                       "oudeWaarde": null,
-                      "nieuweWaarde": "gerealiseerd"
+                      "nieuweWaarde": "https://data.vlaanderen.be/id/concept/gebouwstatus/gerealiseerd"
                     },
                     {
-                      "naam": "geometrieMethode",
+                      "naam": "geometrie.methode",
                       "oudeWaarde": null,
-                      "nieuweWaarde": "ingeschetst"
+                      "nieuweWaarde": "https://data.vlaanderen.be/id/concept/2Dgeometriemethode/ingeschetst"
                     },
                     {
-                      "naam": "gebouwGeometrie",
+                      "naam": "geometrie.geometrie",
                       "oudeWaarde": null,
                       "nieuweWaarde": [
                         {
-                          "type": "Polygon",
-                          "projectie": "http://www.opengis.net/def/crs/EPSG/0/31370",
+                          "@type": "Polygoon",
                           "gml": "<gml:Polygon srsName=\"http://www.opengis.net/def/crs/EPSG/0/31370\" xmlns:gml=\"http://www.opengis.net/gml/3.2\"><gml:exterior><gml:LinearRing><gml:posList>142534.85208049999 187064.83862719999 142533.98317409307 187059.90521990135 142528.05677408725 187056.73901189864 142532.28179809451 187049.13427589461 142545.07210093999 187056.24261001000 142540.42409165000 187064.11062575001 142534.85208049999 187064.83862719999</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>"
                         }
                       ]
@@ -230,7 +229,7 @@ public class BuildingProjectorTests
         var feedState = await context.FeedStates.FindAsync([BuildingFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(6610857);
+        feedState!.EventPosition.Should().Be(6610861);
         feedState.Page.Should().Be(1);
     }
 
@@ -251,7 +250,7 @@ public class BuildingProjectorTests
         var feedState = await context.FeedStates.FindAsync([BuildingFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(6610857);
+        feedState!.EventPosition.Should().Be(6610861);
         feedState.Page.Should().Be(2);
     }
 

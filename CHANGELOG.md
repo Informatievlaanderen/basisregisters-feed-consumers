@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/informatievlaanderen/basisregisters-feed-consumers/compare/v1.1.2...v1.2.0) (2026-08-25)
+
+
+### Bug Fixes
+
+* enable all projectors ([ec8efd4](https://github.com/informatievlaanderen/basisregisters-feed-consumers/commit/ec8efd4d1700581409bf6d8ffd501f9b85d958f1))
+
+
+### Features
+
+* finish oslo changes in building/unit/parcel ([a42de5c](https://github.com/informatievlaanderen/basisregisters-feed-consumers/commit/a42de5cb649f67a851e068b538d6b44d048d0a47))
+* upgrade to dotnet10 ([a9e3594](https://github.com/informatievlaanderen/basisregisters-feed-consumers/commit/a9e3594ead392c01ccfe19f93b23be59b376c205))
+
 ## [1.1.2](https://github.com/informatievlaanderen/basisregisters-feed-consumers/compare/v1.1.1...v1.1.2) (2026-05-15)
 
 

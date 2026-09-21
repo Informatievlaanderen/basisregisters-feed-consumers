@@ -22,6 +22,7 @@ public class PostalInformationProjectorTests
 
     private const string PuriPostalInfo9050 = "https://data.vlaanderen.be/id/postinfo/9050";
     private const string PuriPostalInfo5020 = "https://data.vlaanderen.be/id/postinfo/5020";
+    private const string PuriPostalInfo3010 = "https://data.vlaanderen.be/id/postinfo/3010";
     private const string PostalInformationFeedName = "PostalInformationFeed";
 
     public PostalInformationProjectorTests()
@@ -343,6 +344,105 @@ public class PostalInformationProjectorTests
         postalInformation.PostalNames.Should().HaveCount(2);
         postalInformation.PostalNames.Should().ContainSingle(x => x.Name == "Gentbrugge" && x.Language == Language.Nl);
         postalInformation.PostalNames.Should().ContainSingle(x => x.Name == "Ledeberg" && x.Language == Language.Nl);
+    }
+
+    [Fact]
+    public async Task PostalNameWasRemoved_WithEmptyNewValue_ShouldRemoveAllPostalNames()
+    {
+        var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
+            Path.Combine("TestData", "postalinformation-update-name.json"));
+
+        // Take everything up to and including the removal of the only postal name (id 7135)
+        var relevantEvents = events
+            .Where(e => long.Parse(e.Id!) <= 7135)
+            .ToList();
+        _feedPageFetcher.SetupPage(1, relevantEvents.ToFeedPage(isPageComplete: false));
+
+        using var cts = new CancellationTokenSource();
+        cts.CancelAfter(5000);
+
+        await RunOneCycleAsync(cts.Token);
+
+        await using var context = _contextFactory.CreateDbContext();
+        var postalInformation = await context.PostalInformations
+            .Include(p => p.PostalNames)
+            .FirstOrDefaultAsync(p => p.PersistentUri == PuriPostalInfo3010, TestContext.Current.CancellationToken);
+
+        postalInformation.Should().NotBeNull();
+        postalInformation!.PostalNames.Should().BeEmpty();
+        postalInformation.NisCode.Should().Be("24062");
+        postalInformation.Status.Should().Be(PostalInformationStatus.Realized);
+        postalInformation.IsRemoved.Should().BeFalse();
+        postalInformation.VersionIdAsString.Should().Be(relevantEvents[^1].GetVersionIdAsString());
+    }
+
+    [Fact]
+    public async Task PostalNameRemovedAndAdded_InSameBatch_ShouldReplacePostalName()
+    {
+        var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
+            Path.Combine("TestData", "postalinformation-update-name.json"));
+
+        _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: false));
+
+        using var cts = new CancellationTokenSource();
+        cts.CancelAfter(5000);
+
+        await RunOneCycleAsync(cts.Token);
+
+        await using var context = _contextFactory.CreateDbContext();
+        var postalInformation = await context.PostalInformations
+            .Include(p => p.PostalNames)
+            .FirstOrDefaultAsync(p => p.PersistentUri == PuriPostalInfo3010, TestContext.Current.CancellationToken);
+
+        postalInformation.Should().NotBeNull();
+        postalInformation!.PostalCode.Should().Be("3010");
+        postalInformation.NisCode.Should().Be("24062");
+        postalInformation.Status.Should().Be(PostalInformationStatus.Realized);
+        postalInformation.PostalNames.Should().ContainSingle(n => n.Name == "Kessel-Lo" && n.Language == Language.Nl);
+        postalInformation.PostalNames.Should().NotContain(n => n.Name == "Kessel Lo");
+        postalInformation.IsRemoved.Should().BeFalse();
+        postalInformation.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
+    }
+
+    [Fact]
+    public async Task PostalNameRemovedAndAdded_InSeparateCycles_ShouldReplacePostalName()
+    {
+        var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
+            Path.Combine("TestData", "postalinformation-update-name.json"));
+
+        var firstPage = events.Where(e => long.Parse(e.Id!) <= 7135).ToList();
+        var secondPage = events.Where(e => long.Parse(e.Id!) > 7135).ToList();
+
+        _feedPageFetcher.SetupPage(1, firstPage.ToFeedPage(isPageComplete: true));
+        using (var firstCts = new CancellationTokenSource())
+        {
+            firstCts.CancelAfter(5000);
+            await RunOneCycleAsync(firstCts.Token);
+        }
+
+        await using (var context = _contextFactory.CreateDbContext())
+        {
+            var names = await context.Set<PostalInformationName>()
+                .Where(n => n.PostalCode == "3010")
+                .ToListAsync(TestContext.Current.CancellationToken);
+            names.Should().BeEmpty();
+        }
+
+        _feedPageFetcher.SetupPage(2, secondPage.ToFeedPage(isPageComplete: false));
+        using (var secondCts = new CancellationTokenSource())
+        {
+            secondCts.CancelAfter(5000);
+            await RunOneCycleAsync(secondCts.Token);
+        }
+
+        await using var assertContext = _contextFactory.CreateDbContext();
+        var postalInformation = await assertContext.PostalInformations
+            .Include(p => p.PostalNames)
+            .FirstOrDefaultAsync(p => p.PersistentUri == PuriPostalInfo3010, TestContext.Current.CancellationToken);
+
+        postalInformation.Should().NotBeNull();
+        postalInformation!.PostalNames.Should().ContainSingle(n => n.Name == "Kessel-Lo" && n.Language == Language.Nl);
+        postalInformation.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
     }
 
     [Fact]

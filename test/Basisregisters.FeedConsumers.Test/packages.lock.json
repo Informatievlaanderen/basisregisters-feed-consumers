@@ -86,6 +86,14 @@
         "resolved": "2.9.0",
         "contentHash": "Qh8/MS3YBI78Q5+AVXN/hNQZkhFW5OyDHdn4Wi05ZzlylKOsTypBiQQ1u0U8iOZ24HMe8Hc0VH2CIwnY4YTGEA=="
       },
+      "Corvus.Text.Json": {
+        "type": "Transitive",
+        "resolved": "5.6.1",
+        "contentHash": "l2lXd2xf1Z4mEZKdpvf6mXx5HDg7v4/A4E5YE4Nt1KVAaRdsbbPxIt0SvDcoR04Y5jwjGSYibe0fbMVFtSGoLw==",
+        "dependencies": {
+          "NodaTime": "3.3.1"
+        }
+      },
       "Datadog.Trace": {
         "type": "Transitive",
         "resolved": "3.52.0",
@@ -397,11 +405,6 @@
         "resolved": "6.0.0",
         "contentHash": "hqTM5628jSsQiv+HGpiq3WKBl2c8v1KZfby2J6Pr7pEPlK9waPdgEO6b8A/+/xn/yZ9ulv8HuqK71ONy2tg67A=="
       },
-      "Namotion.Reflection": {
-        "type": "Transitive",
-        "resolved": "3.5.0",
-        "contentHash": "FnASiAaTGSmB4SaSroIwnK4ph9noFIXZpPOMezDqWw5S/TNakzSnawPeM7u0Auq1/EqJXeqG4s6UjfrGBH33Ow=="
-      },
       "NetTopologySuite": {
         "type": "Transitive",
         "resolved": "2.6.0",
@@ -415,15 +418,10 @@
           "NetTopologySuite": "[2.0.0, 3.0.0-A)"
         }
       },
-      "Newtonsoft.Json": {
+      "NodaTime": {
         "type": "Transitive",
-        "resolved": "13.0.3",
-        "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
-      },
-      "NJsonSchema.Annotations": {
-        "type": "Transitive",
-        "resolved": "11.6.1",
-        "contentHash": "WA4z8iK+0SOh2/qoo7rtEanj/LjJZ8oWWoXI8u1xcYMk6VzHONqpabJBYGrzqDO41ld+VQHOFL+B8MXncIVSSA=="
+        "resolved": "3.3.1",
+        "contentHash": "7zkTEqmakybTTuDuifpnzl5s8MkmpAdyvoqIPIO2+M2ThF8ixavPcPt1afPfFyCI+A6t3ySujgpGq/5iWc4/RQ=="
       },
       "Npgsql": {
         "type": "Transitive",
@@ -566,6 +564,7 @@
           "Basisregisters.FeedConsumers": "[1.0.0, )",
           "Be.Vlaanderen.Basisregisters.Aws.DistributedMutex": "[5.1.0, )",
           "CloudNative.CloudEvents.SystemTextJson": "[2.9.0, )",
+          "Corvus.Text.Json.Validator": "[5.6.1, )",
           "Datadog.Trace.Bundle": "[3.52.0, )",
           "Microsoft.Extensions.Configuration": "[10.0.11, )",
           "Microsoft.Extensions.Configuration.CommandLine": "[10.0.11, )",
@@ -575,7 +574,6 @@
           "Microsoft.Extensions.DependencyInjection": "[10.0.11, )",
           "Microsoft.Extensions.Hosting": "[10.0.11, )",
           "Microsoft.Extensions.Http": "[10.0.11, )",
-          "NJsonSchema": "[11.6.1, )",
           "Serilog": "[4.4.0, )",
           "Serilog.Enrichers.Environment": "[3.0.1, )",
           "Serilog.Enrichers.Thread": "[4.0.0, )",
@@ -605,6 +603,15 @@
         "contentHash": "gkf4+RRR8W4VmB7hZr0Wie5VYz+oRKJnuj5CLtyKANa+Yq+eynMqVBnmnjWf8hvgCVDAzyvM2iq6THZageO8jA==",
         "dependencies": {
           "CloudNative.CloudEvents": "2.9.0"
+        }
+      },
+      "Corvus.Text.Json.Validator": {
+        "type": "CentralTransitive",
+        "requested": "[5.6.1, )",
+        "resolved": "5.6.1",
+        "contentHash": "O+14HpHrM9+LVFvS8q1MIxLNpH5BL+9kFXZ2W8OmwIEiG8e3VuflWKGG7kxMUV7nCnGCWXIpWx/BVVFzyyMkmg==",
+        "dependencies": {
+          "Corvus.Text.Json": "5.6.1"
         }
       },
       "Datadog.Trace.Bundle": {
@@ -722,17 +729,6 @@
           "Microsoft.Extensions.Logging": "10.0.11",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
           "Microsoft.Extensions.Options": "10.0.11"
-        }
-      },
-      "NJsonSchema": {
-        "type": "CentralTransitive",
-        "requested": "[11.6.1, )",
-        "resolved": "11.6.1",
-        "contentHash": "miqvNY4OSXCWVqaMqt0A8VUkij0UH1oPosHMLP+t6/nWNSSzWDPmm7G2DjVW7M9evy0x5DE2pS/DDTtKCpbzSQ==",
-        "dependencies": {
-          "NJsonSchema.Annotations": "11.6.1",
-          "Namotion.Reflection": "3.5.0",
-          "Newtonsoft.Json": "13.0.3"
         }
       },
       "Npgsql.EntityFrameworkCore.PostgreSQL": {

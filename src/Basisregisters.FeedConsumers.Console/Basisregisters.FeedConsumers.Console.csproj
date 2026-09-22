@@ -51,7 +51,7 @@
     <PackageReference Include="Microsoft.Extensions.Http" />
 
     <PackageReference Include="CloudNative.CloudEvents.SystemTextJson" />
-    <PackageReference Include="NJsonSchema" />
+    <PackageReference Include="Corvus.Text.Json.Validator" />
 
     <PackageReference Include="Be.Vlaanderen.Basisregisters.Aws.DistributedMutex" />
     <PackageReference Include="Datadog.Trace.Bundle" />

@@ -14,9 +14,6 @@
       "objectId": "71022",
       "naamruimte": "https://data.vlaanderen.be/id/gemeente",
       "versieId": "2002-08-13T17:32:32+02:00",
-      "nisCodes": [
-        "71022"
-      ],
       "attributen": [
         {
           "naam": "status",
@@ -41,9 +38,6 @@
       "objectId": "71022",
       "naamruimte": "https://data.vlaanderen.be/id/gemeente",
       "versieId": "2002-08-13T17:32:32+02:00",
-      "nisCodes": [
-        "71022"
-      ],
       "attributen": [
         {
           "naam": "officieleTaal",
@@ -70,9 +64,6 @@
       "objectId": "71022",
       "naamruimte": "https://data.vlaanderen.be/id/gemeente",
       "versieId": "2002-08-13T17:32:32+02:00",
-      "nisCodes": [
-        "71022"
-      ],
       "attributen": [
         {
           "naam": "status",
@@ -97,9 +88,6 @@
       "objectId": "71022",
       "naamruimte": "https://data.vlaanderen.be/id/gemeente",
       "versieId": "2002-08-13T16:33:18+02:00",
-      "nisCodes": [
-        "71022"
-      ],
       "attributen": [
         {
           "naam": "gemeentenaam",
@@ -126,12 +114,7 @@
     "basisregisterscausationid": "5a3f234f-c877-5409-92d4-7409bad72a49",
     "data": {
       "vanId": "https://data.vlaanderen.be/id/gemeente/71022",
-      "naarId": "https://data.vlaanderen.be/id/gemeente/71072",
-      "nisCodes": [
-        "73040",
-        "71072",
-        "71022"
-      ]
+      "naarId": "https://data.vlaanderen.be/id/gemeente/71072"
     }
   },
   {
@@ -149,9 +132,6 @@
       "objectId": "71022",
       "naamruimte": "https://data.vlaanderen.be/id/gemeente",
       "versieId": "2025-01-01T01:04:15+01:00",
-      "nisCodes": [
-        "71022"
-      ],
       "attributen": [
         {
           "naam": "status",

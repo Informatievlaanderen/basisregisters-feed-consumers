@@ -236,7 +236,6 @@ public class PostalInformationProjectorTests
                   "objectId": "9050",
                   "naamruimte": "https://data.vlaanderen.be/id/postinfo",
                   "versieId": "2020-02-10T12:42:50+01:00",
-                  "nisCodes": [],
                   "attributen": [
                     { "naam": "status", "oudeWaarde": null, "nieuweWaarde": "https://data.vlaanderen.be/id/concept/postinfostatus/gerealiseerd" },
                     {
@@ -279,7 +278,6 @@ public class PostalInformationProjectorTests
                   "objectId": "9050",
                   "naamruimte": "https://data.vlaanderen.be/id/postinfo",
                   "versieId": "2020-02-10T12:43:00+01:00",
-                  "nisCodes": [],
                   "attributen": [
                     {
                       "naam": "postnaam",
@@ -309,7 +307,6 @@ public class PostalInformationProjectorTests
                   "objectId": "9050",
                   "naamruimte": "https://data.vlaanderen.be/id/postinfo",
                   "versieId": "2020-02-10T12:43:01+01:00",
-                  "nisCodes": [],
                   "attributen": [
                     {
                       "naam": "postnaam",

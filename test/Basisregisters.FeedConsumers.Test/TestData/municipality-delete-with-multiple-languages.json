@@ -14,9 +14,6 @@
       "objectId": "21001",
       "naamruimte": "https://data.vlaanderen.be/id/gemeente",
       "versieId": "2002-08-13T17:32:32+02:00",
-      "nisCodes": [
-        "21001"
-      ],
       "attributen": [
         {
           "naam": "status",
@@ -41,9 +38,6 @@
       "objectId": "21001",
       "naamruimte": "https://data.vlaanderen.be/id/gemeente",
       "versieId": "2002-08-13T17:32:32+02:00",
-      "nisCodes": [
-        "21001"
-      ],
       "attributen": [
         {
           "naam": "officieleTaal",
@@ -70,9 +64,6 @@
       "objectId": "21001",
       "naamruimte": "https://data.vlaanderen.be/id/gemeente",
       "versieId": "2002-08-13T17:32:32+02:00",
-      "nisCodes": [
-        "21001"
-      ],
       "attributen": [
         {
           "naam": "officieleTaal",
@@ -102,9 +93,6 @@
       "objectId": "21001",
       "naamruimte": "https://data.vlaanderen.be/id/gemeente",
       "versieId": "2002-08-13T17:32:32+02:00",
-      "nisCodes": [
-        "21001"
-      ],
       "attributen": [
         {
           "naam": "status",
@@ -129,9 +117,6 @@
       "objectId": "21001",
       "naamruimte": "https://data.vlaanderen.be/id/gemeente",
       "versieId": "2002-08-13T16:33:18+02:00",
-      "nisCodes": [
-        "21001"
-      ],
       "attributen": [
         {
           "naam": "gemeentenaam",
@@ -161,9 +146,6 @@
       "objectId": "21001",
       "naamruimte": "https://data.vlaanderen.be/id/gemeente",
       "versieId": "2002-08-13T16:33:18+02:00",
-      "nisCodes": [
-        "21001"
-      ],
       "attributen": [
         {
           "naam": "gemeentenaam",
@@ -202,9 +184,6 @@
       "objectId": "21001",
       "naamruimte": "https://data.vlaanderen.be/id/gemeente",
       "versieId": "2025-09-16T11:28:02+02:00",
-      "nisCodes": [
-        "21001"
-      ],
       "attributen": []
     }
   }

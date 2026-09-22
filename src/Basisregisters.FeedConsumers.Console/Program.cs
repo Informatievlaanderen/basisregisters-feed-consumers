@@ -37,6 +37,8 @@ AppDomain.CurrentDomain.UnhandledException += (_, eventArgs) =>
             eventArgs.ExceptionObject);
 };
 
+const string JsonSchemaHttpClientName = "JsonSchemas";
+
 var host = new HostBuilder()
     .ConfigureAppConfiguration((_, builder) =>
     {
@@ -108,6 +110,9 @@ var host = new HostBuilder()
             });
         }
 
+        // Schemas are hosted on the docs site, so no base address or api key.
+        services.AddHttpClient(JsonSchemaHttpClientName);
+
         services.AddHostedService(provider =>
         {
             var municipalityFeedOptions = feedOptionsBySection["MunicipalityFeed"];
@@ -115,7 +120,7 @@ var host = new HostBuilder()
             var httpClient = httpClientFactory.CreateClient(municipalityFeedOptions.Name);
             var feedPageFetcher = new HttpFeedPageFetcher(httpClient, municipalityFeedOptions.FeedUrl);
             var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            var jsonSchemaValidator = new JsonSchemaValidator(httpClientFactory.CreateClient(JsonSchemaHttpClientName), loggerFactory.CreateLogger<JsonSchemaValidator>());
             return new MunicipalityProjector(
                 municipalityFeedOptions,
                 provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
@@ -131,7 +136,7 @@ var host = new HostBuilder()
             var httpClient = httpClientFactory.CreateClient(postalInformationFeedOptions.Name);
             var feedPageFetcher = new HttpFeedPageFetcher(httpClient, postalInformationFeedOptions.FeedUrl);
             var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            var jsonSchemaValidator = new JsonSchemaValidator(httpClientFactory.CreateClient(JsonSchemaHttpClientName), loggerFactory.CreateLogger<JsonSchemaValidator>());
             return new PostalInformationProjector(
                 postalInformationFeedOptions,
                 provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
@@ -147,7 +152,7 @@ var host = new HostBuilder()
             var httpClient = httpClientFactory.CreateClient(streetNameFeedOptions.Name);
             var feedPageFetcher = new HttpFeedPageFetcher(httpClient, streetNameFeedOptions.FeedUrl);
             var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            var jsonSchemaValidator = new JsonSchemaValidator(httpClientFactory.CreateClient(JsonSchemaHttpClientName), loggerFactory.CreateLogger<JsonSchemaValidator>());
             return new StreetNameProjector(
                 streetNameFeedOptions,
                 provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
@@ -163,7 +168,7 @@ var host = new HostBuilder()
             var httpClient = httpClientFactory.CreateClient(addressFeedOptions.Name);
             var feedPageFetcher = new HttpFeedPageFetcher(httpClient, addressFeedOptions.FeedUrl);
             var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            var jsonSchemaValidator = new JsonSchemaValidator(httpClientFactory.CreateClient(JsonSchemaHttpClientName), loggerFactory.CreateLogger<JsonSchemaValidator>());
             return new AddressProjector(
                 addressFeedOptions,
                 provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
@@ -179,7 +184,7 @@ var host = new HostBuilder()
             var httpClient = httpClientFactory.CreateClient(buildingFeedOptions.Name);
             var feedPageFetcher = new HttpFeedPageFetcher(httpClient, buildingFeedOptions.FeedUrl);
             var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            var jsonSchemaValidator = new JsonSchemaValidator(httpClientFactory.CreateClient(JsonSchemaHttpClientName), loggerFactory.CreateLogger<JsonSchemaValidator>());
             return new BuildingProjector(
                 buildingFeedOptions,
                 provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
@@ -195,7 +200,7 @@ var host = new HostBuilder()
             var httpClient = httpClientFactory.CreateClient(buildingUnitFeedOptions.Name);
             var feedPageFetcher = new HttpFeedPageFetcher(httpClient, buildingUnitFeedOptions.FeedUrl);
             var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            var jsonSchemaValidator = new JsonSchemaValidator(httpClientFactory.CreateClient(JsonSchemaHttpClientName), loggerFactory.CreateLogger<JsonSchemaValidator>());
             return new BuildingUnitProjector(
                 buildingUnitFeedOptions,
                 provider.GetRequiredService<IDbContextFactory<FeedContext>>(),
@@ -211,7 +216,7 @@ var host = new HostBuilder()
             var httpClient = httpClientFactory.CreateClient(parcelFeedOptions.Name);
             var feedPageFetcher = new HttpFeedPageFetcher(httpClient, parcelFeedOptions.FeedUrl);
             var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-            var jsonSchemaValidator = new JsonSchemaValidator(loggerFactory.CreateLogger<JsonSchemaValidator>());
+            var jsonSchemaValidator = new JsonSchemaValidator(httpClientFactory.CreateClient(JsonSchemaHttpClientName), loggerFactory.CreateLogger<JsonSchemaValidator>());
             return new ParcelProjector(
                 parcelFeedOptions,
                 provider.GetRequiredService<IDbContextFactory<FeedContext>>(),

@@ -1,3 +1,5 @@
+## [1.2.1](https://github.com/informatievlaanderen/basisregisters-feed-consumers/compare/v1.2.0...v1.2.1) (2026-09-25)
+
 # [1.2.0](https://github.com/informatievlaanderen/basisregisters-feed-consumers/compare/v1.1.2...v1.2.0) (2026-08-25)
 
 

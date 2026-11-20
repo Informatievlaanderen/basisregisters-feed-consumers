@@ -48,13 +48,6 @@
           ]
         },
         {
-          "naam": "toegekendAdres",
-          "oudeWaarde": null,
-          "nieuweWaarde": [
-            "https://data.vlaanderen.be/id/adres/304486"
-          ]
-        },
-        {
           "naam": "isDeelVan",
           "oudeWaarde": null,
           "nieuweWaarde": "https://data.vlaanderen.be/id/gebouw/5676172"
@@ -63,13 +56,20 @@
           "naam": "afwijkingVastgesteld",
           "oudeWaarde": null,
           "nieuweWaarde": false
+        },
+        {
+          "naam": "toegekendAdres",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            "https://data.vlaanderen.be/id/adres/304486"
+          ]
         }
       ]
     }
   },
   {
     "specversion": "1.0",
-    "id": "5377319",
+    "id": "5377331",
     "time": "2023-12-06T08:44:51.7805795+01:00",
     "type": "basisregisters.buildingunit.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
@@ -114,7 +114,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "5410812",
+    "id": "5410824",
     "time": "2024-01-08T10:37:47.1858731+01:00",
     "type": "basisregisters.buildingunit.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
@@ -159,7 +159,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "5445480",
+    "id": "5445492",
     "time": "2024-01-24T14:13:00.2387981+01:00",
     "type": "basisregisters.buildingunit.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
@@ -191,7 +191,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "6487471",
+    "id": "6487484",
     "time": "2025-01-15T04:37:02.1050963+01:00",
     "type": "basisregisters.buildingunit.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
@@ -223,7 +223,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "6487472",
+    "id": "6487485",
     "time": "2025-01-15T04:37:03.3944689+01:00",
     "type": "basisregisters.buildingunit.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",

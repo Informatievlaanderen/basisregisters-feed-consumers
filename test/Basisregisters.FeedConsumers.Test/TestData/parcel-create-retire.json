@@ -35,7 +35,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "7675074",
+    "id": "7675071",
     "time": "2025-05-25T08:03:00.3607592+02:00",
     "type": "basisregisters.parcel.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/percelen",
@@ -56,7 +56,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "7893339",
+    "id": "7893336",
     "time": "2025-09-18T08:03:17.4797066+02:00",
     "type": "basisregisters.parcel.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/percelen",
@@ -85,7 +85,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "7893340",
+    "id": "7893337",
     "time": "2025-09-18T08:03:17.4797066+02:00",
     "type": "basisregisters.parcel.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/percelen",

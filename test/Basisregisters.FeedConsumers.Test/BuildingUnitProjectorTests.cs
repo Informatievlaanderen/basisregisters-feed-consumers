@@ -166,7 +166,7 @@ public class BuildingUnitProjectorTests
             Path.Combine("TestData", "buildingunit-create-change-building.json"));
 
         var relevantEvents = events
-            .Where(e => long.Parse(e.Id!) <= 6485261)
+            .Where(e => long.Parse(e.Id!) <= 6485274)
             .ToList();
         _feedPageFetcher.SetupPage(1, relevantEvents.ToFeedPage(isPageComplete: false));
 
@@ -529,7 +529,7 @@ public class BuildingUnitProjectorTests
         var feedState = await context.FeedStates.FindAsync([BuildingUnitFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(6585141);
+        feedState!.EventPosition.Should().Be(6585154);
         feedState.Page.Should().Be(1);
     }
 
@@ -550,7 +550,7 @@ public class BuildingUnitProjectorTests
         var feedState = await context.FeedStates.FindAsync([BuildingUnitFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(6585141);
+        feedState!.EventPosition.Should().Be(6585154);
         feedState.Page.Should().Be(2);
     }
 

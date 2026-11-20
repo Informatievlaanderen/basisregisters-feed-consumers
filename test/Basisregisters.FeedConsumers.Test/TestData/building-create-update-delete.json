@@ -47,7 +47,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "6610853",
+    "id": "6610852",
     "time": "2025-02-24T15:10:21.6123635+01:00",
     "type": "basisregisters.building.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouwen",
@@ -68,7 +68,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "6610856",
+    "id": "6610855",
     "time": "2025-02-24T15:10:26.1919722+01:00",
     "type": "basisregisters.building.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouwen",
@@ -89,7 +89,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "6610861",
+    "id": "6610860",
     "time": "2025-02-24T15:11:29.4974075+01:00",
     "type": "basisregisters.building.delete.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouwen",

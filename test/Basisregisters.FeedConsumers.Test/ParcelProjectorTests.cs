@@ -51,7 +51,7 @@ public class ParcelProjectorTests
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "parcel-create-multiple-addresses-only-versionchanges.json"));
 
-        var createEvents = events.Where(e => e.Id == "1093704").ToList();
+        var createEvents = events.Where(e => e.Id == "1093706").ToList();
         _feedPageFetcher.SetupPage(1, createEvents.ToFeedPage(isPageComplete: false));
 
         using var cts = new CancellationTokenSource();
@@ -274,7 +274,7 @@ public class ParcelProjectorTests
         var feedState = await context.FeedStates.FindAsync([ParcelFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(7893340);
+        feedState!.EventPosition.Should().Be(7893337);
         feedState.Page.Should().Be(1);
     }
 
@@ -295,7 +295,7 @@ public class ParcelProjectorTests
         var feedState = await context.FeedStates.FindAsync([ParcelFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(7893340);
+        feedState!.EventPosition.Should().Be(7893337);
         feedState.Page.Should().Be(2);
     }
 

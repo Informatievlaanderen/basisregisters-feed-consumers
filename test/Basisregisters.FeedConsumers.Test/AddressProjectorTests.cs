@@ -52,7 +52,7 @@ public class AddressProjectorTests
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "address-create-update-transform.json"));
 
-        var createEvents = events.Where(e => e.Id == "4419551").ToList();
+        var createEvents = events.Where(e => e.Id == "4420297").ToList();
         _feedPageFetcher.SetupPage(1, createEvents.ToFeedPage(isPageComplete: false));
 
         using var cts = new CancellationTokenSource();
@@ -91,7 +91,7 @@ public class AddressProjectorTests
             Path.Combine("TestData", "address-create-update-transform.json"));
 
         var relevantEvents = events
-            .Where(e => long.Parse(e.Id!) <= 4419556)
+            .Where(e => long.Parse(e.Id!) <= 4420302)
             .ToList();
         _feedPageFetcher.SetupPage(1, relevantEvents.ToFeedPage(isPageComplete: false));
 
@@ -117,7 +117,7 @@ public class AddressProjectorTests
             Path.Combine("TestData", "address-create-update-transform.json"));
 
         var relevantEvents = events
-            .Where(e => long.Parse(e.Id!) <= 5086475)
+            .Where(e => long.Parse(e.Id!) <= 5087221)
             .ToList();
         _feedPageFetcher.SetupPage(1, relevantEvents.ToFeedPage(isPageComplete: false));
 
@@ -162,7 +162,7 @@ public class AddressProjectorTests
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "address-create-update-retire-delete-boxnumber.json"));
 
-        var createEvents = events.Where(e => e.Id == "5610931").ToList();
+        var createEvents = events.Where(e => e.Id == "5611677").ToList();
         _feedPageFetcher.SetupPage(1, createEvents.ToFeedPage(isPageComplete: false));
 
         using var cts = new CancellationTokenSource();
@@ -365,7 +365,7 @@ public class AddressProjectorTests
         var feedState = await context.FeedStates.FindAsync([AddressFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(5086476);
+        feedState!.EventPosition.Should().Be(5087222);
         feedState.Page.Should().Be(1);
     }
 
@@ -386,7 +386,7 @@ public class AddressProjectorTests
         var feedState = await context.FeedStates.FindAsync([AddressFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(5086476);
+        feedState!.EventPosition.Should().Be(5087222);
         feedState.Page.Should().Be(2);
     }
 

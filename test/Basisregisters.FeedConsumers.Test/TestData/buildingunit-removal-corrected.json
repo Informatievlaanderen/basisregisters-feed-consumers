@@ -48,11 +48,6 @@
           ]
         },
         {
-          "naam": "toegekendAdres",
-          "oudeWaarde": null,
-          "nieuweWaarde": []
-        },
-        {
           "naam": "isDeelVan",
           "oudeWaarde": null,
           "nieuweWaarde": "https://data.vlaanderen.be/id/gebouw/15867498"
@@ -67,7 +62,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "5465652",
+    "id": "5465664",
     "time": "2024-02-07T10:01:57.3850101+01:00",
     "type": "basisregisters.buildingunit.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
@@ -112,7 +107,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "5466632",
+    "id": "5466644",
     "time": "2024-02-07T13:11:55.5973451+01:00",
     "type": "basisregisters.buildingunit.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
@@ -139,7 +134,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "5466639",
+    "id": "5466651",
     "time": "2024-02-07T13:12:26.396424+01:00",
     "type": "basisregisters.buildingunit.delete.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
@@ -160,7 +155,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "5466755",
+    "id": "5466767",
     "time": "2024-02-07T13:30:54.0870699+01:00",
     "type": "basisregisters.buildingunit.create.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
@@ -207,11 +202,6 @@
           ]
         },
         {
-          "naam": "toegekendAdres",
-          "oudeWaarde": null,
-          "nieuweWaarde": []
-        },
-        {
           "naam": "isDeelVan",
           "oudeWaarde": null,
           "nieuweWaarde": "https://data.vlaanderen.be/id/gebouw/15867498"
@@ -226,7 +216,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "8511343",
+    "id": "8511358",
     "time": "2026-08-10T15:13:40.8838121+02:00",
     "type": "basisregisters.buildingunit.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",

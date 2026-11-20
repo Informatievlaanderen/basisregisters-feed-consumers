@@ -229,7 +229,7 @@ public class BuildingProjectorTests
         var feedState = await context.FeedStates.FindAsync([BuildingFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(6610861);
+        feedState!.EventPosition.Should().Be(6610860);
         feedState.Page.Should().Be(1);
     }
 
@@ -250,7 +250,7 @@ public class BuildingProjectorTests
         var feedState = await context.FeedStates.FindAsync([BuildingFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(6610861);
+        feedState!.EventPosition.Should().Be(6610860);
         feedState.Page.Should().Be(2);
     }
 

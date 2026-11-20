@@ -48,11 +48,6 @@
           ]
         },
         {
-          "naam": "toegekendAdres",
-          "oudeWaarde": null,
-          "nieuweWaarde": []
-        },
-        {
           "naam": "isDeelVan",
           "oudeWaarde": null,
           "nieuweWaarde": "https://data.vlaanderen.be/id/gebouw/5680698"
@@ -67,7 +62,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "6485261",
+    "id": "6485274",
     "time": "2025-01-14T11:21:05.809676+01:00",
     "type": "basisregisters.buildingunit.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
@@ -117,7 +112,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "6494328",
+    "id": "6494341",
     "time": "2025-01-17T13:47:35.3195139+01:00",
     "type": "basisregisters.buildingunit.delete.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",

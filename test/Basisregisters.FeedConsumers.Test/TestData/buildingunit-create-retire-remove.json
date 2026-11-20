@@ -48,13 +48,6 @@
           ]
         },
         {
-          "naam": "toegekendAdres",
-          "oudeWaarde": null,
-          "nieuweWaarde": [
-            "https://data.vlaanderen.be/id/adres/268596"
-          ]
-        },
-        {
           "naam": "isDeelVan",
           "oudeWaarde": null,
           "nieuweWaarde": "https://data.vlaanderen.be/id/gebouw/5811158"
@@ -63,13 +56,20 @@
           "naam": "afwijkingVastgesteld",
           "oudeWaarde": null,
           "nieuweWaarde": false
+        },
+        {
+          "naam": "toegekendAdres",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            "https://data.vlaanderen.be/id/adres/268596"
+          ]
         }
       ]
     }
   },
   {
     "specversion": "1.0",
-    "id": "6585133",
+    "id": "6585146",
     "time": "2025-02-24T15:10:21.6123635+01:00",
     "type": "basisregisters.buildingunit.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
@@ -98,7 +98,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "6585134",
+    "id": "6585147",
     "time": "2025-02-24T15:10:21.6123635+01:00",
     "type": "basisregisters.buildingunit.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",
@@ -125,7 +125,7 @@
   },
   {
     "specversion": "1.0",
-    "id": "6585141",
+    "id": "6585154",
     "time": "2025-02-24T15:11:29.4974075+01:00",
     "type": "basisregisters.buildingunit.delete.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",

@@ -48,13 +48,6 @@
           ]
         },
         {
-          "naam": "toegekendAdres",
-          "oudeWaarde": null,
-          "nieuweWaarde": [
-            "https://data.vlaanderen.be/id/adres/698483"
-          ]
-        },
-        {
           "naam": "isDeelVan",
           "oudeWaarde": null,
           "nieuweWaarde": "https://data.vlaanderen.be/id/gebouw/5673542"
@@ -63,13 +56,20 @@
           "naam": "afwijkingVastgesteld",
           "oudeWaarde": null,
           "nieuweWaarde": false
+        },
+        {
+          "naam": "toegekendAdres",
+          "oudeWaarde": null,
+          "nieuweWaarde": [
+            "https://data.vlaanderen.be/id/adres/698483"
+          ]
         }
       ]
     }
   },
   {
     "specversion": "1.0",
-    "id": "6209267",
+    "id": "6209280",
     "time": "2025-01-01T02:17:00.5974517+01:00",
     "type": "basisregisters.buildingunit.update.v1",
     "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/gebouweenheden",

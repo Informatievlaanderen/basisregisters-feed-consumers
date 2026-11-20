@@ -1,15 +1,15 @@
 [
   {
     "specversion": "1.0",
-    "id": "4419551",
+    "id": "4420297",
     "time": "2024-11-28T10:17:18.502694+01:00",
     "type": "basisregisters.address.create.v1",
-    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
-    "subject": "https://data.vlaanderen.be/id/adres/30411696",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/adressen",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
     "basisregisterseventtype": "AddressWasProposedBecauseOfReaddress",
     "basisregisterscausationid": "11fb97aa-c146-590d-8738-549e2326fb79",
+    "subject": "https://data.vlaanderen.be/id/adres/30411696",
     "data": {
       "objectId": "30411696",
       "naamruimte": "https://data.vlaanderen.be/id/adres",
@@ -72,10 +72,10 @@
   },
   {
     "specversion": "1.0",
-    "id": "4419555",
+    "id": "4420301",
     "time": "2024-11-28T10:17:18.502694+01:00",
     "type": "basisregisters.address.transform.v1",
-    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/adressen",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres-transform.json",
     "basisregisterseventtype": "StreetNameWasReaddressed",
@@ -83,20 +83,20 @@
     "data": {
       "transformaties": [
         {
-          "vanId": "963208",
-          "naarId": "30411696"
+          "vanId": "https://data.vlaanderen.be/id/adres/963208",
+          "naarId": "https://data.vlaanderen.be/id/adres/30411696"
         },
         {
-          "vanId": "1767836",
-          "naarId": "30411697"
+          "vanId": "https://data.vlaanderen.be/id/adres/1767836",
+          "naarId": "https://data.vlaanderen.be/id/adres/30411697"
         },
         {
-          "vanId": "1067347",
-          "naarId": "30411698"
+          "vanId": "https://data.vlaanderen.be/id/adres/1067347",
+          "naarId": "https://data.vlaanderen.be/id/adres/30411698"
         },
         {
-          "vanId": "975377",
-          "naarId": "30411699"
+          "vanId": "https://data.vlaanderen.be/id/adres/975377",
+          "naarId": "https://data.vlaanderen.be/id/adres/30411699"
         }
       ],
       "nisCodes": [
@@ -106,15 +106,15 @@
   },
   {
     "specversion": "1.0",
-    "id": "4419556",
+    "id": "4420302",
     "time": "2024-11-28T10:17:18.502694+01:00",
     "type": "basisregisters.address.update.v1",
-    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
-    "subject": "https://data.vlaanderen.be/id/adres/30411696",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/adressen",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
     "basisregisterseventtype": "StreetNameWasReaddressed",
     "basisregisterscausationid": "11fb97aa-c146-590d-8738-549e2326fb79",
+    "subject": "https://data.vlaanderen.be/id/adres/30411696",
     "data": {
       "objectId": "30411696",
       "naamruimte": "https://data.vlaanderen.be/id/adres",
@@ -133,10 +133,10 @@
   },
   {
     "specversion": "1.0",
-    "id": "5086475",
+    "id": "5087221",
     "time": "2025-01-01T01:18:19.0988512+01:00",
     "type": "basisregisters.address.transform.v1",
-    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/adressen",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres-transform.json",
     "basisregisterseventtype": "AddressWasRetiredBecauseOfMunicipalityMerger",
@@ -144,8 +144,8 @@
     "data": {
       "transformaties": [
         {
-          "vanId": "30411696",
-          "naarId": "31295628"
+          "vanId": "https://data.vlaanderen.be/id/adres/30411696",
+          "naarId": "https://data.vlaanderen.be/id/adres/31295628"
         }
       ],
       "nisCodes": [
@@ -156,15 +156,15 @@
   },
   {
     "specversion": "1.0",
-    "id": "5086476",
+    "id": "5087222",
     "time": "2025-01-01T01:18:19.0988512+01:00",
     "type": "basisregisters.address.update.v1",
-    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/adressen",
-    "subject": "https://data.vlaanderen.be/id/adres/30411696",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/adressen",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/adres/2026-01-21/adres.json",
     "basisregisterseventtype": "AddressWasRetiredBecauseOfMunicipalityMerger",
     "basisregisterscausationid": "654ec33c-e82e-5772-af1c-14a9a9f6712a",
+    "subject": "https://data.vlaanderen.be/id/adres/30411696",
     "data": {
       "objectId": "30411696",
       "naamruimte": "https://data.vlaanderen.be/id/adres",

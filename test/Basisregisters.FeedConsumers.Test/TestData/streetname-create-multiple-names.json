@@ -4,12 +4,12 @@
     "id": "18764",
     "time": "2023-11-01T08:23:50.5552808+01:00",
     "type": "basisregisters.streetname.create.v1",
-    "source": "https://api.basisregisters.staging-vlaanderen.be/v2/feeds/wijzigingen/straatnamen",
-    "subject": "https://data.vlaanderen.be/id/straatnaam/18618",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/straatnamen",
     "datacontenttype": "application/json",
     "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/straatnaam/2026-01-21/straatnaam.json",
     "basisregisterseventtype": "StreetNameWasMigratedToMunicipality",
     "basisregisterscausationid": "1a68eb1f-f521-5c7f-8e4c-d63895198d53",
+    "subject": "https://data.vlaanderen.be/id/straatnaam/18618",
     "data": {
       "objectId": "18618",
       "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
@@ -43,6 +43,27 @@
           ]
         }
       ]
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "189013",
+    "time": "2025-09-16T11:32:33.456815+02:00",
+    "type": "basisregisters.streetname.delete.v1",
+    "source": "https://api.basisregisters.staging-vlaanderen.be/v3/feeds/wijzigingen/straatnamen",
+    "datacontenttype": "application/json",
+    "dataschema": "https://docs.basisregisters.staging-vlaanderen.be/schemas/feeds/wijzigingen/straatnaam/2026-01-21/straatnaam.json",
+    "basisregisterseventtype": "StreetNameWasRemovedV2",
+    "basisregisterscausationid": "f8859031-9388-503f-b745-f545aa4456bc",
+    "subject": "https://data.vlaanderen.be/id/straatnaam/18618",
+    "data": {
+      "objectId": "18618",
+      "naamruimte": "https://data.vlaanderen.be/id/straatnaam",
+      "versieId": "2025-09-16T11:32:33+02:00",
+      "nisCodes": [
+        "21001"
+      ],
+      "attributen": []
     }
   }
 ]

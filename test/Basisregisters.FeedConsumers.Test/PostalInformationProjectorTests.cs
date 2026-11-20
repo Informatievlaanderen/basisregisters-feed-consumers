@@ -52,7 +52,7 @@ public class PostalInformationProjectorTests
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "postalinformation-create-update.json"));
 
-        var createEvents = events.Where(e => e.Id == "3596").ToList();
+        var createEvents = events.Where(e => e.Id == "3595").ToList();
         _feedPageFetcher.SetupPage(1, createEvents.ToFeedPage(isPageComplete: false));
 
         using var cts = new CancellationTokenSource();
@@ -78,9 +78,9 @@ public class PostalInformationProjectorTests
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "postalinformation-create-update.json"));
 
-        // Take create + status + first naming + second naming events (ids 3596-3601)
+        // Take create + status + first naming + second naming events (ids 3595-3600)
         var relevantEvents = events
-            .Where(e => long.Parse(e.Id!) <= 3601)
+            .Where(e => long.Parse(e.Id!) <= 3600)
             .ToList();
         _feedPageFetcher.SetupPage(1, relevantEvents.ToFeedPage(isPageComplete: false));
 
@@ -481,8 +481,8 @@ public class PostalInformationProjectorTests
         var feedState = await context.FeedStates.FindAsync([PostalInformationFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        // Highest event id in the file is 6243
-        feedState!.EventPosition.Should().Be(6243);
+        // Highest event id in the file is 6242
+        feedState!.EventPosition.Should().Be(6242);
         // Page not complete, should remain 1
         feedState.Page.Should().Be(1);
     }
@@ -504,7 +504,7 @@ public class PostalInformationProjectorTests
         var feedState = await context.FeedStates.FindAsync([PostalInformationFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(6243);
+        feedState!.EventPosition.Should().Be(6242);
         // Page was marked complete, should advance to 2
         feedState.Page.Should().Be(2);
     }

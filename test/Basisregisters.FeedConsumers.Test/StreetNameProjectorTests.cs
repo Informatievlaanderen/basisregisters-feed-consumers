@@ -51,7 +51,8 @@ public class StreetNameProjectorTests
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "streetname-create-multiple-names.json"));
 
-        _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: false));
+        var createEvents = events.Where(e => e.Id == "18764").ToList();
+        _feedPageFetcher.SetupPage(1, createEvents.ToFeedPage(isPageComplete: false));
 
         using var cts = new CancellationTokenSource();
         cts.CancelAfter(5000);
@@ -74,7 +75,8 @@ public class StreetNameProjectorTests
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "streetname-create-multiple-names.json"));
 
-        _feedPageFetcher.SetupPage(1, events.ToFeedPage(isPageComplete: false));
+        var createEvents = events.Where(e => e.Id == "18764").ToList();
+        _feedPageFetcher.SetupPage(1, createEvents.ToFeedPage(isPageComplete: false));
 
         using var cts = new CancellationTokenSource();
         cts.CancelAfter(5000);
@@ -91,7 +93,7 @@ public class StreetNameProjectorTests
         streetName.NameEnglish.Should().BeNull();
         // 2023-11-01T08:23:50+01:00
         streetName.VersionId.Should().BeCloseTo(new DateTimeOffset(2023, 11, 1, 8, 23, 50, TimeSpan.FromHours(1)), TimeSpan.FromSeconds(1));
-        streetName.VersionIdAsString.Should().Be(events[^1].GetVersionIdAsString());
+        streetName.VersionIdAsString.Should().Be(createEvents[^1].GetVersionIdAsString());
     }
 
     [Fact]
@@ -100,9 +102,9 @@ public class StreetNameProjectorTests
         var events = await CloudEventTestHelper.ReadEventsFromFileAsync(
             Path.Combine("TestData", "streetname-create-update-transform.json"));
 
-        // Take create + two name correction updates (ids 159388-159390)
+        // Take create + two name correction updates (ids 159236-159238)
         var relevantEvents = events
-            .Where(e => long.Parse(e.Id!) <= 159390)
+            .Where(e => long.Parse(e.Id!) <= 159238)
             .ToList();
         _feedPageFetcher.SetupPage(1, relevantEvents.ToFeedPage(isPageComplete: false));
 
@@ -132,7 +134,7 @@ public class StreetNameProjectorTests
 
         // Take all events including the transform event
         var relevantEvents = events
-            .Where(e => long.Parse(e.Id!) <= 184164)
+            .Where(e => long.Parse(e.Id!) <= 183998)
             .ToList();
         _feedPageFetcher.SetupPage(1, relevantEvents.ToFeedPage(isPageComplete: false));
 
@@ -182,7 +184,7 @@ public class StreetNameProjectorTests
             Path.Combine("TestData", "streetname-homonym-delete.json"));
 
         // Only take the create event
-        var createEvents = events.Where(e => e.Id == "159199").ToList();
+        var createEvents = events.Where(e => e.Id == "159047").ToList();
         _feedPageFetcher.SetupPage(1, createEvents.ToFeedPage(isPageComplete: false));
 
         using var cts = new CancellationTokenSource();
@@ -266,8 +268,8 @@ public class StreetNameProjectorTests
         var feedState = await context.FeedStates.FindAsync([StreetNameFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        // Highest event id in the file is 184165
-        feedState!.EventPosition.Should().Be(184165);
+        // Highest event id in the file is 183999
+        feedState!.EventPosition.Should().Be(183999);
         // Page not complete, should remain 1
         feedState.Page.Should().Be(1);
     }
@@ -289,7 +291,7 @@ public class StreetNameProjectorTests
         var feedState = await context.FeedStates.FindAsync([StreetNameFeedName], TestContext.Current.CancellationToken);
 
         feedState.Should().NotBeNull();
-        feedState!.EventPosition.Should().Be(184165);
+        feedState!.EventPosition.Should().Be(183999);
         // Page was marked complete, should advance to 2
         feedState.Page.Should().Be(2);
     }
